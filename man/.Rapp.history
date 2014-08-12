@@ -1,0 +1,7 @@
+require(vegan)
+require(FD)
+require(SYNCSA)
+?syncsa
+?mice
+rao.diversity
+gowdis
