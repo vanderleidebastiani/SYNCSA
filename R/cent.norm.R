@@ -1,3 +1,10 @@
+#' Matrix centralization and standardization
+#' 
+#' Internal function for centralization and standardization in a matrix.
+#' 
+#' 
+#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @keywords SYNCSA
 cent.norm<-function (x,na.rm = FALSE) 
 {
     x.cent <- sweep(x, 2, colMeans(x, na.rm = na.rm), "-")

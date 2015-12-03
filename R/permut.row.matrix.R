@@ -1,3 +1,10 @@
+#' Permutate rows in a matrix
+#' 
+#' Internal function to permutate rows in a matrix.
+#' 
+#' 
+#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @keywords SYNCSA
 permut.row.matrix <-
 function(matrix){
 	row<-dim(matrix)[1]
