@@ -24,7 +24,7 @@
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
 #' matrix MUST be the same as they show up in traits matrix. See
 #' \code{\link{organize.syncsa}}.
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.p}}, \code{\link{matrix.x}},
 #' \code{\link{syncsa}}, \code{\link{organize.syncsa}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
@@ -33,7 +33,7 @@
 #' 
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
-#' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
+#' ecological community gradients. Journal of Vegetation Science, 20, 334?348.
 #' @keywords SYNCSA
 #' @examples
 #' 

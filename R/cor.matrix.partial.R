@@ -32,7 +32,7 @@
 #' na.rm = FALSE).
 #' @return \item{Obs}{Correlation between matrices.} \item{p}{Significance
 #' level based on permutations.}
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{cor.matrix}}, \code{\link{syncsa}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
@@ -40,7 +40,7 @@
 #' 
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
-#' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
+#' ecological community gradients. Journal of Vegetation Science, 20, 334?348.
 #' @keywords SYNCSA
 cor.matrix.partial<-function (m1, m2, x, y, z, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, na.rm = FALSE) 
 {

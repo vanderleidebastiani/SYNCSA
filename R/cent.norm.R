@@ -3,7 +3,7 @@
 #' Internal function for centralization and standardization in a matrix.
 #' 
 #' 
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 cent.norm<-function (x,na.rm = FALSE) 
 {

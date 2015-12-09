@@ -3,7 +3,7 @@
 #' Text progress bar in the R console. See \code{\link{txtProgressBar}}.
 #' 
 #' 
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 ProgressBAR<-function(n,N,...){
 	n=n/N

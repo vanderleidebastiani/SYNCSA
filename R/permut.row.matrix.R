@@ -3,7 +3,7 @@
 #' Internal function to permutate rows in a matrix.
 #' 
 #' 
-#' @author Vanderlei J?lio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 permut.row.matrix <- function(matrix){
 	row<-dim(matrix)[1]
