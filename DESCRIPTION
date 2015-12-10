@@ -10,8 +10,6 @@ Maintainer: Vanderlei Julio Debastiani
 Depends:
     vegan
 Imports:
-    mice,
-    FD
 Description: Analysis of metacommunities based on functional traits and
     phylogeny of the community components. The functions that are offered here
     implement for the R environment methods that have been available in the
