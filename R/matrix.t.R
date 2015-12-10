@@ -40,6 +40,7 @@
 #' data(flona)
 #' matrix.t(flona$community,flona$traits,scale=TRUE)
 #' 
+#' @export
 matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE) 
 {
 	comm<-as.matrix(comm)

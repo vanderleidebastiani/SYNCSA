@@ -21,9 +21,10 @@
 #' @examples
 #' 
 #' data(flona)
-#' belonging(flona$phylo)
-#' 
-belonging<-function (dis, standardize=TRUE){
+#' flona_belongs <- belonging(flona$phylo)
+#' head(flona_belongs)
+#' @export
+belonging <- function(dis, standardize=TRUE){
 	distance <- as.matrix(dis)
 	if(standardize){
 		distance<-distance/max(distance)	

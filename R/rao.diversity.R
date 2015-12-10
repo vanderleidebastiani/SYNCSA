@@ -60,6 +60,7 @@
 #' rao.diversity(flona$community)
 #' rao.diversity(flona$community,traits=flona$traits)
 #' 
+#' @export
 rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
 	comm <- as.matrix(comm)
     N <- dim(comm)[1]

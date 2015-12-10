@@ -27,6 +27,8 @@
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{matrix.p}}, \code{\link{syncsa}}
 #' @keywords SYNCSA
+#' 
+#' @export
 organize.syncsa <-
 function (comm, traits, dist.spp, envir) 
 	{

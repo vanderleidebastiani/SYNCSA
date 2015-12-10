@@ -24,7 +24,8 @@ species. For more details, see \code{\link{matrix.p}},
 }
 \examples{
 data(flona)
-belonging(flona$phylo)
+flona_belongs <- belonging(flona$phylo)
+head(flona_belongs)
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>

@@ -32,6 +32,7 @@
 #' data(flona)
 #' matrix.p(flona$community,flona$phylo)
 #' 
+#' @export
 matrix.p<-function (comm, dist.spp, notification = TRUE)
 {
 	comm<-as.matrix(comm)

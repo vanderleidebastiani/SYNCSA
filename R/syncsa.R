@@ -243,6 +243,7 @@
 #' syncsa(comm=flona$community,traits=flona$traits,dist.spp=flona$phylo,envir=flona$environment)
 #' syncsa(flona$community,traits=flona$traits,envir=flona$environment)
 #' 
+#' @export
 syncsa<-function (comm, traits, dist.spp, envir, method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, na.rm = FALSE, notification = TRUE) 
 {
     N <- permutations

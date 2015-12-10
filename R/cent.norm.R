@@ -5,6 +5,7 @@
 #' 
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
+#' @export
 cent.norm<-function (x,na.rm = FALSE) 
 {
     x.cent <- sweep(x, 2, colMeans(x, na.rm = na.rm), "-")

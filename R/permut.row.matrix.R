@@ -5,6 +5,7 @@
 #' 
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
+#' @export
 permut.row.matrix <- function(matrix){
 	row<-dim(matrix)[1]
 	col<-dim(matrix)[2]

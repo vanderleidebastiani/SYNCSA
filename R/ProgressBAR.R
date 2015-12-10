@@ -5,6 +5,7 @@
 #' 
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
+#' @export
 ProgressBAR<-function(n,N,...){
 	n=n/N
 	for(i in c(0, n)){

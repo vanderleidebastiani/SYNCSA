@@ -67,6 +67,7 @@
 #' optimal(flona$community,flona$environment,flona$traits,
 #' 	subset.min=3,subset.max=5,pattern="tcap.tdap")
 #' 
+#' @export
 optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3, pattern = "tcap", dist = "euclidean", method = "pearson", scale = TRUE, scale.envir = TRUE , na.rm = FALSE, notification = TRUE, progressbar=FALSE) 
 {
     part.cor <- function(rxy, rxz, ryz) {

@@ -42,6 +42,7 @@
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
 #' ecological community gradients. Journal of Vegetation Science, 20, 334?348.
 #' @keywords SYNCSA
+#' @export
 cor.matrix.partial<-function (m1, m2, x, y, z, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, na.rm = FALSE) 
 {
     permut <- permutations
