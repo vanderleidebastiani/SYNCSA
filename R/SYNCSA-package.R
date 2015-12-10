@@ -1,4 +1,4 @@
-#' SYN_CSA
+#' SYNCSA
 #' 
 #' This is the syncsa package!
 #' 
@@ -8,5 +8,5 @@
 #' measured with TCAP
 #'   
 #' @docType package
-#' @name SYN_CSA
+#' @name SYNCSA-package
 NULL
