@@ -80,7 +80,7 @@ rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
         }
     		traits<-as.data.frame(traits[match.names,])
     	}
-    	D1<-as.matrix(gowdis(x=traits,...))
+    	D1<-as.matrix(FD::gowdis(x=traits,...))
     	S1<-1-D1
     	tij<-sqrt(1-S1)	
     }

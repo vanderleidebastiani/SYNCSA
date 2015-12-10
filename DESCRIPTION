@@ -8,7 +8,8 @@ Author: Vanderlei Julio Debastiani
 Maintainer: Vanderlei Julio Debastiani
     <vanderleidebastiani@yahoo.com.br>
 Depends:
-    vegan
+    vegan,
+    FD
 Imports:
 Description: Analysis of metacommunities based on functional traits and
     phylogeny of the community components. The functions that are offered here
