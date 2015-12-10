@@ -2,7 +2,8 @@
 #' 
 #' Internal function for centralization and standardization in a matrix.
 #' 
-#' 
+#' @param x matrix to centralize
+#' @param na.rm remove NAs?
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export

@@ -6,6 +6,11 @@
 \usage{
 cent.norm(x, na.rm = FALSE)
 }
+\arguments{
+\item{x}{matrix to centralize}
+
+\item{na.rm}{remove NAs?}
+}
 \description{
 Internal function for centralization and standardization in a matrix.
 }

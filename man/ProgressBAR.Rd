@@ -6,6 +6,13 @@
 \usage{
 ProgressBAR(n, N, ...)
 }
+\arguments{
+\item{n}{is a number}
+
+\item{N}{is the total number}
+
+\item{...}{additional arguments to txtProgressBar}
+}
 \description{
 Text progress bar in the R console. See \code{\link{txtProgressBar}}.
 }

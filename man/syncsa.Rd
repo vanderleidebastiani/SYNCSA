@@ -233,7 +233,7 @@ matrices) the missing data are ignored as in \code{\link{vegdist}} function.
 In some cases the dissimilarity matrices obtained by the function
 \code{\link{vegdist}} still contain some missing values. In these cases the
 rest of the procedure will be affected. In these cases you can find
-solutions in the package \code{\link{mice}}.
+solutions in the package \code{mice}.
 }
 \examples{
 data(flona)

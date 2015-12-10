@@ -6,6 +6,9 @@
 \usage{
 permut.row.matrix(matrix)
 }
+\arguments{
+\item{matrix}{matrix to permute}
+}
 \description{
 Internal function to permutate rows in a matrix.
 }

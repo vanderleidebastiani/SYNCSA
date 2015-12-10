@@ -2,7 +2,9 @@
 #' 
 #' Text progress bar in the R console. See \code{\link{txtProgressBar}}.
 #' 
-#' 
+#' @param n is a number
+#' @param N is the total number
+#' @param ... additional arguments to txtProgressBar
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export

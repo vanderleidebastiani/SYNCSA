@@ -208,7 +208,7 @@
 #' In some cases the dissimilarity matrices obtained by the function
 #' \code{\link{vegdist}} still contain some missing values. In these cases the
 #' rest of the procedure will be affected. In these cases you can find
-#' solutions in the package \code{\link{mice}}.
+#' solutions in the package \code{mice}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{matrix.p}}, \code{\link{optimal}}, \code{\link{belonging}},

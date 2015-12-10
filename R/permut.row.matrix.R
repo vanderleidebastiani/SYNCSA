@@ -2,7 +2,7 @@
 #' 
 #' Internal function to permutate rows in a matrix.
 #' 
-#' 
+#' @param matrix matrix to permute
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export
