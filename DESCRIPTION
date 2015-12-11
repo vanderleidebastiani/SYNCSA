@@ -7,10 +7,9 @@ Date: Apr 30, 2014
 Author: Vanderlei Julio Debastiani
 Maintainer: Vanderlei Julio Debastiani
     <vanderleidebastiani@yahoo.com.br>
-Depends:
+Imports:
     vegan,
     FD
-Imports:
 Description: Analysis of metacommunities based on functional traits and
     phylogeny of the community components. The functions that are offered here
     implement for the R environment methods that have been available in the
