@@ -1,3 +1,46 @@
+#' Matrix T
+#' 
+#' Function to obtain a matrix containing trait averages at community level.
+#' For more details, see \code{\link{syncsa}}.
+#' 
+#' 
+#' @param comm Community data, with species as columns and sampling units as
+#' rows. This matrix can contain either presence/absence or abundance data.
+#' @param traits Matrix data of species described by traits, with traits as
+#' columns and species as rows.
+#' @param scale Logical argument (TRUE or FALSE) to specify if the traits are
+#' measured on different scales (Default Scale = TRUE). Scale = TRUE if traits
+#' are measured on different scales, the matrix T is subjected to
+#' standardization within each trait. Scale = FALSE is traits are measured on
+#' the same scale, the matrix T is not subjected to standardization.
+#' @param notification Logical argument (TRUE or FALSE) to specify if
+#' notifications of missing observations are shown (Default notification =
+#' TRUE).
+#' @return \item{matriz.w}{Standardized community matrix, where rows are
+#' communities and columns species. Row totals (communities) = 1.}
+#' \item{matriz.b}{Matrix of traits, exactly the same data input.}
+#' \item{matriz.T}{Matrix containing trait averages at community level. If
+#' Scale = TRUE the matrix T is standardized within the traits.}
+#' @note \strong{IMPORTANT}: The sequence species show up in community data
+#' matrix MUST be the same as they show up in traits matrix. See
+#' \code{\link{organize.syncsa}}.
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @seealso \code{\link{matrix.p}}, \code{\link{matrix.x}},
+#' \code{\link{syncsa}}, \code{\link{organize.syncsa}}
+#' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
+#' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
+#' 587-596.
+#' 
+#' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
+#' Discriminating trait-convergence and trait-divergence assembly patterns in
+#' ecological community gradients. Journal of Vegetation Science, 20, 334?348.
+#' @keywords SYNCSA
+#' @examples
+#' 
+#' data(flona)
+#' matrix.t(flona$community,flona$traits,scale=TRUE)
+#' 
+#' @export
 matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE) 
 {
 	comm<-as.matrix(comm)
