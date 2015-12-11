@@ -44,6 +44,7 @@
 #' data(flona)
 #' matrix.x(flona$community,flona$traits,scale=TRUE)
 #' 
+#' @importFrom vegan vegdist
 #' @export
 matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE) 
 {
