@@ -1,6 +1,7 @@
 \encoding{UTF-8}
 \name{optimal}
 \alias{optimal}
+\alias{print.optimal}
 
 \title{
 Searching for optimal traits
@@ -11,9 +12,10 @@ Maximize trait-convergence assembly patterns (TCAP = roTE), trait-divergence ass
 }
 
 \usage{
-optimal(comm, envir, traits, subset.min = 2, subset.max = 3, pattern = "tcap" , 
-		dist = "euclidean", method = "pearson", scale = TRUE, scale.envir = TRUE,
-		na.rm = FALSE, notification = TRUE, progressbar = FALSE)
+optimal(comm, envir, traits, subset.min = 2, subset.max = 3, pattern = "tcap" ,
+        ro.method = "mantel", dist = "euclidean", method = "pearson", scale = TRUE,
+        scale.envir = TRUE, na.rm = FALSE, notification = TRUE, put.together = NULL, progressbar = FALSE)
+\method{print}{optimal}(x, ...)		
 }
 
 \arguments{
@@ -23,13 +25,17 @@ optimal(comm, envir, traits, subset.min = 2, subset.max = 3, pattern = "tcap" ,
 \item{subset.min}{Minimum of traits in each subset (Default subset.min=2).}
 \item{subset.max}{Maximum of traits in each subset (Default subset.max=3).}
 \item{pattern}{Patterns for maximize correlation, "tcap","tdap" or "tcap.tdap" (Default pattern="tcap").}
+\item{ro.method}{Method to obtain the correlation, "mantel" or "procrustes" (Default ro.method="mantel").}
 \item{method}{Correlation method, as accepted by cor: "pearson", "spearman" or "kendall".}
 \item{dist}{Dissimilarity index, as accepted by vegdist: "manhattan", "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao".}
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are measured on different scales (Default Scale = TRUE). Scale = TRUE if traits are measured on different scales, the matrix T is subjected to standardization within each trait. Scale = FALSE if traits are measured on the same scale, the matrix T is not subjected to standardization. Furthermore, if Scale = TRUE the matrix of traits is subjected to standardization within each trait, and  Gower Index is used to calculate the degree of belonging to the species, and if Scale = FALSE the matrix of traits is not subjected to standardization, and Euclidean distance is calculated to determine the degree of belonging to the species.}
 \item{scale.envir}{Logical argument (TRUE or FALSE) to specify if the environmental variables are measured on different scales (Default Scale = TRUE). If the enviromental variables are measured on different scales, the matrix is subjected to centralization and standardization within each variable.}
 \item{na.rm}{Logical argument (TRUE or FALSE) to specify if pairwise deletion of missing observations when computing dissimilarities (Default na.rm = FALSE).}
 \item{notification}{Logical argument (TRUE or FALSE) to specify if notifications of missing observations are shown (Default notification = TRUE).}
+\item{put.together}{List to specify group traits that are added or removed together (Default put.together = NULL). This argument must be a list, see examples.}
 \item{progressbar}{Logical argument (TRUE or FALSE) to specify if display a progress bar on the R console (Default progressbar = FALSE).}
+\item{x}{An object of class optimal.}
+\item{...}{Other parameters for the respective functions.}
 }
 
 \value{
@@ -59,6 +65,10 @@ optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5
 optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tdap")
 optimal(flona$community,flona$environment,flona$traits,
 	subset.min=3,subset.max=5,pattern="tcap.tdap")
+put.together<-list(c("fol","sem"),c("tam","red"))
+put.together
+optimal(flona$community,flona$environment,flona$traits,
+	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
 }
 
 \keyword{SYNCSA}

@@ -2,19 +2,18 @@
 \name{syncsa}
 \alias{syncsa}
 
-\title{Syncsa
-}
+\title{Syncsa}
 
 \description{
-This function integrates several steps for the analysis of phylogenetic assembly patterns and their links to traits and ecological processes in a metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). It requires data organized into the following matrices: (1) the presences or abundances of species in a set of communities (\strong{W}); (2) the phylogenetic pairwise dissimilarities of these species (\strong{DF}, in the range 0 to 1); (3) a set of functional traits describing the species (\strong{B}), which may be a mixture of binary and quantitative traits (ordinal, interval, ratio scales), but not nominal ones (these should be expanded into binary traits); and (4) the ecological gradient of interest, which may be one or more factors to which the communities respond or ecosystem effects of the communities (\strong{E}). The function computes several matrix correlations that express trait-convergence assembly patterns (TCAP), trait-divergence assembly patterns (TDAP), and phylogenetic signal in functional traits at the species pool level and at the metacomunity level. This function also generates P-values by permutation testing based on null models (Pillar et al. 2009, Pillar & Duarte 2010).
+This function integrates several steps for the analysis of phylogenetic assembly patterns and their links to traits and ecological processes in a metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). It requires data organized into the following matrices: (1) the presences or abundances of species in a set of communities (\strong{W}); (2) the phylogenetic pairwise dissimilarities of these species (\strong{DF}, in the range 0 to 1); (3) a set of functional traits describing the species (\strong{B}), which may be a mixture of binary and quantitative traits (ordinal, interval, ratio scales), but not nominal ones (these should be expanded into binary traits); and (4) the ecological gradient of interest, which may be one or more factors to which the communities respond or ecosystem effects of the communities (\strong{E}). The function computes several correlations (Mantel or Procrustes) that express trait-convergence assembly patterns (TCAP), trait-divergence assembly patterns (TDAP), and phylogenetic signal in functional traits at the species pool level and at the metacomunity level. This function also generates P-values by permutation testing based on null models (Pillar et al. 2009, Pillar & Duarte 2010).
 
 The function implement methods that have been available in the SYNCSA application written in C++ (by Valério Pillar, available at http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html).
 }
 
 \usage{
-syncsa(comm, traits, dist.spp, envir, method = "pearson", dist = "euclidean",
-		scale = TRUE, scale.envir = TRUE, permutations = 999, na.rm = FALSE, 
-		notification = TRUE)
+syncsa(comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson",
+        dist = "euclidean",scale = TRUE, scale.envir = TRUE, permutations = 999, 
+        strata = NULL, na.rm = FALSE, notification = TRUE)
 }
 
 \arguments{
@@ -22,11 +21,13 @@ syncsa(comm, traits, dist.spp, envir, method = "pearson", dist = "euclidean",
 \item{traits}{Matrix data of species described by traits, with traits as columns and species as rows.}
 \item{dist.spp}{Matrix containing phylogenetic distance between species. Must be a complete matrix (not a half diagonal matrix).}
 \item{envir}{Environmental variables for each community, with variables as columns and sampling units as rows.}
-\item{method}{Correlation method, as accepted by cor: "pearson", "spearman" or "kendall".}
-\item{dist}{Dissimilarity index, as accepted by vegdist: "manhattan", "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao". However, some of these will not make sense in this case.}
+\item{ro.method}{Method to obtain the correlation, "mantel" or "procrustes" (Default ro.method="mantel").}
+\item{method}{Mantel correlation method, as accepted by cor: "pearson", "spearman" or "kendall".}
+\item{dist}{Dissimilarity index used for Mantel correlation, as accepted by vegdist: "manhattan", "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao". However, some of these will not make sense in this case.}
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are measured on different scales (Default Scale = TRUE). Scale = TRUE if traits are measured on different scales, the matrix T is subjected to standardization within each trait. Scale = FALSE if traits are measured on the same scale, the matrix T is not subjected to standardization. Furthermore, if Scale = TRUE the matrix of traits is subjected to standardization within each trait, and  Gower Index is used to calculate the degree of belonging to the species, and if Scale = FALSE the matrix of traits is not subjected to standardization, and Euclidean distance is calculated to determine the degree of belonging to the species.}
 \item{scale.envir}{Logical argument (TRUE or FALSE) to specify if the environmental variables are measured on different scales (Default Scale = TRUE). If the enviromental variables are measured on different scales, the matrix is subjected to centralization and standardization within each variable.}
 \item{permutations}{Number of permutations in assessing significance.}
+\item{strata}{Argument to specify restricting permutations within species groups (Default strata = NULL).}
 \item{na.rm}{Logical argument (TRUE or FALSE) to specify if pairwise distances should be deleted in cases of missing observations (Default na.rm = FALSE).}
 \item{notification}{Logical argument (TRUE or FALSE) to specify if notification of missing observations should to be shown (Default notification = TRUE).}
 }
@@ -34,11 +35,11 @@ syncsa(comm, traits, dist.spp, envir, method = "pearson", dist = "euclidean",
 \details{
 \strong{ro(TE)}
 
-This matrix correlation refers to trait-convergence assembly patterns related to the ecological gradient (TCAP, Pillar et al. 2009). For evaluating TCAP, by matrix multiplication we define \strong{T = WB}, which with previous standardization of \strong{W} to unit column totals will contain the trait averages in each community. The elements in \strong{T} are community weighted mean values or community functional parameters (Violle et al. 2007). Standardization of the traits (rows) in \strong{T} is needed if the trait set contains traits measured with different scales. By using matrix correlation, we evaluate how the trait patterns in \strong{T} are associated to ecological gradients in \strong{E}. For relating \strong{T} to \strong{E}, we define a distance matrix of the communities (\strong{DT}) using \strong{T}, and another distance matrix of the community sites (\strong{DE}) using \strong{E}. The matrix correlation ro(\strong{TE}) = ro(\strong{DT};\strong{DE}) measures the level of congruence between TCAP and \strong{E}. A strong correlation ro(\strong{TE}) indicates the factors directly or indirectly represented in \strong{E} are involved in ecological filtering of species that, at least for the traits considered in the analysis, consistently produce trait-convergence assembly patterns along the gradient comprising the metacommunity.
+This correlation refers to trait-convergence assembly patterns related to the ecological gradient (TCAP, Pillar et al. 2009). For evaluating TCAP, by matrix multiplication we define \strong{T = WB}, which with previous standardization of \strong{W} to unit column totals will contain the trait averages in each community. The elements in \strong{T} are community weighted mean values or community functional parameters (Violle et al. 2007). Standardization of the traits (rows) in \strong{T} is needed if the trait set contains traits measured with different scales. By using matrix correlation, we evaluate how the trait patterns in \strong{T} are associated to ecological gradients in \strong{E}. For relating \strong{T} to \strong{E}, using Mantel correlation we define a distance matrix of the communities (\strong{DT}) using \strong{T}, and another distance matrix of the community sites (\strong{DE}) using \strong{E}. The matrix correlation ro(\strong{TE}) = ro(\strong{DT};\strong{DE}) measures the level of congruence between TCAP and \strong{E}. A strong correlation ro(\strong{TE}) indicates the factors directly or indirectly represented in \strong{E} are involved in ecological filtering of species that, at least for the traits considered in the analysis, consistently produce trait-convergence assembly patterns along the gradient comprising the metacommunity.
 
 \strong{ro(XE) and ro(XE.T)}
 
-These matrix correlations refer to trait-divergence assembly patterns related to the ecological gradient (TDAP, Pillar et al. 2009). For the identification of TDAP, in a first step the species pairwise similarities (in the range 0 to 1) in matrix \strong{SB} based on traits in \strong{B} are used to define matrix \strong{U} with degrees of belonging of species to fuzzy sets. By matrix multiplication \strong{X = WU} will contain the species composition of the communities after fuzzy-weighting by their trait similarities (each row in \strong{X} will refer to a species). Matrix \strong{X} expresses both TCAP and TDAP (Pillar et al. 2009). By using matrix correlation, we evaluate how the trait patterns in \strong{X} (TCAP and TDAP) are associated to ecological gradients in \strong{E}. For relating \strong{X} to \strong{E}, we define a distance matrix of the communities (\strong{DX}) using \strong{X}, and another distance matrix of the community sites (\strong{DE}) using \strong{E}. The matrix correlation ro(\strong{XE}) = ro(\strong{DX};\strong{DE}) between \strong{X} and \strong{E} is defined. We then remove the trait-convergence component ro(\strong{TE}) from ro(\strong{XE}) by computing the partial matrix (Mantel) correlation ro(\strong{XE.T}), which measures the level of congruence between TDAP and \strong{E}. Trait-divergence assembly patterns (TDAP, Pillar et al. 2009) may result from community assembly processes related to biotic interactions (Stubbs & Wilson 2004; Wilson 2007). 
+These matrix correlations refer to trait-divergence assembly patterns related to the ecological gradient (TDAP, Pillar et al. 2009). For the identification of TDAP, in a first step the species pairwise similarities (in the range 0 to 1) in matrix \strong{SB} based on traits in \strong{B} are used to define matrix \strong{U} with degrees of belonging of species to fuzzy sets. By matrix multiplication \strong{X = WU} will contain the species composition of the communities after fuzzy-weighting by their trait similarities (each row in \strong{X} will refer to a species). Matrix \strong{X} expresses both TCAP and TDAP (Pillar et al. 2009). By using matrix correlation, we evaluate how the trait patterns in \strong{X} (TCAP and TDAP) are associated to ecological gradients in \strong{E}. For relating \strong{X} to \strong{E}, we define a distance matrix of the communities (\strong{DX}) using \strong{X}, and another distance matrix of the community sites (\strong{DE}) using \strong{E}. The matrix correlation ro(\strong{XE}) = ro(\strong{DX};\strong{DE}) between \strong{X} and \strong{E} is defined. We then remove the trait-convergence component ro(\strong{TE}) from ro(\strong{XE}) by computing the partial matrix correlation ro(\strong{XE.T}), which measures the level of congruence between TDAP and \strong{E}. Trait-divergence assembly patterns (TDAP, Pillar et al. 2009) may result from community assembly processes related to biotic interactions (Stubbs & Wilson 2004; Wilson 2007). 
 
 \strong{ro(PE)}
 
@@ -56,6 +57,12 @@ This matrix correlation measures phylogenetic signal at the species pool level (
 \strong{Additional matrix correlations} 
 
 The matrix correlations ro(\strong{TE.P}) and ro(\strong{XE.P}) are also computed, which may be useful for evaluating causal models in path analysis.
+
+\strong{Mantel correlations} 
+
+\strong{Procrustes correlations} 
+
+\strong{Partial correlations}
 
 \strong{Testing against null models}
 
