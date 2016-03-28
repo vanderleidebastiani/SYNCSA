@@ -20,7 +20,9 @@ function (comm, traits, dist.spp, envir)
 		match.names<-match(colnames(comm), rownames(traits))
 		if(sum(is.na(match.names))>0)
 		{
-		stop("\n There are species from community data that are not on traits matrix\n")
+		print("There are species from community data that are not on traits matrix:",quote=FALSE)
+		print(setdiff(colnames(comm), rownames(traits)))
+		stop("\n Species not found on traits matrix\n")
 		}
 		traits<-as.matrix(traits[match.names,])
 		}
@@ -34,7 +36,9 @@ function (comm, traits, dist.spp, envir)
 		match.names<-match(colnames(comm), colnames(dist.spp))
 		if(sum(is.na(match.names))>0)
 		{
-		stop("\n There are species from community data that are not on phylogenetic distance matrix\n")
+		print("There are species from community data that are not on phylogenetic distance matrix:",quote=FALSE)
+		print(setdiff(colnames(comm), colnames(dist.spp)))
+		stop("\n Species not found on phylogenetic distance matrix\n")
 		}
 	dist.spp<-as.matrix(dist.spp[match.names,match.names])
 	}
@@ -48,7 +52,9 @@ function (comm, traits, dist.spp, envir)
 		match.names<-match(rownames(comm), rownames(envir))
 		if(sum(is.na(match.names))>0)
 		{
-		stop("\n The are community that are not on environmental matrix\n")
+		print("The are community that are not on environmental matrix:",quote=FALSE)
+		print(setdiff(rownames(comm), rownames(envir)))
+		stop("\n Sampling units not found on environmental matrix\n")
 		}
 		envir<-as.matrix(envir[match.names,])   
     }
