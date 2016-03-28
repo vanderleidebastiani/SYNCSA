@@ -2,8 +2,13 @@
 exportPattern(".")
 
 # Import all packages listed as Imports or Depends
-import(
-  vegan
-)
+importFrom(vegan, vegdist)
+importFrom(vegan, mantel)
+importFrom(vegan, wcmdscale)
+importFrom(vegan, procrustes)
+importFrom(vegan, protest)
 importFrom(mice, mice)
 importFrom(FD, gowdis)
+importFrom(permute, how)
+
+
