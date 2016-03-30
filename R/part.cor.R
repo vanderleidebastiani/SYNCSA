@@ -1,3 +1,11 @@
+#' First-order partial correlation coefficient
+#' 
+#' Internal function to obtain the first-order partial correlation coefficient.
+#' 
+#' 
+#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @keywords SYNCSA
+#' @export
 part.cor <- function(rxy, rxz, ryz)
 {
 	rxy<-round(rxy,10)

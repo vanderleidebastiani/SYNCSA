@@ -4,7 +4,7 @@
 \docType{data}
 \title{Hypothetical data for SYNCSA}
 \usage{
-  data(flona)
+data(flona)
 }
 \description{Hypothetical data for running examples.}
 \format{
