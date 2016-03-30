@@ -1,5 +1,5 @@
 #' Syncsa
-#' 
+#'
 #' This function integrates several steps for the analysis of phylogenetic
 #' assembly patterns and their links to traits and ecological processes in a
 #' metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). It requires data
@@ -17,13 +17,13 @@
 #' functional traits at the species pool level and at the metacomunity level.
 #' This function also generates P-values by permutation testing based on null
 #' models (Pillar et al. 2009, Pillar & Duarte 2010).
-#' 
+#'
 #' The function implement methods that have been available in the SYNCSA
 #' application written in C++ (by Valério Pillar, available at
 #' http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html).
-#' 
+#'
 #' \strong{ro(TE)}
-#' 
+#'
 #' This correlation refers to trait-convergence assembly patterns related to
 #' the ecological gradient (TCAP, Pillar et al. 2009). For evaluating TCAP, by
 #' matrix multiplication we define \strong{T = WB}, which with previous
@@ -43,9 +43,9 @@
 #' involved in ecological filtering of species that, at least for the traits
 #' considered in the analysis, consistently produce trait-convergence assembly
 #' patterns along the gradient comprising the metacommunity.
-#' 
+#'
 #' \strong{ro(XE) and ro(XE.T)}
-#' 
+#'
 #' These matrix correlations refer to trait-divergence assembly patterns
 #' related to the ecological gradient (TDAP, Pillar et al. 2009). For the
 #' identification of TDAP, in a first step the species pairwise similarities
@@ -67,9 +67,9 @@
 #' \strong{E}. Trait-divergence assembly patterns (TDAP, Pillar et al. 2009)
 #' may result from community assembly processes related to biotic interactions
 #' (Stubbs & Wilson 2004; Wilson 2007).
-#' 
+#'
 #' \strong{ro(PE)}
-#' 
+#'
 #' This matrix correlation refers to the phylogenetic structure related to the
 #' ecological gradient comprising the metacommunity. The phylogenetic pairwise
 #' dissimilarities in \strong{DF} are transformed into similarities and used to
@@ -95,9 +95,9 @@
 #' distances based on their ecological conditions (\strong{DE}). Further,
 #' \strong{P} can be explored for phylogenetic patterns at the metacommunity
 #' level by using, e.g., ordination techniques.
-#' 
+#'
 #' \strong{ro(PT) and ro(PX.T)}
-#' 
+#'
 #' These matrix correlations measure phylogenetic signal at the metacommunity
 #' level related to TCAP and to TDAP. We define phylogenetic signal at the
 #' metacommunity level related to TCAP (PSMT) as the correlation between the
@@ -118,9 +118,9 @@
 #' species composition after fuzzy-weighting by the species‚ or trait
 #' similarities, removing the effect of TCAP (\strong{DT}). This is analogous
 #' to TDAP.
-#' 
+#'
 #' \strong{ro(BF)}
-#' 
+#'
 #' This matrix correlation measures phylogenetic signal at the species pool
 #' level (PSS, Pillar & Duarte 2010). We define PSS as the matrix correlation
 #' ro(\strong{FB}) = ro(\strong{DF};\strong{DB}) between species phylogenetic
@@ -128,20 +128,20 @@
 #' dissimilarities (derived from already defined matrix \strong{SB}) computed
 #' on any number of traits from matrix \strong{B}. The species pool refers to
 #' the species present in the metacommunity.
-#' 
+#'
 #' \strong{Additional matrix correlations}
-#' 
+#'
 #' The matrix correlations ro(\strong{TE.P}) and ro(\strong{XE.P}) are also
 #' computed, which may be useful for evaluating causal models in path analysis.
-#' 
+#'
 #' \strong{Mantel correlations}
-#' 
+#'
 #' \strong{Procrustes correlations}
-#' 
+#'
 #' \strong{Partial correlations}
-#' 
+#'
 #' \strong{Testing against null models}
-#' 
+#'
 #' All the matrix correlations are tested against null models. The null model
 #' is defined accoding to the correlation being tested. For ro(\strong{TE}),
 #' each permutation generates a random matrix \strong{T} calculated after the
@@ -156,7 +156,7 @@
 #' are used for testing the additional matrix correlations; that is, the same
 #' null model for ro(\strong{TE}) is used for ro(\strong{TE.P}), the same model
 #' for ro(\strong{XE}) is used for ro(\strong{XE.P}).
-#' 
+#'
 #' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
@@ -204,13 +204,13 @@
 #' @note The function calculates the correlations despite the lack of one of
 #' the matrices, provided that community data had been entered. Correlations
 #' including unspecified matrices will appear with ro = 0.
-#' 
+#'
 #' \strong{IMPORTANT}: The sequence of species in the community data matrix
 #' MUST be the same as that in the phylogenetic distance matrix and in traits
 #' matrix. Similarly, the sequence of communities in the community data matrix
 #' MUST be the same as that in the environmental data matrix. See
 #' \code{\link{organize.syncsa}}.
-#' 
+#'
 #' The functions ignore missing data when specified. In the case of direct
 #' multiplication of matrices (matrices \strong{W} and matrix \strong{B}) the
 #' missing data are replaced by 0, ignoring the cell with missing value. Result
@@ -226,37 +226,37 @@
 #' \code{\link{matrix.p}}, \code{\link{optimal}}, \code{\link{belonging}},
 #' \code{\link{organize.syncsa}}, \code{\link{rao.diversity}}
 #' @references
-#' 
+#'
 #' Pillar, V.D.; Duarte, L.d.S. (2010). A framework for metacommunity analysis
 #' of phylogenetic structure. Ecology Letters, 13, 587-596.
-#' 
+#'
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
 #' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
-#' 
+#'
 #' Pillar, V.D. & Orlóci, L. (1991). Fuzzy components in community level
 #' comparisons. In: Computer Assisted Vegetation Analysis (eds Feoli, E. &
 #' Orlóci, L.). Kluwer, Dordrecht, pp. 87–93.
-#' 
+#'
 #' Stubbs, W.J. & Wilson, J.B. (2004). Evidence for limiting similarity in a
 #' sand dune community. Journal of Ecology, 92, 557–567.
-#' 
+#'
 #' Violle, C., Navas, M.L., Vile, D., Kazakou, E., Fortunel, C., Hummel, I. &
 #' Garnier, E. (2007). Let the concept of trait be functional! Oikos, 116,
 #' 882–892.
-#' 
+#'
 #' Wilson, J.B. (2007). Trait-divergence assembly rules have been demonstrated:
 #' limiting similarity lives! A reply to Grime. Journal of Vegetation Science,
 #' 18, 451–452.
 #' @keywords SYNCSA
 #' @examples
-#' 
+#'
 #' data(flona)
 #' syncsa(comm=flona$community,traits=flona$traits,dist.spp=flona$phylo,envir=flona$environment)
 #' syncsa(flona$community,traits=flona$traits,envir=flona$environment)
-#' 
+#'
 #' @export
-syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, na.rm = FALSE, notification = TRUE) 
+syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, na.rm = FALSE, notification = TRUE)
 {
     N <- permutations
     roTE <- 0
@@ -292,21 +292,21 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     		c.NA <- apply(comm, 2, is.na)
     		if(length(which(unique(as.vector(c.NA))==TRUE))>0)
     		{
-				warning("Warning: NA in community data",call.=FALSE)	
+				warning("Warning: NA in community data",call.=FALSE)
     		}
     	}
     	if (!missing(traits) == "TRUE") {
 			t.NA <- apply(traits, 2, is.na)
     		if(length(which(unique(as.vector(t.NA))==TRUE))>0)
     		{
-				warning("Warning: NA in traits matrix",call.=FALSE)	
+				warning("Warning: NA in traits matrix",call.=FALSE)
     		}
 		}
 		if (!missing(envir) == "TRUE") {
 			e.NA <- apply(envir, 2, is.na)
 			if(length(which(unique(as.vector(e.NA))==TRUE))>0)
     		{
-				warning("Warning: NA in environmental data",call.=FALSE)	
+				warning("Warning: NA in environmental data",call.=FALSE)
     		}
 		}
     }
@@ -376,12 +376,12 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
 	            roPT <- pro.matrix(W, Q, P, T, permutations = N, strata = strata)
     	        roPX.T <- pro.matrix.partial(W, Q, P, X, T, permutations = N, strata = strata)
     	    }
-    	    if(romethod == 1){    
+    	    if(romethod == 1){
             	dist.traits <- vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
 	            if (scale == "TRUE") {
     	            dist.traits <- vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
         	    }
-            	BF <- mantel(dist.traits, dist.spp, method = method, permutations = N, strata = strata, na.rm = na.rm)
+            	BF <- vegan::mantel(dist.traits, dist.spp, method = method, permutations = N, strata = strata, na.rm = na.rm)
 	            roBF <- c(BF$statistic, BF$signif)
             }
             if(romethod == 2){
