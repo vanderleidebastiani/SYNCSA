@@ -1,9 +1,9 @@
 #' Matrix X
-#' 
+#'
 #' Function to obtain a matrix containing trait-weighted species composition.
 #' For more details, see \code{\link{syncsa}}.
-#' 
-#' 
+#'
+#'
 #' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
@@ -35,18 +35,18 @@
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 #' 587-596.
-#' 
+#'
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
 #' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
 #' @keywords SYNCSA
 #' @examples
-#' 
+#'
 #' data(flona)
 #' matrix.x(flona$community,flona$traits,scale=TRUE)
-#' 
+#'
 #' @export
-matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE) 
+matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE)
 {
 	comm<-as.matrix(comm)
 	traits<-as.matrix(traits)
@@ -56,37 +56,37 @@ matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE)
     if(notification==TRUE){
     	if(length(which(unique(as.vector(w.NA))==TRUE))>0)
     	{
-			warning("Warning: NA in community data",call.=FALSE)		
+			warning("Warning: NA in community data",call.=FALSE)
     	}
     }
     x.NA <- apply(traits, 2, is.na)
     if(notification==TRUE){
     	if(length(which(unique(as.vector(x.NA))==TRUE))>0)
     	{
-			warning("Warning: NA in traits matrix",call.=FALSE)		
+			warning("Warning: NA in traits matrix",call.=FALSE)
     	}
     }
-    
+
     if (scale == "TRUE") {
-        dist.traits <- vegdist(traits, method = "gower", diag = TRUE, upper = TRUE,na.rm=TRUE)
+        dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE,na.rm=TRUE)
         similar.traits <- 1 - as.matrix(dist.traits)
         matrix.traits <- 1/colSums(similar.traits,na.rm=TRUE)
         matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
     }
     else{
-    	dist.traits <- as.matrix(vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE,na.rm =TRUE))
+    	dist.traits <- as.matrix(vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE,na.rm =TRUE))
 	    similar.traits <- 1 - (dist.traits/max(dist.traits,na.rm=TRUE))
     	matrix.traits <- 1/colSums(similar.traits,na.rm=TRUE)
 	    matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
     }
 	u.NA <- apply(matrix.u, 2, is.na)
     if (notification == TRUE) {
-        if (length(which(unique(as.vector(u.NA)) == TRUE)) > 
+        if (length(which(unique(as.vector(u.NA)) == TRUE)) >
             0) {
             warning("Warning: NA in matrix U", call. = FALSE)
         }
     }
-    matrix.u[u.NA] <- 0 
+    matrix.u[u.NA] <- 0
     matrix.X <- matrix.w %*% matrix.u
     return(list(matrix.w = matrix.w, matrix.u = matrix.u, matrix.X = matrix.X))
 }
