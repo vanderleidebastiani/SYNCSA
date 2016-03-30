@@ -1,5 +1,6 @@
-#'@rdname procrustes.syncsa
-#'@export
+#' @rdname procrustes.syncsa
+#' @encoding UTF-8
+#' @export
 procrustes.partial<-function(x, y, z)
 {
 	x <- as.matrix(x)

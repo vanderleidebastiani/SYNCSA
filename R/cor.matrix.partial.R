@@ -1,5 +1,6 @@
-#'@rdname cor.matrix
-#'@export
+#' @rdname cor.matrix
+#' @encoding UTF-8
+#' @export
 cor.matrix.partial<-function (m1, m2, x, y, z, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE) 
 {
     m1<-as.matrix(m1)
