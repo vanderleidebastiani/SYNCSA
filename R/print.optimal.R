@@ -1,3 +1,5 @@
+#'@rdname optimal
+#'@export
 print.optimal<-function(x , ...){
 	n = 10
     if (dim(x$optimization)[1] < n) {

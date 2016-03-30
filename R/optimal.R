@@ -6,6 +6,7 @@
 #' more details, see \code{\link{syncsa}}.
 #' 
 #' 
+#' @encoding UTF-8
 #' @aliases optimal print.optimal
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.

@@ -11,6 +11,7 @@
 #' and applied the first-order partial correlation coefficient, in the same way
 #' that the partial Mantel.
 #' 
+#' @encoding UTF-8
 #' @aliases procrustes.syncsa procrustes.partial
 #' @param x,y Matrix that will be correlated.
 #' @param z Matrix whose effect will be removed from the correlation between x

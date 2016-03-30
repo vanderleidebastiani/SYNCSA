@@ -3,6 +3,10 @@
 #' Internal function to obtain the first-order partial correlation coefficient.
 #' 
 #' 
+#' @encoding UTF-8
+#' @param rxy Correlation between xy
+#' @param rxz Correlation between xz
+#' @param ryz Correlation between yz
 #' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export

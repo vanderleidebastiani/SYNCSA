@@ -1,3 +1,5 @@
+#'@rdname cor.matrix
+#'@export
 pro.matrix.partial<-function (m1, m2, x, y, z, permutations = 999, norm = FALSE, strata = NULL)
 {
 	m1 <- as.matrix(m1)

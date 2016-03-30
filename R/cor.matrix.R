@@ -15,6 +15,7 @@
 #' Null model described by Pillar et al. (2009) and Pillar & Duarte (2010). For
 #' more details on the matrices and the null model, see \code{\link{syncsa}}.
 #' 
+#' @encoding UTF-8
 #' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial
 #' @param m1 Matrix that multiplied by m2 results in the matrix x.
 #' @param m2 Matrix that when multiplied by m1 results in the matrix x. See

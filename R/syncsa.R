@@ -157,6 +157,7 @@
 #' null model for ro(\strong{TE}) is used for ro(\strong{TE.P}), the same model
 #' for ro(\strong{XE}) is used for ro(\strong{XE.P}).
 #' 
+#' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
 #' @param traits Matrix data of species described by traits, with traits as

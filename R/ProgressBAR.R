@@ -3,6 +3,10 @@
 #' Text progress bar in the R console. See \code{\link{txtProgressBar}}.
 #' 
 #' 
+#' @encoding UTF-8
+#' @param n Number of current progress
+#' @param N Total number of cases
+#' @param ... Other parameters for the txtProgressBar function
 #' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export

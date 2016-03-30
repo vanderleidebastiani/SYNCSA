@@ -8,6 +8,7 @@
 #' distance and environmental varibles in the same order.
 #' 
 #' 
+#' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows.
 #' @param traits Matrix data of species described by traits, with traits as

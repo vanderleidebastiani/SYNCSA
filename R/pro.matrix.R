@@ -1,3 +1,5 @@
+#'@rdname cor.matrix
+#'@export
 pro.matrix<-function (m1, m2, x, y, permutations = 999, norm = FALSE, strata = NULL) 
 {
 	x <- cbind(x)

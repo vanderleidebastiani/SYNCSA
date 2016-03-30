@@ -1,3 +1,5 @@
+#'@rdname procrustes.syncsa
+#'@export
 procrustes.partial<-function(x, y, z)
 {
 	x <- as.matrix(x)

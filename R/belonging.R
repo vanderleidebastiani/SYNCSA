@@ -6,6 +6,7 @@
 #' \code{\link{matrix.x}} and \code{\link{syncsa}}.
 #' 
 #' 
+#' @encoding UTF-8
 #' @param dis Matrix containing distance between species.
 #' @param standardize Logical argument (TRUE or FALSE) to specify if dis must
 #' be standardized in values ranging from 0 to 1 (Default standardize = TRUE).

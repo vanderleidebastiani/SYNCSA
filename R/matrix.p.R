@@ -4,6 +4,7 @@
 #' composition. For more details, see \code{\link{syncsa}}.
 #' 
 #' 
+#' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
 #' @param dist.spp Matrix containing phylogenetic distance between species.

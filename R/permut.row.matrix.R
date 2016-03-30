@@ -3,6 +3,10 @@
 #' Internal function to permutate rows in a matrix.
 #' 
 #' 
+#' @encoding UTF-8
+#' @param matrix A matrix
+#' @param strata Argument to specify restricting permutations in rows 
+#' (Default strata = NULL).
 #' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export

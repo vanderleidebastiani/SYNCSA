@@ -3,6 +3,10 @@
 #' Internal function for centralization and standardization in a matrix.
 #' 
 #' 
+#' @encoding UTF-8
+#' @param x A matrix
+#' @param na.rm Logical argument (TRUE or FALSE) to specify if missing
+#' observations are removed (Default na.rm = FALSE).
 #' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export
