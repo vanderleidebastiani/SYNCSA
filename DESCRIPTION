@@ -9,7 +9,6 @@ Maintainer: Vanderlei Julio Debastiani
     <vanderleidebastiani@yahoo.com.br>
 Imports:
     vegan,
-    mice,
     FD,
     permute
 Description: Analysis of metacommunities based on functional traits and
