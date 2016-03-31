@@ -220,7 +220,7 @@
 #' In some cases the dissimilarity matrices obtained by the function
 #' \code{\link{vegdist}} still contain some missing values. In these cases the
 #' rest of the procedure will be affected. In these cases you can find
-#' solutions in the package \code{\link{mice}}.
+#' solutions in the package \code{\link[mice]{mice}}.
 #' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{matrix.p}}, \code{\link{optimal}}, \code{\link{belonging}},
@@ -386,8 +386,8 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             }
             if(romethod == 2){
 			    dist.spp.t <- sweep(dist.spp, 2, sqrt(apply(dist.spp^2,2,sum)), "/")
-			    vectors <- wcmdscale(dist.spp.t,eig = TRUE)$points
-				BF <- suppressWarnings(protest(vectors,traits,permutations = how(nperm = N, blocks = strata)))
+			    vectors <- vegan::wcmdscale(dist.spp.t,eig = TRUE)$points
+				BF <- suppressWarnings(vegan::protest(vectors,traits,permutations = permute::how(nperm = N, blocks = strata)))
 	            roBF <- c(sqrt(1 - BF$ss), BF$signif)
             }
         }
