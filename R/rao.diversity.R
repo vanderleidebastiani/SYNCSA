@@ -1,25 +1,25 @@
 #' Rao's quadratic entropy
-#' 
+#'
 #' Calculates Rao's quadratic entropy, functional and phylogenetic redundancy.
-#' 
+#'
 #' Rao's quadratic entropy is a measure of diversity of ecological communities
 #' defined by Rao (1982) and is based on the proportion of the abundance of
 #' species present in a community and some measure of dissimilarity among them.
 #' The dissimilarity range from 0 to 1 and is based on a set of specified
 #' functional traits or in the phylogenetic dissimilarity.
-#' 
+#'
 #' For the trait data , the function calculates the square root of the
 #' one-complement of Gower’s similarity index, in order to have a dissimilarity
 #' matrix with Euclidean metric properties. Gower’s index ranges from 0 to 1
 #' and can handle traits measured indifferent scales. When the species are
 #' completely different in terms of their traits, Rao quadratic entropy is
 #' equivalent to the Gini–Simpson index.
-#' 
+#'
 #' Functional redundancy is defined purely as the difference between species
 #' diversity and Rao’s quadratic entropy based on their functional
 #' dissimilarity (de Bello et al. 2007). The same definition is used for
 #' phylogenetic redundancy.
-#' 
+#'
 #' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
@@ -47,20 +47,20 @@
 #' @references de Bello, F.; Leps, J.; Lavorel, S. & Moretti, M. (2007).
 #' Importance of species abundance for assessment of trait composition: an
 #' example based on pollinator communities. Community Ecology, 8, 163–170.
-#' 
+#'
 #' Pillar, V.D.; Blanco, C.C.; Muler, S.C.; Sosinski, E.E.; Joner, F. & Duarte,
 #' L.d.S. (2013). Functional redundancy and stability in plant communities.
 #' Journal of Vegetation Science, 24, 963-974.
-#' 
+#'
 #' Rao, C.R. (1982). Diversity and dissimilarity coefficients: a unified
 #' approach. Theoretical Population Biology, 21, 24–43.
 #' @keywords SYNCSA
 #' @examples
-#' 
+#'
 #' data(flona)
 #' rao.diversity(flona$community)
 #' rao.diversity(flona$community,traits=flona$traits)
-#' 
+#'
 #' @export
 rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
 	comm <- as.matrix(comm)
@@ -81,9 +81,9 @@ rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
         }
     		traits<-as.data.frame(traits[match.names,])
     	}
-    	D1<-as.matrix(gowdis(x=traits,...))
+    	D1<-as.matrix(FD::gowdis(x=traits,...))
     	S1<-1-D1
-    	tij<-sqrt(1-S1)	
+    	tij<-sqrt(1-S1)
     }
     if (!is.null(phylodist)) {
 		if (checkdata) {
@@ -101,23 +101,23 @@ rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
             stop("\n There are species from community data that are not on phylogenetic distance matrix\n")
         }
         phylodist <- as.matrix(phylodist[match.names, match.names])
-    	}	
+    	}
     	D1<-as.matrix(phylodist)
     	tij3<-D1/max(D1)
     }
 	comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
 	inter<-comm%*%tij2
-	SD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))	
+	SD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))
 	if (!is.null(traits)){
 		inter<-comm%*%tij
-		RD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))	
+		RD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))
 	}
 	if (!is.null(phylodist)){
 		inter<-comm%*%tij3
-		FRD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))	
+		FRD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))
 	}
     Res<-list(Simpson=SD)
-    if (!is.null(traits)){    
+    if (!is.null(traits)){
 		Res<-list(Simpson=SD,FunRao=RD,FunRedundancy=SD-RD)
     }
     if (!is.null(phylodist)){
@@ -126,5 +126,5 @@ rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
     if (!is.null(phylodist) & !is.null(traits)){
 		Res<-list(Simpson=SD,FunRao=RD,FunRedundancy=SD-RD,PhyRao=FRD,PhyRedundancy=SD-FRD)
     }
-return(Res)    
+return(Res)
 }

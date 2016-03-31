@@ -1,11 +1,11 @@
 #' Searching for optimal traits
-#' 
+#'
 #' Maximize trait-convergence assembly patterns (TCAP = roTE), trait-divergence
 #' assembly patterns (TDAP = roXE.T) or maximize both trait-divergence assembly
 #' patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE). For
 #' more details, see \code{\link{syncsa}}.
-#' 
-#' 
+#'
+#'
 #' @encoding UTF-8
 #' @aliases optimal print.optimal
 #' @param comm Community data, with species as columns and sampling units as
@@ -63,13 +63,13 @@
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 #' 587-596.
-#' 
+#'
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
 #' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
 #' @keywords SYNCSA
 #' @examples
-#' 
+#'
 #' data(flona)
 #' optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tcap")
 #' optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tdap")
@@ -79,12 +79,13 @@
 #' put.together
 #' optimal(flona$community,flona$environment,flona$traits,
 #' 	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
-#' 
+#'
 #' @export
-optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3, 
-    pattern = "tcap", ro.method = "mantel", dist = "euclidean", 
-    method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE, 
-    notification = TRUE, put.together = NULL, progressbar = FALSE) 
+#' @importFrom vegan vegdist
+optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
+    pattern = "tcap", ro.method = "mantel", dist = "euclidean",
+    method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE,
+    notification = TRUE, put.together = NULL, progressbar = FALSE)
 {
 	comm <- as.matrix(comm)
 	envir <- as.matrix(envir)
@@ -134,7 +135,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 		if(class(put.together)!="list"){
 			stop("\n The put.together must be a object of class list\n")
 		}
-		if(make.names){    	
+		if(make.names){
 			for(k in 1:length(put.together)){
 				put.together[[k]]<-paste("T", put.together[[k]],sep="")
 			}
@@ -182,7 +183,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits2<-intersect(choose.traits,unlist(put.together2))
 						choose.traits3<-c()
 						for(k in 1:length(choose.traits2)){
-							for(l in 1:length(put.together)){			        	
+							for(l in 1:length(put.together)){
 								if(choose.traits2[k]==put.together2[[l]]){
 									choose.traits3<-c(choose.traits3,put.together[[l]])
 								}
@@ -213,7 +214,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits2<-intersect(choose.traits,unlist(put.together2))
 						choose.traits3<-c()
 						for(k in 1:length(choose.traits2)){
-							for(l in 1:length(put.together)){			        	
+							for(l in 1:length(put.together)){
 								if(choose.traits2[k]==put.together2[[l]]){
 									choose.traits3<-c(choose.traits3,put.together[[l]])
 								}
@@ -250,7 +251,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits2<-intersect(choose.traits,unlist(put.together2))
 						choose.traits3<-c()
 						for(k in 1:length(choose.traits2)){
-							for(l in 1:length(put.together)){			        	
+							for(l in 1:length(put.together)){
 								if(choose.traits2[k]==put.together2[[l]]){
 									choose.traits3<-c(choose.traits3,put.together[[l]])
 								}
