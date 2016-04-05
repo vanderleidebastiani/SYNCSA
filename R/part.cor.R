@@ -7,7 +7,7 @@
 #' @param rxy Correlation between xy
 #' @param rxz Correlation between xz
 #' @param ryz Correlation between yz
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export
 part.cor <- function(rxy, rxz, ryz)

@@ -16,6 +16,7 @@
 #' more details on the matrices and the null model, see \code{\link{syncsa}}.
 #' 
 #' @encoding UTF-8
+#' @importFrom vegan vegdist
 #' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial
 #' @param m1 Matrix that multiplied by m2 results in the matrix x.
 #' @param m2 Matrix that when multiplied by m1 results in the matrix x. See
@@ -40,7 +41,7 @@
 #' na.rm = FALSE).
 #' @return \item{Obs}{Correlation between matrices.} \item{p}{Significance
 #' level based on permutations.}
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{procrustes}}, \code{\link{mantel}},
 #' \code{\link{syncsa}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
@@ -49,7 +50,7 @@
 #' 
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
-#' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
+#' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #' @keywords SYNCSA
 #' @export
 cor.matrix<-function (m1, m2, x, y, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE) 
@@ -58,8 +59,8 @@ cor.matrix<-function (m1, m2, x, y, method = "pearson", dist = "euclidean", perm
     m2<-as.matrix(m2)
     x<-as.matrix(x)
     y<-as.matrix(y)
-    dist.y <- vegdist(y, method = dist, na.rm = na.rm)
-    dist.x <- vegdist(x, method = dist, na.rm = na.rm)
+    dist.y <- vegan::vegdist(y, method = dist, na.rm = na.rm)
+    dist.x <- vegan::vegdist(x, method = dist, na.rm = na.rm)
     correlation <- cor(dist.x, dist.y, method = method)
     value <- matrix(NA, nrow = permutations, ncol = 1)
     for (i in 1: permutations) {
@@ -69,7 +70,7 @@ cor.matrix<-function (m1, m2, x, y, method = "pearson", dist = "euclidean", perm
             matrix.permut <- apply(x.permut^2, 2, sum)
             x.permut <- sweep(x.permut, 2, sqrt(matrix.permut), "/")
         }
-        dist.x.permut <- vegdist(x.permut, method = dist , na.rm = na.rm)
+        dist.x.permut <- vegan::vegdist(x.permut, method = dist , na.rm = na.rm)
         cor.x.permut <- cor(dist.x.permut, dist.y, method = method)
         value[i,] <- cor.x.permut
     }

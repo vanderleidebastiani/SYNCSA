@@ -17,7 +17,7 @@
 #' @param z Matrix whose effect will be removed from the correlation between x
 #' and y.
 #' @return Procrustes correlation between matrices.
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @references Peres-Neto, P.R. and Jackson, D.A. (2001). How well do
 #' multivariate data sets match? The advantages of a Procrustean
 #' superimposition approach over the Mantel test. Oecologia 129: 169-178.

@@ -7,7 +7,7 @@
 #' @param matrix A matrix
 #' @param strata Argument to specify restricting permutations in rows 
 #' (Default strata = NULL).
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export
 permut.row.matrix <- function(matrix, strata = NULL){

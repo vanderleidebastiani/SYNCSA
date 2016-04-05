@@ -19,7 +19,7 @@
 #' models (Pillar et al. 2009, Pillar & Duarte 2010).
 #'
 #' The function implement methods that have been available in the SYNCSA
-#' application written in C++ (by Valério Pillar, available at
+#' application written in C++ (by Valerio Pillar, available at
 #' http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html).
 #'
 #' \strong{ro(TE)}
@@ -74,7 +74,7 @@
 #' ecological gradient comprising the metacommunity. The phylogenetic pairwise
 #' dissimilarities in \strong{DF} are transformed into similarities and used to
 #' define degrees of belonging qij to fuzzy sets. This is analogous to the
-#' definition of functional fuzzy sets (Pillar & Orlóci 1991; Pillar et al.
+#' definition of functional fuzzy sets (Pillar & Orloci 1991; Pillar et al.
 #' 2009). Based on the phylogenetic similarities, every species i among s
 #' species in the metacommunity specifies a fuzzy set to which every species j
 #' (j = 1 to s species, including species i) belongs with a certain degree of
@@ -83,7 +83,7 @@
 #' of belonging of a given species across the fuzzy sets are standardized to
 #' unit total. By matrix multiplication \strong{P = WQ} will contain the
 #' composition of the communities after fuzzy-weighting of species presences or
-#' abundances by the species' phylogenetic similarities. Each column in matrix
+#' abundances by the species` phylogenetic similarities. Each column in matrix
 #' \strong{P} holds the phylogenetic structure of a community. The
 #' standardization of \strong{Q} is essential for the community totals in each
 #' column in \strong{W} remaining the same in \strong{P}. Further, matrix
@@ -115,7 +115,7 @@
 #' (PSMX.T) as the partial matrix correlation ro(\strong{PX.T}) =
 #' ro(\strong{DP};\strong{DX.DT}) between community distances DP computed on
 #' phylogenetic structure and community distances \strong{DX} computed on
-#' species composition after fuzzy-weighting by the species‚ or trait
+#' species composition after fuzzy-weighting by the species, or trait
 #' similarities, removing the effect of TCAP (\strong{DT}). This is analogous
 #' to TDAP.
 #'
@@ -158,6 +158,9 @@
 #' for ro(\strong{XE}) is used for ro(\strong{XE.P}).
 #'
 #' @encoding UTF-8
+#' @importFrom stats cor
+#' @importFrom vegan mantel wcmdscale protest vegdist
+#' @importFrom permute how
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
 #' @param traits Matrix data of species described by traits, with traits as
@@ -221,33 +224,33 @@
 #' \code{\link{vegdist}} still contain some missing values. In these cases the
 #' rest of the procedure will be affected. In these cases you can find
 #' solutions in the package \code{\link[mice]{mice}}.
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{matrix.p}}, \code{\link{optimal}}, \code{\link{belonging}},
 #' \code{\link{organize.syncsa}}, \code{\link{rao.diversity}}
 #' @references
 #'
 #' Pillar, V.D.; Duarte, L.d.S. (2010). A framework for metacommunity analysis
-#' of phylogenetic structure. Ecology Letters, 13, 587-596.
+#' of phylogenetic structure. Ecology Letters, 13, 587:596.
 #'
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
-#' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
+#' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #'
-#' Pillar, V.D. & Orlóci, L. (1991). Fuzzy components in community level
+#' Pillar, V.D. & Orloci, L. (1991). Fuzzy components in community level
 #' comparisons. In: Computer Assisted Vegetation Analysis (eds Feoli, E. &
-#' Orlóci, L.). Kluwer, Dordrecht, pp. 87–93.
+#' Orloci, L.). Kluwer, Dordrecht, pp. 87:93.
 #'
 #' Stubbs, W.J. & Wilson, J.B. (2004). Evidence for limiting similarity in a
-#' sand dune community. Journal of Ecology, 92, 557–567.
+#' sand dune community. Journal of Ecology, 92, 557:567.
 #'
 #' Violle, C., Navas, M.L., Vile, D., Kazakou, E., Fortunel, C., Hummel, I. &
 #' Garnier, E. (2007). Let the concept of trait be functional! Oikos, 116,
-#' 882–892.
+#' 882:892.
 #'
 #' Wilson, J.B. (2007). Trait-divergence assembly rules have been demonstrated:
 #' limiting similarity lives! A reply to Grime. Journal of Vegetation Science,
-#' 18, 451–452.
+#' 18, 451:452.
 #' @keywords SYNCSA
 #' @examples
 #'
@@ -377,9 +380,9 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     	        roPX.T <- pro.matrix.partial(W, Q, P, X, T, permutations = N, strata = strata)
     	    }
     	    if(romethod == 1){
-            	dist.traits <- vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
+            	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
 	            if (scale == "TRUE") {
-    	            dist.traits <- vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
+    	            dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
         	    }
             	BF <- vegan::mantel(dist.traits, dist.spp, method = method, permutations = N, strata = strata, na.rm = na.rm)
 	            roBF <- c(BF$statistic, BF$signif)

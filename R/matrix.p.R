@@ -21,7 +21,7 @@
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
 #' matrix MUST be the same as they show up in phylogenetic distance matrix. See
 #' \code{\link{organize.syncsa}}.
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{syncsa}}, \code{\link{organize.syncsa}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for

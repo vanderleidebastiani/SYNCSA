@@ -7,7 +7,7 @@
 #' @param x A matrix
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if missing
 #' observations are removed (Default na.rm = FALSE).
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export
 cent.norm<-function (x,na.rm = FALSE) 

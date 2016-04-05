@@ -7,6 +7,7 @@
 #'
 #'
 #' @encoding UTF-8
+#' @importFrom vegan vegdist
 #' @aliases optimal print.optimal
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
@@ -58,7 +59,7 @@
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
 #' matrix MUST be the same as they show up in traits matrix. See
 #' \code{\link{organize.syncsa}}.
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
@@ -66,7 +67,7 @@
 #'
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
-#' ecological community gradients. Journal of Vegetation Science, 20, 334–348.
+#' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #' @keywords SYNCSA
 #' @examples
 #'
@@ -81,7 +82,6 @@
 #' 	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
 #'
 #' @export
-#' @importFrom vegan vegdist
 optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
     pattern = "tcap", ro.method = "mantel", dist = "euclidean",
     method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE,
@@ -126,7 +126,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 		envir <- cent.norm(envir, na.rm = na.rm)
 	}
 	if (romethod == 1) {
-		dist.y <- vegdist(envir, method = dist, na.rm = na.rm)
+		dist.y <- vegan::vegdist(envir, method = dist, na.rm = na.rm)
 	}
 	m <- dim(traits)[2]
 	p <- 1:subset.max
@@ -194,7 +194,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 				}
 				T <- matrix.t(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
 				if (romethod == 1) {
-					correlation[n, 1] <- cor(vegdist(as.matrix(T$matrix.T), method = dist, na.rm = na.rm), dist.y, method = method)
+					correlation[n, 1] <- cor(vegan::vegdist(as.matrix(T$matrix.T), method = dist, na.rm = na.rm), dist.y, method = method)
 					if (progressbar) {
 						ProgressBAR(n, nT, style = 3)
 					}
@@ -226,8 +226,8 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 				T <- matrix.t(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
 				X <- matrix.x(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
 				if (romethod == 1) {
-					dist.x <- vegdist(X$matrix.X, method = dist, na.rm = na.rm)
-					dist.z <- vegdist(T$matrix.T, method = dist, na.rm = na.rm)
+					dist.x <- vegan::vegdist(X$matrix.X, method = dist, na.rm = na.rm)
+					dist.z <- vegan::vegdist(T$matrix.T, method = dist, na.rm = na.rm)
 					rxy <- cor(dist.x, dist.y, method = method)
 					rxz <- cor(dist.x, dist.z, method = method)
 					ryz <- cor(dist.y, dist.z, method = method)
@@ -262,7 +262,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 				}
 				X <- matrix.x(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
 				if (romethod == 1) {
-					correlation[n, 1] <- cor(vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
+					correlation[n, 1] <- cor(vegan::vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
 					if (progressbar) {
 						ProgressBAR(n, nT, style = 3)
 					}

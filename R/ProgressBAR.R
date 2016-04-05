@@ -7,7 +7,7 @@
 #' @param n Number of current progress
 #' @param N Total number of cases
 #' @param ... Other parameters for the txtProgressBar function
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @keywords SYNCSA
 #' @export
 ProgressBAR<-function(n,N,...){

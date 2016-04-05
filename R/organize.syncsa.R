@@ -24,7 +24,7 @@
 #' @note The function organizes the matrices despite the absence of one of the
 #' matrices, provided that the community data had been entered. Unspecified
 #' matrices will appear as NULL.
-#' @author Vanderlei Júlio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{matrix.p}}, \code{\link{syncsa}}
 #' @keywords SYNCSA
