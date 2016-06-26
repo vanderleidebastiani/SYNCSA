@@ -41,9 +41,8 @@ matrix.p<-function (comm, dist.spp, notification = TRUE)
     matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")
 	w.NA <- apply(matrix.w, 2, is.na)
     matrix.w[w.NA] <-0
-    if(notification==TRUE){
-    	if(length(which(unique(as.vector(w.NA))==TRUE))>0)
-    	{
+    if(notification){
+    	if(any(w.NA)){
 			warning("Warning: NA in community data",call.=FALSE)		
     	}  	 
     }

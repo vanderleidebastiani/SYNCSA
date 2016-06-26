@@ -33,6 +33,9 @@
 #' trait and in the phylodist matrices (Default checkdata = TRUE).
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
 #' (Default ord = "classic").
+#' @param put.together List to specify group traits that are added or removed
+#' together (Default put.together = NULL). This argument must be a list, see
+#' examples.
 #' @param ... Parameters for \code{\link{gowdis}} function.
 #' @return \item{Simpson}{Gini-Simpson index within each community (equivalent
 #' to Rao quadratic entropy with null, crisp, similarities).} \item{FunRao}{Rao

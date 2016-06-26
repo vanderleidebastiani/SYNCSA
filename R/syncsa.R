@@ -207,6 +207,8 @@
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notification of missing observations should to be shown (Default
 #' notification = TRUE).
+#' @param x An object of class syncsa.
+#' @param ... Other parameters for the respective functions.
 #' @return Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
 #' and roBF, and their significance levels based on permutations.
 #' @note The function calculates the correlations despite the lack of one of

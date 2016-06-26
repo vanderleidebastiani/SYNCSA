@@ -18,11 +18,19 @@
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
 #' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial
-#' @param m1 Matrix that multiplied by m2 results in the matrix x.
-#' @param m2 Matrix that when multiplied by m1 results in the matrix x. See
+#' @param mx1 m1 Matrix that multiplied by mx2 results in the matrix x.
+#' @param mx2 m2 Matrix that when multiplied by mx1 results in the matrix x. See
+#' @param m1 Matrix that multiplied by mx2 results in the matrix x.
+#' @param m2 Matrix that when multiplied by mx1 results in the matrix x. See
 #' `details` below.
 #' @param x Matrix obtained by multiplication of m1 and m2.
+#' @param my1 Matrix that multiplied by my2 results in the matrix y.
+#' @param my2 Matrix that when multiplied by my1 results in the matrix y. See
+#' `details` below.
 #' @param y Matrix that will be correlated with the matrix x.
+#' @param mz1 Matrix that multiplied by mz2 results in the matrix z.
+#' @param mz2 Matrix that when multiplied by mz1 results in the matrix z. See
+#' `details` below.
 #' @param z Matrix whose effect will be removed from the correlation between x
 #' and y.
 #' @param method Correlation method, as accepted by cor: "pearson", "spearman"
@@ -34,6 +42,14 @@
 #' @param permutations Number of permutations in assessing significance.
 #' @param norm Logical argument (TRUE or FALSE) to specify if x is standardized
 #' within variables (Default norm = FALSE).
+#' @param norm.y Logical argument (TRUE or FALSE) to specify if y is standardized
+#' within variables (Default norm = FALSE).
+#' @param norm.z Logical argument (TRUE or FALSE) to specify if z is standardized
+#' within variables (Default norm = FALSE).
+#' @param permute.my2 Logical argument (TRUE or FALSE) to specify if realize 
+#' parallel permutation in matrix my2.
+#' @param permute.mz2 Logical argument (TRUE or FALSE) to specify if realize 
+#' parallel permutation in matrix mz2.
 #' @param strata Argument to specify restricting permutations within species
 #' groups (Default strata = NULL).
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
