@@ -15,6 +15,10 @@ syncsa(comm, traits, dist.spp, envir, ro.method = "mantel",
   notification = TRUE)
 }
 \arguments{
+\item{x}{An object of class syncsa.}
+
+\item{...}{Other parameters for the respective functions.}
+
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 

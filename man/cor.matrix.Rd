@@ -24,9 +24,9 @@ pro.matrix.partial(mx1, mx2, x, my1, my2, y, mz1, mz2, z, permute.my2 = FALSE,
   norm.z = FALSE, strata = NULL)
 }
 \arguments{
-\item{m1}{Matrix that multiplied by m2 results in the matrix x.}
+\item{m1}{Matrix that multiplied by mx2 results in the matrix x.}
 
-\item{m2}{Matrix that when multiplied by m1 results in the matrix x. See
+\item{m2}{Matrix that when multiplied by mx1 results in the matrix x. See
 `details` below.}
 
 \item{x}{Matrix obtained by multiplication of m1 and m2.}
@@ -53,8 +53,34 @@ groups (Default strata = NULL).}
 deletion of missing observations when computing dissimilarities (Default
 na.rm = FALSE).}
 
+\item{mx1}{m1 Matrix that multiplied by mx2 results in the matrix x.}
+
+\item{mx2}{m2 Matrix that when multiplied by mx1 results in the matrix x. See}
+
+\item{my1}{Matrix that multiplied by my2 results in the matrix y.}
+
+\item{my2}{Matrix that when multiplied by my1 results in the matrix y. See
+`details` below.}
+
+\item{mz1}{Matrix that multiplied by mz2 results in the matrix z.}
+
+\item{mz2}{Matrix that when multiplied by mz1 results in the matrix z. See
+`details` below.}
+
 \item{z}{Matrix whose effect will be removed from the correlation between x
 and y.}
+
+\item{permute.my2}{Logical argument (TRUE or FALSE) to specify if realize 
+parallel permutation in matrix my2.}
+
+\item{permute.mz2}{Logical argument (TRUE or FALSE) to specify if realize 
+parallel permutation in matrix mz2.}
+
+\item{norm.y}{Logical argument (TRUE or FALSE) to specify if y is standardized
+within variables (Default norm = FALSE).}
+
+\item{norm.z}{Logical argument (TRUE or FALSE) to specify if z is standardized
+within variables (Default norm = FALSE).}
 }
 \value{
 \item{Obs}{Correlation between matrices.} \item{p}{Significance

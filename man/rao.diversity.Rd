@@ -25,6 +25,10 @@ trait and in the phylodist matrices (Default checkdata = TRUE).}
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
 (Default ord = "classic").}
 
+\item{put.together}{List to specify group traits that are added or removed
+together (Default put.together = NULL). This argument must be a list, see
+examples.}
+
 \item{...}{Parameters for \code{\link{gowdis}} function.}
 }
 \value{
