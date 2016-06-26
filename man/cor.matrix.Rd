@@ -12,13 +12,16 @@ correlation between three matrices.}
 cor.matrix(m1, m2, x, y, method = "pearson", dist = "euclidean",
   permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE)
 
-cor.matrix.partial(m1, m2, x, y, z, method = "pearson", dist = "euclidean",
-  permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE)
+cor.matrix.partial(mx1, mx2, x, my1, my2, y, mz1, mz2, z, method = "pearson",
+  dist = "euclidean", permute.my2 = FALSE, permute.mz2 = FALSE,
+  permutations = 999, norm = FALSE, norm.y = FALSE, norm.z = FALSE,
+  strata = NULL, na.rm = FALSE)
 
 pro.matrix(m1, m2, x, y, permutations = 999, norm = FALSE, strata = NULL)
 
-pro.matrix.partial(m1, m2, x, y, z, permutations = 999, norm = FALSE,
-  strata = NULL)
+pro.matrix.partial(mx1, mx2, x, my1, my2, y, mz1, mz2, z, permute.my2 = FALSE,
+  permute.mz2 = FALSE, permutations = 999, norm = FALSE, norm.y = FALSE,
+  norm.z = FALSE, strata = NULL)
 }
 \arguments{
 \item{m1}{Matrix that multiplied by m2 results in the matrix x.}

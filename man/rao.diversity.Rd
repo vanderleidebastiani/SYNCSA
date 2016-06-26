@@ -6,7 +6,7 @@
 \title{Rao's quadratic entropy}
 \usage{
 rao.diversity(comm, traits = NULL, phylodist = NULL, checkdata = TRUE,
-  ...)
+  ord = "classic", put.together = NULL, ...)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -21,6 +21,9 @@ columns and species as rows (optional).}
 \item{checkdata}{Logical argument (TRUE or FALSE) to check if species
 sequence in the community data follows the same order as the one in the
 trait and in the phylodist matrices (Default checkdata = TRUE).}
+
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
+(Default ord = "classic").}
 
 \item{...}{Parameters for \code{\link{gowdis}} function.}
 }

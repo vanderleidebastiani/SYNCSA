@@ -31,7 +31,7 @@ Package \strong{SYNCSA} requires that the species and community sequence in
 the data matrix must be the same for all matrices.
 }
 \details{
-The Function organizes the data for the functions of the package
+The function organizes the data for the functions of the package
 \strong{SYNCSA}, placing the matrices of community, traits, phylogenetic
 distance and environmental varibles in the same order.
 }

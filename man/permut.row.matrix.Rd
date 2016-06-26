@@ -5,10 +5,10 @@
 \alias{permut.row.matrix}
 \title{Permutate rows in a matrix}
 \usage{
-permut.row.matrix(matrix, strata = NULL)
+permut.row.matrix(data, strata = NULL)
 }
 \arguments{
-\item{matrix}{A matrix}
+\item{data}{A matrix}
 
 \item{strata}{Argument to specify restricting permutations in rows 
 (Default strata = NULL).}
