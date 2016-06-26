@@ -64,7 +64,7 @@ cor.matrix<-function (m1, m2, x, y, method = "pearson", dist = "euclidean", perm
     correlation <- cor(dist.x, dist.y, method = method)
     value <- matrix(NA, nrow = permutations, ncol = 1)
     for (i in 1: permutations) {
-        m2.permut <- permut.row.matrix(m2, strata = strata)
+        m2.permut <- permut.row.matrix(m2, strata = strata)$permut.matrix
         x.permut <- m1 %*% m2.permut
         if (norm == "TRUE") {
             matrix.permut <- apply(x.permut^2, 2, sum)

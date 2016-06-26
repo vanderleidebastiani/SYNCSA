@@ -196,6 +196,11 @@
 #' @param permutations Number of permutations in assessing significance.
 #' @param strata Argument to specify restricting permutations within species
 #' groups (Default strata = NULL).
+#' @param put.together List to specify group traits that are analysed
+#' together (Default put.together = NULL). This argument must be a list, see
+#' examples.
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "classic").
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' distances should be deleted in cases of missing observations (Default na.rm
 #' = FALSE).
@@ -259,7 +264,7 @@
 #' syncsa(flona$community,traits=flona$traits,envir=flona$environment)
 #'
 #' @export
-syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, na.rm = FALSE, notification = TRUE)
+syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, put.together = NULL, ord = "classic", na.rm = FALSE, notification = TRUE)
 {
     N <- permutations
     roTE <- 0
@@ -282,6 +287,9 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     note.roXE.P <- paste("Removing phylogeny from both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE.P")
     note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P)
     colnames(note) = "Correlation meanings"
+    RES<-list()
+    RES.matrices<-list()
+	RES$notes<-note
     roMETHOD <- c("mantel", "procrustes")
     romethod <- pmatch(ro.method, roMETHOD)
     if (length(romethod) > 1) {
@@ -290,6 +298,12 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     if (is.na(romethod)) {
         stop("\n Invalid ro.method \n")
     }
+    if (!missing(comm)=="TRUE"){
+		commvartype<-vartype(comm)
+		if(any(commvartype=="N")){
+			stop("\n comm must contain only numeric, binary or ordinal variables \n")
+		}
+	}
     if(notification==TRUE){
     	if (!missing(comm) == "TRUE") {
     		c.NA <- apply(comm, 2, is.na)
@@ -319,13 +333,61 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     	}
     }
     if (!missing(traits) == "TRUE") {
+		traitsvartype<-vartype(traits)
+		if(any(traitsvartype=="N")){
+			stop("\n trait must contain only numeric, binary or ordinal variables \n")
+		}
+	}
+	if (!missing(dist.spp) == "TRUE") {
+		dist.sppvartype<-vartype(dist.spp)	
+		if(any(dist.sppvartype=="N")){
+			stop("\n dist.spp must contain only numeric, binary or ordinal variables \n")
+		}	
+	}
+	if (!missing(envir) == "TRUE") {
+		envirvartype<-vartype(envir)
+		if(any(envirvartype=="N")){
+			stop("\n envir must contain only numeric, binary or ordinal variables \n")
+		}
+    }
+    if (!missing(traits) == "TRUE") {	
+    	m <- dim(traits)[2]
+		weights<-rep(1,m)
+		make.names<-is.null(colnames(traits))
+		colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
+		names(weights)<-colnames(traits)
+		if(!is.null(put.together)){
+			if(class(put.together)!="list"){
+				stop("\n The put.together must be a object of class list\n")
+			}
+			if(make.names){
+				for(k in 1:length(put.together)){
+					put.together[[k]]<-paste("T", put.together[[k]],sep="")
+				}
+			}
+			if(max(table(unlist(put.together)))>1){
+				stop("\n The same trait appears more than once in put.together\n")
+			}
+			if(length(setdiff(unlist(put.together),colnames(traits)))>0){
+				stop("\n Check traits names in put.together\n")
+			}
+			for(k in 1:length(put.together)){
+				weights[put.together[[k]]]<-1/length(put.together[[k]])
+			}
+		}
         matrixT <- matrix.t(comm, traits, scale = scale, notification = FALSE)
-        matrixX <- matrix.x(comm, traits, scale = scale, notification = FALSE)
+        matrixX <- matrix.x(comm, traits, scale = scale, notification = FALSE, ord = ord, w = weights)
         W <- matrixT$matrix.w
         B <- matrixT$matrix.b
         T <- matrixT$matrix.T
         U <- matrixX$matrix.u
         X <- matrixX$matrix.X
+        RES.matrices$W<-W
+        RES.matrices$B<-B
+        RES.matrices$T<-T
+        RES.matrices$U<-U
+        RES.matrices$X<-X
+        RES$weights<-weights
         if (!missing(envir) == "TRUE") {
             E <- envir
             if (scale.envir == "TRUE") {
@@ -334,12 +396,12 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             if(romethod == 1){
             	roTE <- cor.matrix(W, B, T, E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm)
 	            roXE <- cor.matrix(W, U, X, E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
-    	        roXE.T <- cor.matrix.partial(W, U, X, E, T, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
+    	        roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale)
         	}
         	if(romethod == 2){
             	roTE <- pro.matrix(W, B, T, E, permutations = N, norm = scale, strata = strata)
 	            roXE <- pro.matrix(W, U, X, E, permutations = N, strata = strata)
-    	        roXE.T <- pro.matrix.partial(W, U, X, E, T, permutations = N, strata = strata)
+    	        roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale)
         	}
         }
     }
@@ -348,6 +410,9 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
         W <- matrixP$matrix.w
         Q <- matrixP$matrix.q
         P <- matrixP$matrix.P
+        RES.matrices$W<-W
+        RES.matrices$Q<-Q
+        RES.matrices$P<-P
         if (!missing(envir) == "TRUE") {
             E <- envir
             if (scale.envir == "TRUE") {
@@ -361,23 +426,23 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             }
             if (!missing(traits) == "TRUE") {
             	if(romethod == 1){
-                	roTE.P <- cor.matrix.partial(W, B, T, E, P, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm)
-	                roXE.P <- cor.matrix.partial(W, U, X, E, P, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
+                	roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm)
+	                roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
                 }
                 if(romethod == 2){
-                	roTE.P <- pro.matrix.partial(W, B, T, E, P, permutations = N, norm = scale, strata = strata)
-	                roXE.P <- pro.matrix.partial(W, U, X, E, P, permutations = N, strata = strata)
+                	#roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, norm = scale, strata = strata)
+	                #roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata)
                 }
             }
         }
         if (!missing(traits) == "TRUE") {
         	if(romethod == 1){
 	            roPT <- cor.matrix(W, Q, P, T, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
-    	        roPX.T <- cor.matrix.partial(W, Q, P, X, T, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
+    	        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale)
     	    }
     	    if(romethod == 2){
 	            roPT <- pro.matrix(W, Q, P, T, permutations = N, strata = strata)
-    	        roPX.T <- pro.matrix.partial(W, Q, P, X, T, permutations = N, strata = strata)
+    	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, norm.z = scale)
     	    }
     	    if(romethod == 1){
             	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
@@ -388,13 +453,20 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
 	            roBF <- c(BF$statistic, BF$signif)
             }
             if(romethod == 2){
-			    dist.spp.t <- sweep(dist.spp, 2, sqrt(apply(dist.spp^2,2,sum)), "/")
+			    #dist.spp.t <- sweep(dist.spp, 2, sqrt(apply(dist.spp^2,2,sum)), "/")
+			    dist.spp.t<-dist.spp
 			    vectors <- vegan::wcmdscale(dist.spp.t,eig = TRUE)$points
-				BF <- suppressWarnings(vegan::protest(vectors,traits,permutations = permute::how(nperm = N, blocks = strata)))
+			    #vectors <- prcomp(dist.spp.t,scale = TRUE)$x
+			    traits.t <- sweep(traits, 2, sqrt(apply(traits^2,2,sum)), "/")
+				BF <- suppressWarnings(vegan::protest(vectors,traits.t,permutations = permute::how(nperm = N, blocks = strata)))
 	            roBF <- c(sqrt(1 - BF$ss), BF$signif)
             }
         }
     }
     SYNCSA <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF)
-    return(list(Notes = note, Statistics = SYNCSA))
+    RES$statistics<-SYNCSA
+    RES$call<-match.call()
+    RES$matrices<-RES.matrices
+    class(RES) <- "syncsa"
+    return(RES)
 }

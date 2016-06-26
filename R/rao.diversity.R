@@ -31,6 +31,8 @@
 #' @param checkdata Logical argument (TRUE or FALSE) to check if species
 #' sequence in the community data follows the same order as the one in the
 #' trait and in the phylodist matrices (Default checkdata = TRUE).
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "classic").
 #' @param ... Parameters for \code{\link{gowdis}} function.
 #' @return \item{Simpson}{Gini-Simpson index within each community (equivalent
 #' to Rao quadratic entropy with null, crisp, similarities).} \item{FunRao}{Rao
@@ -63,7 +65,7 @@
 #' rao.diversity(flona$community,traits=flona$traits)
 #'
 #' @export
-rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
+rao.diversity<-function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE, ord = "classic", put.together = NULL, ...){
 	comm <- as.matrix(comm)
     N <- dim(comm)[1]
     S <- dim(comm)[2]
@@ -82,9 +84,34 @@ rao.diversity<-function(comm,traits=NULL,phylodist=NULL,checkdata=TRUE,...){
         }
     		traits<-as.data.frame(traits[match.names,])
     	}
-    	D1<-as.matrix(FD::gowdis(x=traits,...))
-    	S1<-1-D1
-    	tij<-sqrt(1-S1)
+       	m <- dim(traits)[2]
+		weights<-rep(1,m)
+		make.names<-is.null(colnames(traits))
+		colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
+		names(weights)<-colnames(traits)
+		if(!is.null(put.together)){
+			if(class(put.together)!="list"){
+				stop("\n The put.together must be a object of class list\n")
+			}
+			if(make.names){
+				for(k in 1:length(put.together)){
+					put.together[[k]]<-paste("T", put.together[[k]],sep="")
+				}
+			}
+			if(max(table(unlist(put.together)))>1){
+				stop("\n The same trait appears more than once in put.together\n")
+			}
+			if(length(setdiff(unlist(put.together),colnames(traits)))>0){
+				stop("\n Check traits names in put.together\n")
+			}
+			for(k in 1:length(put.together)){
+				weights[put.together[[k]]]<-1/length(put.together[[k]])
+			}
+		}    	
+    	D1<-as.matrix(FD::gowdis(x=traits, asym.bin = NULL, ord = ord, w = weights))
+    	#S1<-1-D1
+    	#tij<-sqrt(1-S1)
+    	tij<-sqrt(D1)
     }
     if (!is.null(phylodist)) {
 		if (checkdata) {

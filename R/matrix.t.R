@@ -45,7 +45,15 @@
 matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE) 
 {
 	comm<-as.matrix(comm)
-	traits<-as.matrix(traits)
+	vartype<-vartype(traits)
+	if(any(vartype=="N")){
+		stop("\n trait must contain only numeric, binary or ordinal variables \n")
+	}
+	traits_temp<-matrix(NA,dim(traits)[1],dim(traits)[2])
+	for(i in 1:dim(traits)[2]){
+		traits_temp[,i]<-as.numeric(traits[,i])
+	}   	
+	traits<-as.matrix(traits_temp)
 	matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")
 	w.NA <- apply(matrix.w, 2, is.na)
     matrix.w[w.NA] <-0

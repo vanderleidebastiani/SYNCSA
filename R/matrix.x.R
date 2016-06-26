@@ -6,6 +6,7 @@
 #'
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
+#' @importFrom FD gowdis
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
 #' @param traits Matrix data of species described by traits, with traits as
@@ -21,6 +22,9 @@
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notifications of missing observations are shown (Default notification =
 #' TRUE).
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "classic").
+#' @param ... Another parameters for \code{\link{gowdis}} function.
 #' @return \item{matriz.w}{Standardized community matrix, where rows are
 #' communities and columns species. Row totals (communities) = 1.}
 #' \item{matriz.u}{Standardized matrix containing the degree of belonging of
@@ -47,10 +51,9 @@
 #' matrix.x(flona$community,flona$traits,scale=TRUE)
 #'
 #' @export
-matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE)
+matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "classic", ...)
 {
 	comm<-as.matrix(comm)
-	traits<-as.matrix(traits)
     matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")
 	w.NA <- apply(matrix.w, 2, is.na)
     matrix.w[w.NA] <-0
@@ -67,9 +70,8 @@ matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE)
 			warning("Warning: NA in traits matrix",call.=FALSE)
     	}
     }
-
     if (scale == "TRUE") {
-        dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE,na.rm=TRUE)
+        dist.traits <- FD::gowdis(traits, asym.bin = NULL, ord = ord, ...)
         similar.traits <- 1 - as.matrix(dist.traits)
         matrix.traits <- 1/colSums(similar.traits,na.rm=TRUE)
         matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")

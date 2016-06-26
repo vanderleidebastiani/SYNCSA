@@ -50,6 +50,8 @@
 #' @param put.together List to specify group traits that are added or removed
 #' together (Default put.together = NULL). This argument must be a list, see
 #' examples.
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "classic").
 #' @param progressbar Logical argument (TRUE or FALSE) to specify if display a
 #' progress bar on the R console (Default progressbar = FALSE).
 #' @param x An object of class optimal.
@@ -85,11 +87,29 @@
 optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
     pattern = "tcap", ro.method = "mantel", dist = "euclidean",
     method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE,
-    notification = TRUE, put.together = NULL, progressbar = FALSE)
+    notification = TRUE, put.together = NULL, ord = "classic", progressbar = FALSE)
 {
-	comm <- as.matrix(comm)
-	envir <- as.matrix(envir)
-	traits <- as.matrix(traits)
+#	comm <- as.matrix(comm)
+#	envir <- as.matrix(envir)
+	#traits <- as.matrix(traits)
+	if (!missing(comm)=="TRUE"){
+	commvartype<-vartype(comm)
+	if(any(commvartype=="N")){
+		stop("\n comm must contain only numeric, binary or ordinal variables \n")
+		}
+	}
+    if (!missing(traits) == "TRUE") {
+	traitsvartype<-vartype(traits)
+		if(any(traitsvartype=="N")){
+			stop("\n trait must contain only numeric, binary or ordinal variables \n")
+		}
+	}
+	if (!missing(envir) == "TRUE") {
+		envirvartype<-vartype(envir)
+		if(any(envirvartype=="N")){
+			stop("\n envir must contain only numeric, binary or ordinal variables \n")
+		}
+    }
 	roMETHOD <- c("mantel", "procrustes")
 	romethod <- pmatch(ro.method, roMETHOD)
 	if (length(romethod) > 1) {
@@ -129,9 +149,11 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 		dist.y <- vegan::vegdist(envir, method = dist, na.rm = na.rm)
 	}
 	m <- dim(traits)[2]
+	weights<-rep(1,m)
+	names(weights)<-colnames(traits)
 	p <- 1:subset.max
 	names.traits<-colnames(traits)
-	if(!missing(put.together)){
+	if(!is.null(put.together)){
 		if(class(put.together)!="list"){
 			stop("\n The put.together must be a object of class list\n")
 		}
@@ -149,6 +171,9 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 		for(k in 1:length(put.together)){
 			names.traits[which(names.traits==put.together[[k]][1])]<-paste(put.together[[k]], collapse = " ")
 			names.traits<-setdiff(names.traits,put.together[[k]][-1])
+#			put.together[[k]]
+#			length(put.together[[k]])
+			weights[put.together[[k]]]<-1/length(put.together[[k]])
 		}
 		m<-length(names.traits)
 		put.together2<-list()
@@ -192,7 +217,17 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits<-c(choose.traits3,setdiff(choose.traits,unlist(put.together2)))
 					}
 				}
-				T <- matrix.t(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
+#				class(traits)
+#				class(traits[, choose.traits])
+#				str(traits[, choose.traits])
+				
+				#B<-matrix(NA,A$nrow,A$ncol)
+				#for(i in 1:A$ncol){
+				#	B[,i]<-as.numeric(A$data[,i])
+				#}
+
+				####
+				T <- matrix.t(comm, traits[, choose.traits, drop=FALSE], scale = scale, notification = FALSE)
 				if (romethod == 1) {
 					correlation[n, 1] <- cor(vegan::vegdist(as.matrix(T$matrix.T), method = dist, na.rm = na.rm), dist.y, method = method)
 					if (progressbar) {
@@ -223,8 +258,8 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits<-c(choose.traits3,setdiff(choose.traits,unlist(put.together2)))
 					}
 				}
-				T <- matrix.t(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
-				X <- matrix.x(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
+				T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, notification = FALSE)
+				X <- matrix.x(comm, traits[, choose.traits, drop=FALSE], scale = scale, notification = FALSE, ord = ord, w = weights[choose.traits])
 				if (romethod == 1) {
 					dist.x <- vegan::vegdist(X$matrix.X, method = dist, na.rm = na.rm)
 					dist.z <- vegan::vegdist(T$matrix.T, method = dist, na.rm = na.rm)
@@ -260,7 +295,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits<-c(choose.traits3,setdiff(choose.traits,unlist(put.together2)))
 					}
 				}
-				X <- matrix.x(comm, as.matrix(traits[, choose.traits]), scale = scale, notification = FALSE)
+				X <- matrix.x(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, notification = FALSE, ord = ord, w = weights[choose.traits])
 				if (romethod == 1) {
 					correlation[n, 1] <- cor(vegan::vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
 					if (progressbar) {
@@ -278,7 +313,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 	}
 	result <- data.frame(Subset = comb, ro = correlation, stringsAsFactors = FALSE)
 	result <- result[order(abs(result[, 2]), decreasing = TRUE), ]
-	Res <- list(call = match.call(), N_subset = nT, optimization = result)
+	Res <- list(call = match.call(), N_subset = nT, optimization = result, weights = weights)
 	class(Res) <- "optimal"
 	return(Res)
 }
