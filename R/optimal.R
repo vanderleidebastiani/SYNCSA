@@ -51,7 +51,7 @@
 #' together (Default put.together = NULL). This argument must be a list, see
 #' examples.
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "classic").
+#' (Default ord = "metric").
 #' @param progressbar Logical argument (TRUE or FALSE) to specify if display a
 #' progress bar on the R console (Default progressbar = FALSE).
 #' @param x An object of class optimal.
@@ -87,7 +87,7 @@
 optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
     pattern = "tcap", ro.method = "mantel", dist = "euclidean",
     method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE,
-    notification = TRUE, put.together = NULL, ord = "classic", progressbar = FALSE)
+    notification = TRUE, put.together = NULL, ord = "metric", progressbar = FALSE)
 {
 #	comm <- as.matrix(comm)
 #	envir <- as.matrix(envir)

@@ -200,7 +200,7 @@
 #' together (Default put.together = NULL). This argument must be a list, see
 #' examples.
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "classic").
+#' (Default ord = "metric").
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' distances should be deleted in cases of missing observations (Default na.rm
 #' = FALSE).
@@ -266,7 +266,7 @@
 #' syncsa(flona$community,traits=flona$traits,envir=flona$environment)
 #'
 #' @export
-syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, put.together = NULL, ord = "classic", na.rm = FALSE, notification = TRUE)
+syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, put.together = NULL, ord = "metric", na.rm = FALSE, notification = TRUE)
 {
     N <- permutations
     roTE <- 0
@@ -395,6 +395,7 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             if (scale.envir == "TRUE") {
                 E <- cent.norm(envir,na.rm = na.rm)
             }
+            RES.matrices$E<-E
             if(romethod == 1){
             	roTE <- cor.matrix(W, B, T, E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm)
 	            roXE <- cor.matrix(W, U, X, E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
@@ -420,6 +421,7 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             if (scale.envir == "TRUE") {
                 E <- cent.norm(envir,na.rm = na.rm)
             }
+            RES.matrices$E<-E
             if(romethod == 1){
             	roPE <- cor.matrix(W, Q, P, E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
             }

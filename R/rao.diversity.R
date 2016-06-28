@@ -32,7 +32,7 @@
 #' sequence in the community data follows the same order as the one in the
 #' trait and in the phylodist matrices (Default checkdata = TRUE).
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "classic").
+#' (Default ord = "metric").
 #' @param put.together List to specify group traits that are added or removed
 #' together (Default put.together = NULL). This argument must be a list, see
 #' examples.
@@ -68,7 +68,7 @@
 #' rao.diversity(flona$community,traits=flona$traits)
 #'
 #' @export
-rao.diversity<-function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE, ord = "classic", put.together = NULL, ...){
+rao.diversity<-function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE, ord = "metric", put.together = NULL, ...){
 	comm <- as.matrix(comm)
     N <- dim(comm)[1]
     S <- dim(comm)[2]

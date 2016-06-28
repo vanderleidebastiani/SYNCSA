@@ -23,7 +23,7 @@
 #' notifications of missing observations are shown (Default notification =
 #' TRUE).
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "classic").
+#' (Default ord = "metric").
 #' @param ... Another parameters for \code{\link{gowdis}} function.
 #' @return \item{matriz.w}{Standardized community matrix, where rows are
 #' communities and columns species. Row totals (communities) = 1.}
@@ -51,7 +51,7 @@
 #' matrix.x(flona$community,flona$traits,scale=TRUE)
 #'
 #' @export
-matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "classic", ...)
+matrix.x<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "metric", ...)
 {
 	comm<-as.matrix(comm)
     matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")

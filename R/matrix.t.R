@@ -17,6 +17,8 @@
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notifications of missing observations are shown (Default notification =
 #' TRUE).
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "metric").
 #' @return \item{matriz.w}{Standardized community matrix, where rows are
 #' communities and columns species. Row totals (communities) = 1.}
 #' \item{matriz.b}{Matrix of traits, exactly the same data input.}
@@ -42,18 +44,20 @@
 #' matrix.t(flona$community,flona$traits,scale=TRUE)
 #' 
 #' @export
-matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE) 
+matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "metric") 
 {
 	comm<-as.matrix(comm)
 	vartype<-vartype(traits)
 	if(any(vartype=="N")){
 		stop("\n trait must contain only numeric, binary or ordinal variables \n")
 	}
-	traits_temp<-matrix(NA,dim(traits)[1],dim(traits)[2])
-	for(i in 1:dim(traits)[2]){
-		traits_temp[,i]<-as.numeric(traits[,i])
+	for(i in 1:length(vartype)){
+		if(ord != "classic" & vartype[i]=="O"){
+			traits[, i] <- rank(traits[, i], na.last = "keep")
+		}
+		traits[, i] <- as.numeric(traits[, i])
 	}
-	traits<-as.matrix(traits_temp)
+	traits<-as.matrix(traits)
 	matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")
 	w.NA <- apply(matrix.w, 2, is.na)
     matrix.w[w.NA] <-0

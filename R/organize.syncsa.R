@@ -1,7 +1,7 @@
 #' Function for organize data for Package SYNCSA
 #' 
 #' Package \strong{SYNCSA} requires that the species and community sequence in
-#' the data matrix must be the same for all matrices.
+#' the dataframe or matrix must be the same for all dataframe/matrices.
 #' 
 #' The function organizes the data for the functions of the package
 #' \strong{SYNCSA}, placing the matrices of community, traits, phylogenetic
@@ -19,17 +19,19 @@
 #' species that are in community data.
 #' @param envir Environmental variables for each community, with variables as
 #' columns and sampling units as rows.
-#' @return The matrices of community, traits, phylogenetic distance and
-#' environmental variables. The objects returned belong to the matrix class.
-#' @note The function organizes the matrices despite the absence of one of the
-#' matrices, provided that the community data had been entered. Unspecified
-#' matrices will appear as NULL.
+#' @param strata Strata nomed vector to specify restricting permutations within
+#' species groups.
+#' @return The dataframes or matrices of community, traits, phylogenetic distance and
+#' environmental variables. The strata vector for permutations.
+#' @note The function organizes the data despite the absence of one of the
+#' dataframes or matrices, provided that the community data had been entered. Unspecified
+#' data will appear as NULL.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
 #' \code{\link{matrix.p}}, \code{\link{syncsa}}
 #' @keywords SYNCSA
 #' @export
-organize.syncsa <- function (comm, traits, dist.spp, envir){
+organize.syncsa <- function (comm, traits, dist.spp, envir, strata){
 	if (missing(comm)=="TRUE"){
 		stop("\n Community not fount\n")
 	}
@@ -112,18 +114,37 @@ organize.syncsa <- function (comm, traits, dist.spp, envir){
 			stop("\n envir must contain only numeric, binary or ordinal variables \n")
 		}
     }
-    if (missing(traits) == "TRUE"){
+    if (!missing(strata)) {
+		N<-dim(comm)[2]
+		if (is.null(names(strata))){
+			stop("\n Names of strata factor are null\n")
+		}		
+		if (N != length(strata)) {
+            stop("\n The strata must be the same length of number of species\n")
+        }
+		match.names<-match(colnames(comm), names(strata))
+		if(sum(is.na(match.names))>0){
+			print("There are species from community data that are not on strata vector :",quote=FALSE)
+			print(setdiff(colnames(comm), names(strata)))
+			stop("\n Species not found on strata\n")
+		}
+		strata<-strata[match.names]
+    }
+    if (missing(traits)){
 		traits<-NULL
 		traitsvartype=NULL
 	}
-	if (missing(dist.spp) == "TRUE"){
+	if (missing(dist.spp)){
 		dist.spp<-NULL
 		dist.sppvartype =NULL
 	}
-	if (missing(envir) == "TRUE"){
+	if (missing(envir)){
 		envir<-NULL
 		envirvartype=NULL
 	}
-	res<-list(community=comm,traits=traits,dist.spp=dist.spp,environmental=envir,community.var.type= commvartype,traits.var.type= traitsvartype, dist.spp.var.type = dist.sppvartype, environmental.var.type = envirvartype)		
+	if (missing(strata)){
+		strata<-NULL
+	}
+	res<-list(community=comm,traits=traits,dist.spp=dist.spp,environmental=envir,community.var.type= commvartype,traits.var.type= traitsvartype, dist.spp.var.type = dist.sppvartype, environmental.var.type = envirvartype, strata = strata)		
     return(res)
 }
