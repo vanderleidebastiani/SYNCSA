@@ -5,7 +5,7 @@
 \alias{organize.syncsa}
 \title{Function for organize data for Package SYNCSA}
 \usage{
-organize.syncsa(comm, traits, dist.spp, envir, strata)
+organize.syncsa(comm, traits, dist.spp, envir, strata, check.comm = TRUE)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -24,6 +24,9 @@ columns and sampling units as rows.}
 
 \item{strata}{Strata nomed vector to specify restricting permutations within
 species groups.}
+
+\item{check.comm}{Logical argument (TRUE or FALSE) to remove sampling units and 
+species with total sums equal or less than zero (Default check.comm = "TRUE").}
 }
 \value{
 The dataframes or matrices of community, traits, phylogenetic distance and
