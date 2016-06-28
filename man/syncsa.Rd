@@ -11,7 +11,7 @@
 syncsa(comm, traits, dist.spp, envir, ro.method = "mantel",
   method = "pearson", dist = "euclidean", scale = TRUE,
   scale.envir = TRUE, permutations = 999, strata = NULL,
-  put.together = NULL, ord = "classic", na.rm = FALSE,
+  put.together = NULL, ord = "metric", na.rm = FALSE,
   notification = TRUE)
 }
 \arguments{
@@ -70,7 +70,7 @@ together (Default put.together = NULL). This argument must be a list, see
 examples.}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "classic").}
+(Default ord = "metric").}
 
 \item{na.rm}{Logical argument (TRUE or FALSE) to specify if pairwise
 distances should be deleted in cases of missing observations (Default na.rm

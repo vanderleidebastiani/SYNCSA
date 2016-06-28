@@ -5,7 +5,7 @@
 \alias{matrix.x}
 \title{Matrix X}
 \usage{
-matrix.x(comm, traits, scale = TRUE, notification = TRUE, ord = "classic",
+matrix.x(comm, traits, scale = TRUE, notification = TRUE, ord = "metric",
   ...)
 }
 \arguments{
@@ -29,7 +29,7 @@ notifications of missing observations are shown (Default notification =
 TRUE).}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "classic").}
+(Default ord = "metric").}
 
 \item{...}{Another parameters for \code{\link{gowdis}} function.}
 }

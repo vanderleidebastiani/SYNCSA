@@ -6,7 +6,7 @@
 \title{Rao's quadratic entropy}
 \usage{
 rao.diversity(comm, traits = NULL, phylodist = NULL, checkdata = TRUE,
-  ord = "classic", put.together = NULL, ...)
+  ord = "metric", put.together = NULL, ...)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -23,7 +23,7 @@ sequence in the community data follows the same order as the one in the
 trait and in the phylodist matrices (Default checkdata = TRUE).}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "classic").}
+(Default ord = "metric").}
 
 \item{put.together}{List to specify group traits that are added or removed
 together (Default put.together = NULL). This argument must be a list, see

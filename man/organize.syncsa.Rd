@@ -5,7 +5,7 @@
 \alias{organize.syncsa}
 \title{Function for organize data for Package SYNCSA}
 \usage{
-organize.syncsa(comm, traits, dist.spp, envir)
+organize.syncsa(comm, traits, dist.spp, envir, strata)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -21,14 +21,17 @@ species that are in community data.}
 
 \item{envir}{Environmental variables for each community, with variables as
 columns and sampling units as rows.}
+
+\item{strata}{Strata nomed vector to specify restricting permutations within
+species groups.}
 }
 \value{
-The matrices of community, traits, phylogenetic distance and
-environmental variables. The objects returned belong to the matrix class.
+The dataframes or matrices of community, traits, phylogenetic distance and
+environmental variables. The strata vector for permutations.
 }
 \description{
 Package \strong{SYNCSA} requires that the species and community sequence in
-the data matrix must be the same for all matrices.
+the dataframe or matrix must be the same for all dataframe/matrices.
 }
 \details{
 The function organizes the data for the functions of the package
@@ -36,9 +39,9 @@ The function organizes the data for the functions of the package
 distance and environmental varibles in the same order.
 }
 \note{
-The function organizes the matrices despite the absence of one of the
-matrices, provided that the community data had been entered. Unspecified
-matrices will appear as NULL.
+The function organizes the data despite the absence of one of the
+dataframes or matrices, provided that the community data had been entered. Unspecified
+data will appear as NULL.
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>

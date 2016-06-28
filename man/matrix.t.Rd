@@ -5,7 +5,7 @@
 \alias{matrix.t}
 \title{Matrix T}
 \usage{
-matrix.t(comm, traits, scale = TRUE, notification = TRUE)
+matrix.t(comm, traits, scale = TRUE, notification = TRUE, ord = "metric")
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -23,6 +23,9 @@ the same scale, the matrix T is not subjected to standardization.}
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications of missing observations are shown (Default notification =
 TRUE).}
+
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
+(Default ord = "metric").}
 }
 \value{
 \item{matriz.w}{Standardized community matrix, where rows are
