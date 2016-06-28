@@ -21,6 +21,8 @@
 #' columns and sampling units as rows.
 #' @param strata Strata nomed vector to specify restricting permutations within
 #' species groups.
+#' @param check.comm Logical argument (TRUE or FALSE) to remove sampling units and 
+#' species with total sums equal or less than zero (Default check.comm = "TRUE").
 #' @return The dataframes or matrices of community, traits, phylogenetic distance and
 #' environmental variables. The strata vector for permutations.
 #' @note The function organizes the data despite the absence of one of the
@@ -31,7 +33,7 @@
 #' \code{\link{matrix.p}}, \code{\link{syncsa}}
 #' @keywords SYNCSA
 #' @export
-organize.syncsa <- function (comm, traits, dist.spp, envir, strata){
+organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm = TRUE){
 	if (missing(comm)=="TRUE"){
 		stop("\n Community not fount\n")
 	}
@@ -41,9 +43,23 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata){
 	if (is.null(rownames(comm))){
 		stop("\n Row names of comm are null\n")
 	}
+	if(check.comm){
+		col.rm<-colnames(comm)[!colSums(comm,na.rm=TRUE)>0]
+		row.rm<-rownames(comm)[!rowSums(comm,na.rm=TRUE)>0]
+		if(length(col.rm)>0){
+			print("Species removed from community data:",quote=FALSE)
+			print(col.rm)
+		}
+		if(length(row.rm)>0){
+			print("Communities removed from community data:",quote=FALSE)
+			print(row.rm)	
+		}		
+		comm<-comm[,colSums(comm,na.rm=TRUE)>0,drop=FALSE]
+		comm<-comm[rowSums(comm,na.rm=TRUE)>0,,drop=FALSE]
+	}
 	if(any(is.na(comm))){
 		warning("Warning: NA in community data",call.=FALSE)
-	}	
+	}
 	commvartype<-vartype(comm)
 	if(any(commvartype=="N")){
 		stop("\n comm must contain only numeric, binary or ordinal variables \n")
@@ -115,13 +131,9 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata){
 		}
     }
     if (!missing(strata)) {
-		N<-dim(comm)[2]
 		if (is.null(names(strata))){
 			stop("\n Names of strata factor are null\n")
 		}		
-		if (N != length(strata)) {
-            stop("\n The strata must be the same length of number of species\n")
-        }
 		match.names<-match(colnames(comm), names(strata))
 		if(sum(is.na(match.names))>0){
 			print("There are species from community data that are not on strata vector :",quote=FALSE)
