@@ -94,19 +94,19 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 	#traits <- as.matrix(traits)
 	if (!missing(comm)=="TRUE"){
 	commvartype<-vartype(comm)
-	if(any(commvartype=="N")){
+	if(any(commvartype=="n")){
 		stop("\n comm must contain only numeric, binary or ordinal variables \n")
 		}
 	}
     if (!missing(traits) == "TRUE") {
 	traitsvartype<-vartype(traits)
-		if(any(traitsvartype=="N")){
+		if(any(traitsvartype=="n")){
 			stop("\n trait must contain only numeric, binary or ordinal variables \n")
 		}
 	}
 	if (!missing(envir) == "TRUE") {
 		envirvartype<-vartype(envir)
-		if(any(envirvartype=="N")){
+		if(any(envirvartype=="n")){
 			stop("\n envir must contain only numeric, binary or ordinal variables \n")
 		}
     }

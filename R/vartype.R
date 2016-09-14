@@ -3,8 +3,8 @@
 #' Function extracted (with small changes) of the function \code{\link{gowdis}} 
 #'to check the type of variables in a dataframe or matrix.
 #'
-#' The variable types, where 'C' is continuous/numeric, 'O' is ordinal, 'B' is
-#' symmetric binary and 'N' is nominal. 
+#' The variable types, where 'c' is continuous/numeric, 'o' is ordinal, 'b' is
+#' binary, 'n' is nominal and 'f' is factor.
 #'
 #'
 #' @encoding UTF-8
@@ -28,20 +28,20 @@ vartype<-function(data){
 		for (i in 1:nc) {
 			bin.var[i] <- is.bin(data[, i])
 		}	
-		type[type %in% c("numeric", "integer")] <- "C"
-		type[type == "ordered"] <- "O"
-		type[type %in% c("factor", "character")] <- "N"
-		type[bin.var] <- "B" # rever
-		type[type2 %in% c("factor", "character")] <- "N"
-		#
-		
+		type[type %in% c("numeric", "integer")] <- "c"
+		type[type == "ordered"] <- "o"
+		type[type == "character"] <- "n"
+		type[type == "factor"] <- "f"
+		type[bin.var] <- "b"
+		type[type2 == "character"] <- "n"
+		type[type2 == "factor"] <- "f"
 		names(type)<-NULL
 	}
     else {
     	if(any(sapply(data, data.class)=="character")){
     		stop("\n If data are a matrix class it must be entirely numeric \n")
     	}
-        type <- rep("C", nc)
+        type <- rep("c", nc)
     }
 return(type)
 }

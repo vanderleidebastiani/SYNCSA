@@ -48,11 +48,11 @@ matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "metr
 {
 	comm<-as.matrix(comm)
 	vartype<-vartype(traits)
-	if(any(vartype=="N")){
+	if(any(vartype=="n")){
 		stop("\n trait must contain only numeric, binary or ordinal variables \n")
 	}
 	for(i in 1:length(vartype)){
-		if(ord != "classic" & vartype[i]=="O"){
+		if(ord != "classic" & vartype[i]=="o"){
 			traits[, i] <- rank(traits[, i], na.last = "keep")
 		}
 		traits[, i] <- as.numeric(traits[, i])

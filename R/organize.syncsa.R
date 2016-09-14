@@ -33,7 +33,7 @@
 #' \code{\link{matrix.p}}, \code{\link{syncsa}}
 #' @keywords SYNCSA
 #' @export
-organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm = TRUE){
+organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm = TRUE, convert.traits = TRUE, ord = "metric"){
 	if (missing(comm)=="TRUE"){
 		stop("\n Community not fount\n")
 	}
@@ -61,7 +61,7 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
 		warning("Warning: NA in community data",call.=FALSE)
 	}
 	commvartype<-vartype(comm)
-	if(any(commvartype=="N")){
+	if(any(commvartype=="n")){
 		stop("\n comm must contain only numeric, binary or ordinal variables \n")
 	}
     if (!missing(traits) == "TRUE") {
@@ -82,8 +82,21 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
 		}
 		traits<-as.data.frame(traits[match.names,,drop=FALSE])
 		traitsvartype<-vartype(traits)
-		if(any(traitsvartype=="N")){
+		if(any(traitsvartype=="n")){
 			stop("\n trait must contain only numeric, binary or ordinal variables \n")
+		}
+		if(convert.traits){
+			traits<-data.matrix(traits)
+			for (i in 1:length(traitsvartype)){
+				if (traitsvartype[i] == "o"){
+					if (ord != "classic"){	
+						traits[,i]<-rank(traits[,i], na.last = "keep")
+    	    		} else {
+			        	traits[,i]<-as.numeric(traits[, i])
+        			}
+    			}
+			}
+			traitsvartype<-vartype(traits)
 		}
 	}
 	if (!missing(dist.spp) == "TRUE") {
@@ -104,7 +117,7 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
 		}
 		dist.spp<-dist.spp[match.names,match.names,drop=FALSE]
 		dist.sppvartype<-vartype(dist.spp)
-		if(any(dist.sppvartype=="N")){
+		if(any(dist.sppvartype=="n")){
 			stop("\n dist.spp must contain only numeric, binary or ordinal variables \n")
 		}
 	}
@@ -126,7 +139,7 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
 		}
 		envir<-envir[match.names,,drop=FALSE]
 		envirvartype<-vartype(envir)
-		if(any(envirvartype=="N")){
+		if(any(envirvartype=="n")){
 			stop("\n envir must contain only numeric, binary or ordinal variables \n")
 		}
     }
