@@ -14,6 +14,10 @@ procrustes.partial<-function(x, y, z)
 	return(res)
 	}
 	scoresofz<-prcomp(z,scale = TRUE)$x
+	nm<-round(dim(x)[1]/2)
+	if(nm<dim(scoresofz)[2]){
+		scoresofz<-scoresofz[,1:nm,drop=FALSE]
+	}
 	x.r<-pro.residuals(x,scoresofz)
 	y.r<-pro.residuals(y,scoresofz)
 #	x.r<-sweep(x.r, 2, sqrt(apply(x.r^2,2,sum)), "/")
