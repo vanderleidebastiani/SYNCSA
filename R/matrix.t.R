@@ -47,7 +47,7 @@
 matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "metric") 
 {
 	comm<-as.matrix(comm)
-	vartype<-vartype(traits)
+	vartype<-var.type(traits)
 	if(any(vartype=="n")){
 		stop("\n trait must contain only numeric, binary or ordinal variables \n")
 	}

@@ -158,9 +158,10 @@
 #' for ro(\strong{XE}) is used for ro(\strong{XE.P}).
 #'
 #' @encoding UTF-8
-#' @importFrom stats cor
-#' @importFrom vegan mantel wcmdscale protest vegdist
+#' @importFrom stats cor as.dist
+#' @importFrom vegan wcmdscale protest vegdist
 #' @importFrom permute how
+#' @importFrom parallel makeCluster stopCluster
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
 #' @param traits Matrix data of species described by traits, with traits as
@@ -207,6 +208,7 @@
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notification of missing observations should to be shown (Default
 #' notification = TRUE).
+#' @param parallel Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).
 #' @param x An object of class syncsa.
 #' @param ... Other parameters for the respective functions.
 #' @return Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
@@ -266,7 +268,7 @@
 #' syncsa(flona$community,traits=flona$traits,envir=flona$environment)
 #'
 #' @export
-syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, put.together = NULL, ord = "metric", na.rm = FALSE, notification = TRUE)
+syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, permutations = 999, strata = NULL, put.together = NULL, ord = "metric", na.rm = FALSE, notification = TRUE, parallel = NULL)
 {
     N <- permutations
     roTE <- 0
@@ -301,7 +303,7 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
         stop("\n Invalid ro.method \n")
     }
     if (!missing(comm)=="TRUE"){
-		commvartype<-vartype(comm)
+		commvartype<-var.type(comm)
 		if(any(commvartype=="n")){
 			stop("\n comm must contain only numeric, binary or ordinal variables \n")
 		}
@@ -334,23 +336,29 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     		stop("\n  The strata must be the same length of number of species \n")
     	}
     }
+    seqpermutation<-permut.vector(dim(comm)[2],strata = strata, nset = permutations)
     if (!missing(traits) == "TRUE") {
-		traitsvartype<-vartype(traits)
+		traitsvartype<-var.type(traits)
 		if(any(traitsvartype=="n")){
 			stop("\n trait must contain only numeric, binary or ordinal variables \n")
 		}
 	}
 	if (!missing(dist.spp) == "TRUE") {
-		dist.sppvartype<-vartype(dist.spp)	
+		dist.sppvartype<-var.type(dist.spp)	
 		if(any(dist.sppvartype=="n")){
 			stop("\n dist.spp must contain only numeric, binary or ordinal variables \n")
 		}	
 	}
 	if (!missing(envir) == "TRUE") {
-		envirvartype<-vartype(envir)
+		envirvartype<-var.type(envir)
 		if(any(envirvartype=="n")){
 			stop("\n envir must contain only numeric, binary or ordinal variables \n")
 		}
+    }
+    if(!is.null(parallel)){
+    	CL <- parallel::makeCluster(parallel,type="PSOCK")	
+    } else {
+    	CL <- NULL
     }
     if (!missing(traits) == "TRUE") {	
     	m <- dim(traits)[2]
@@ -397,14 +405,14 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             }
             RES.matrices$E<-E
             if(romethod == 1){
-            	roTE <- cor.matrix(W, B, T, E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm)
-	            roXE <- cor.matrix(W, U, X, E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
-    	        roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale)
+            	roTE <- cor.matrix(mx1 = W, mx2 = B, x = T, y = E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	            roXE <- cor.matrix(mx1 = W, mx2 = U, x = X, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    	        roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         	}
         	if(romethod == 2){
-            	roTE <- pro.matrix(W, B, T, E, permutations = N, norm = scale, strata = strata)
-	            roXE <- pro.matrix(W, U, X, E, permutations = N, strata = strata)
-    	        roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale)
+            	roTE <- pro.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	            roXE <- pro.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    	        roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         	}
         }
     }
@@ -423,38 +431,38 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             }
             RES.matrices$E<-E
             if(romethod == 1){
-            	roPE <- cor.matrix(W, Q, P, E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
+            	roPE <- cor.matrix(mx1 = W, mx2 = Q, x = P, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
             }
             if(romethod == 2){
-            	roPE <- pro.matrix(W, Q, P, E, permutations = N, strata = strata)
+            	roPE <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
             }
             if (!missing(traits) == "TRUE") {
             	if(romethod == 1){
-                	roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm)
-	                roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
+                	roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	                roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
                 }
                 if(romethod == 2){
-                	#roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, norm = scale, strata = strata)
-	                #roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata)
+                	roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	                roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
                 }
             }
         }
         if (!missing(traits) == "TRUE") {
         	if(romethod == 1){
-	            roPT <- cor.matrix(W, Q, P, T, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm)
-    	        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale)
+	            roPT <- cor.matrix(mx1 = W, mx2 = Q, x = P, y = T, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    	        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
     	    }
     	    if(romethod == 2){
-	            roPT <- pro.matrix(W, Q, P, T, permutations = N, strata = strata)
-    	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, norm.z = scale)
+	            roPT <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = T, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
     	    }
     	    if(romethod == 1){
-            	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
+            	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm) # VER TUDO DA BF, CLUSTER, PROCRUSTES
 	            if (scale == "TRUE") {
     	            dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
         	    }
-            	BF <- vegan::mantel(dist.traits, dist.spp, method = method, permutations = N, strata = strata, na.rm = na.rm)
-	            roBF <- c(BF$statistic, BF$signif)
+            	roBF <- cor.mantel(dist.traits, stats::as.dist(dist.spp), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL) #VER
+	            #roBF <- c(BF$statistic, BF$signif)
             }
             if(romethod == 2){
 			    #dist.spp.t <- sweep(dist.spp, 2, sqrt(apply(dist.spp^2,2,sum)), "/")
@@ -462,12 +470,16 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
 			    vectors <- vegan::wcmdscale(dist.spp.t,eig = TRUE)$points
 			    #vectors <- prcomp(dist.spp.t,scale = TRUE)$x
 			    traits.t <- sweep(traits, 2, sqrt(apply(traits^2,2,sum)), "/")
-				BF <- suppressWarnings(vegan::protest(vectors,traits.t,permutations = permute::how(nperm = N, blocks = strata)))
-	            roBF <- c(sqrt(1 - BF$ss), BF$signif)
+				#BF <- suppressWarnings(vegan::protest(vectors,traits.t,permutations = permute::how(nperm = N, blocks = strata))) #VER
+				roBF <- cor.procrustes(vectors,traits.t,permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	            #roBF <- c(sqrt(1 - BF$ss), BF$signif)
             }
         }
     }
     SYNCSA <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF)
+    if(!is.null(parallel)){
+    	parallel::stopCluster(CL)
+    }
     RES$statistics<-SYNCSA
     RES$call<-match.call()
     RES$matrices<-RES.matrices

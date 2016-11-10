@@ -9,11 +9,11 @@ procrustes.partial<-function(x, y, z)
 	pro.residuals<-function(x,scoresofz){
 		res<-matrix(NA,dim(x)[1],dim(x)[2])
 		for(i in 1:dim(x)[2]){ 
-			res[,i]<-cbind(residuals(lm(V1~.,data=as.data.frame(cbind(x[,i],scoresofz)))))
+			res[,i]<-cbind(stats::residuals(stats::lm(V1~.,data=as.data.frame(cbind(x[,i],scoresofz)))))
 		}
 	return(res)
 	}
-	scoresofz<-prcomp(z,scale = TRUE)$x
+	scoresofz<-stats::prcomp(z,scale = TRUE)$x
 	nm<-round(dim(x)[1]/2)
 	if(nm<dim(scoresofz)[2]){
 		scoresofz<-scoresofz[,1:nm,drop=FALSE]

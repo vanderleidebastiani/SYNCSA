@@ -4,6 +4,7 @@
 #' 
 #' 
 #' @encoding UTF-8
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @param n Number of current progress
 #' @param N Total number of cases
 #' @param ... Other parameters for the txtProgressBar function
@@ -13,7 +14,7 @@
 ProgressBAR<-function(n,N,...){
 	n=n/N
 	for(i in c(0, n)){
-		A<-txtProgressBar(...)	
-		setTxtProgressBar(A,i)
+		A<-utils::txtProgressBar(...)	
+		utils::setTxtProgressBar(A,i)
 	}
 }

@@ -12,19 +12,27 @@
 #' @param comm Community data, with species as columns and sampling units as
 #' rows.
 #' @param traits Matrix data of species described by traits, with traits as
-#' columns and species as rows.
+#' columns and species as rows (Default traits = NULL).
 #' @param dist.spp Matrix containing phylogenetic distance between species.
 #' Must be a complete matrix (not a half diagonal matrix).This matrix can be
 #' larger than community data (more species) as long as it has at least all
-#' species that are in community data.
+#' species that are in community data (Default dist.spp = NULL).
 #' @param envir Environmental variables for each community, with variables as
-#' columns and sampling units as rows.
+#' columns and sampling units as rows (Default envir = NULL).
 #' @param strata Strata nomed vector to specify restricting permutations within
-#' species groups.
+#' species groups (Default strata = NULL).
 #' @param check.comm Logical argument (TRUE or FALSE) to remove sampling units and 
 #' species with total sums equal or less than zero (Default check.comm = "TRUE").
+#' @param convert.traits Logical argument (TRUE or FALSE) to convert factor traits in 
+#' dannny traits (Default convert.traits = "FALSE").
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "metric").
 #' @return The dataframes or matrices of community, traits, phylogenetic distance and
-#' environmental variables. The strata vector for permutations.
+#' environmental variables, as well as the type of each varible in each dataframe or matrix. 
+#' The strata vector for permutations. If convert.traits is TRUE and some traits is of class
+#' factor the function returm the traits with expand traits in dummy variables and return 
+#' a list with sugestion to group of traits that are analysed together. If some warning messenger
+#' is showed a list of warning messenger is returned.
 #' @note The function organizes the data despite the absence of one of the
 #' dataframes or matrices, provided that the community data had been entered. Unspecified
 #' data will appear as NULL.
@@ -33,9 +41,12 @@
 #' \code{\link{matrix.p}}, \code{\link{syncsa}}
 #' @keywords SYNCSA
 #' @export
-organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm = TRUE, convert.traits = TRUE, ord = "metric"){
+organize.syncsa <- function (comm, traits = NULL, dist.spp = NULL, envir = NULL, strata = NULL, check.comm = TRUE, convert.traits = FALSE, ord = "metric"){
 	if (missing(comm)=="TRUE"){
 		stop("\n Community not fount\n")
+	}
+	if(class(comm) != "data.frame" & class(comm) != "matrix"){
+		stop("comm must be a matrix or a data.frame")
 	}
 	if (is.null(colnames(comm))){
 		stop("\n Column names of comm are null\n")
@@ -43,16 +54,22 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
 	if (is.null(rownames(comm))){
 		stop("\n Row names of comm are null\n")
 	}
+	commvartype<-var.type(comm)
+	if(any(commvartype=="n") | any(commvartype=="f") | any(commvartype=="o")){
+		stop("\n comm must contain only numeric or binary variables \n")
+	}
+	list.warning<-list()
+	put.together<-NULL
 	if(check.comm){
 		col.rm<-colnames(comm)[!colSums(comm,na.rm=TRUE)>0]
 		row.rm<-rownames(comm)[!rowSums(comm,na.rm=TRUE)>0]
 		if(length(col.rm)>0){
-			print("Species removed from community data:",quote=FALSE)
-			print(col.rm)
+			warning("Species removed from community data - Check list of warning in list.warning",call.=FALSE)
+			list.warning$comm$spp<-data.frame(species.removed=col.rm)
 		}
 		if(length(row.rm)>0){
-			print("Communities removed from community data:",quote=FALSE)
-			print(row.rm)	
+			warning("Communities removed from community data - Check list of warning in list.warning",call.=FALSE)
+			list.warning$comm$comm<-data.frame(communities.removed=row.rm)
 		}		
 		comm<-comm[,colSums(comm,na.rm=TRUE)>0,drop=FALSE]
 		comm<-comm[rowSums(comm,na.rm=TRUE)>0,,drop=FALSE]
@@ -60,32 +77,38 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
 	if(any(is.na(comm))){
 		warning("Warning: NA in community data",call.=FALSE)
 	}
-	commvartype<-vartype(comm)
-	if(any(commvartype=="n")){
-		stop("\n comm must contain only numeric, binary or ordinal variables \n")
-	}
-    if (!missing(traits) == "TRUE") {
+    if (!is.null(traits)) {
+    	if(class(traits) != "data.frame" & class(traits) != "matrix"){
+			stop("traits must be a matrix or a data.frame")
+		}	
     	if (is.null(colnames(traits))){
-		stop("\n Column names of traits are null\n")
+			stop("\n Column names of traits are null\n")
 		}
 		if (is.null(rownames(traits))){
-		stop("\n Row names of traits are null\n")
+			stop("\n Row names of traits are null\n")
 		}
-    	if(any(is.na(traits))){
-			warning("Warning: NA in traits matrix",call.=FALSE)
-    	}
+		traitsvartype<-var.type(traits)
+		if(any(traitsvartype=="n")){
+			stop("\n trait must contain only numeric, binary, factor or ordinal variables \n")
+		}
 		match.names<-match(colnames(comm), rownames(traits))
 		if(sum(is.na(match.names))>0){
-			print("There are species from community data that are not on traits matrix:",quote=FALSE)
-			print(setdiff(colnames(comm), rownames(traits)))
-			stop("\n Species not found on traits matrix\n")
+			list.warning$traits$spp<-data.frame(species.not.on.traits=setdiff(colnames(comm), rownames(traits)))
+			warning("ERROR - Check list of warning in list.warning$traits",call.=FALSE)
+			return(list(list.warning = list.warning))
 		}
 		traits<-as.data.frame(traits[match.names,,drop=FALSE])
-		traitsvartype<-vartype(traits)
-		if(any(traitsvartype=="n")){
-			stop("\n trait must contain only numeric, binary or ordinal variables \n")
-		}
 		if(convert.traits){
+			if(any(traitsvartype=="f")){
+				warning("Factor variables expanded in dummy variables",call.=FALSE)
+			}
+			traits.dummy.temp<-var.dummy(traits)
+			traits<-traits.dummy.temp$data
+			put.together<-traits.dummy.temp$together
+			traitsvartype<-var.type(traits)
+			if(any(traitsvartype=="o")){
+				warning("Ordinal variables transformed in continual variables",call.=FALSE)
+			}
 			traits<-data.matrix(traits)
 			for (i in 1:length(traitsvartype)){
 				if (traitsvartype[i] == "o"){
@@ -96,80 +119,93 @@ organize.syncsa <- function (comm, traits, dist.spp, envir, strata, check.comm =
         			}
     			}
 			}
-			traitsvartype<-vartype(traits)
+			traitsvartype<-var.type(traits)
 		}
+		if(any(is.na(traits))){
+			warning("Warning: NA in traits matrix",call.=FALSE)
+    	}
 	}
-	if (!missing(dist.spp) == "TRUE") {
+	if (!is.null(dist.spp)) {
+		if(class(dist.spp) != "data.frame" & class(dist.spp) != "matrix"){
+			stop("dist.spp must be a matrix or a data.frame")
+		}
 		if (is.null(colnames(dist.spp))){
 			stop("\n Column names of dist.spp are null\n")
 		}
 		if (is.null(rownames(dist.spp))){
 			stop("\n Row names of dist.spp are null\n")
 		}
-		if(any(is.na(dist.spp))){
-			warning("Warning: NA in phylogenetic distance matrix",call.=FALSE)
+		dist.sppvartype<-var.type(dist.spp)
+		if(any(dist.sppvartype=="n") | any(dist.sppvartype=="f") | any(dist.sppvartype=="o")){
+			stop("\n dist.spp must contain only numeric or binary variables \n")
 		}
 		match.names<-match(colnames(comm), colnames(dist.spp))
 		if(sum(is.na(match.names))>0){
-			print("There are species from community data that are not on phylogenetic distance matrix:",quote=FALSE)
-			print(setdiff(colnames(comm), colnames(dist.spp)))
-			stop("\n Species not found on phylogenetic distance matrix\n")
+			list.warning$dist.spp$spp<-data.frame(species.not.on.dist.spp=setdiff(colnames(comm), colnames(dist.spp)))
+			warning("ERROR - Check list of warning in list.warning$dist.spp",call.=FALSE)
+			return(list.warning)
 		}
 		dist.spp<-dist.spp[match.names,match.names,drop=FALSE]
-		dist.sppvartype<-vartype(dist.spp)
-		if(any(dist.sppvartype=="n")){
-			stop("\n dist.spp must contain only numeric, binary or ordinal variables \n")
+		if(any(is.na(dist.spp))){
+			warning("Warning: NA in phylogenetic distance matrix",call.=FALSE)
 		}
 	}
-	if (!missing(envir) == "TRUE") {
+	if (!is.null(envir)) {
+		if(class(envir) != "data.frame" & class(envir) != "matrix"){
+			stop("envir must be a matrix or a data.frame")
+		}
 		if (is.null(colnames(envir))){
 			stop("\n Column names of envir are null\n")
 		}		
 		if (is.null(rownames(envir))){
 			stop("\n Row names of envir are null\n")
 		}
+		envirvartype<-var.type(envir)
+		if(any(envirvartype=="n") | any(envirvartype=="f") | any(envirvartype=="o")){
+			stop("\n envir must contain only numeric or binary variables \n")
+		}
+		match.names<-match(rownames(comm), rownames(envir))
+		if(sum(is.na(match.names))>0){			
+			list.warning$envir$comm<-data.frame(comm.not.on.envir=setdiff(rownames(comm), rownames(envir)))
+			warning("ERROR - Check list of warning in list.warning$envir",call.=FALSE)
+			return(list.warning)	
+		}
+		envir<-envir[match.names,,drop=FALSE]
 		if(any(is.na(envir))){
 			warning("Warning: NA in environmental data",call.=FALSE)
 		}
-		match.names<-match(rownames(comm), rownames(envir))
-		if(sum(is.na(match.names))>0){
-			print("The are community that are not on environmental matrix:",quote=FALSE)
-			print(setdiff(rownames(comm), rownames(envir)))
-			stop("\n Sampling units not found on environmental matrix\n")
-		}
-		envir<-envir[match.names,,drop=FALSE]
-		envirvartype<-vartype(envir)
-		if(any(envirvartype=="n")){
-			stop("\n envir must contain only numeric, binary or ordinal variables \n")
-		}
     }
-    if (!missing(strata)) {
+    if (!is.null(strata)) {
 		if (is.null(names(strata))){
 			stop("\n Names of strata factor are null\n")
 		}		
 		match.names<-match(colnames(comm), names(strata))
 		if(sum(is.na(match.names))>0){
-			print("There are species from community data that are not on strata vector :",quote=FALSE)
-			print(setdiff(colnames(comm), names(strata)))
-			stop("\n Species not found on strata\n")
+			list.warning$strata<-data.frame(species.not.on.strata=setdiff(colnames(comm), names(strata)))
+			warning("ERROR - Check list of warning in list.warning$strata",call.=FALSE)
+			return(list.warning)			
 		}
 		strata<-strata[match.names]
     }
-    if (missing(traits)){
+    if (is.null(traits)){
 		traits<-NULL
 		traitsvartype=NULL
 	}
-	if (missing(dist.spp)){
+	if (is.null(dist.spp)){
 		dist.spp<-NULL
 		dist.sppvartype =NULL
 	}
-	if (missing(envir)){
+	if (is.null(envir)){
 		envir<-NULL
 		envirvartype=NULL
 	}
-	if (missing(strata)){
+	if (is.null(strata)){
 		strata<-NULL
 	}
-	res<-list(community=comm,traits=traits,dist.spp=dist.spp,environmental=envir,community.var.type= commvartype,traits.var.type= traitsvartype, dist.spp.var.type = dist.sppvartype, environmental.var.type = envirvartype, strata = strata)		
-    return(res)
+	if(length(list.warning)==0){
+		res<-list(community=comm,traits=traits,dist.spp=dist.spp,environmental=envir,community.var.type= commvartype,traits.var.type= traitsvartype, dist.spp.var.type = dist.sppvartype, environmental.var.type = envirvartype, strata = strata,put.together=put.together)		
+	} else {
+		res<-list(list.warning = list.warning, community=comm,traits=traits,dist.spp=dist.spp,environmental=envir,community.var.type= commvartype,traits.var.type= traitsvartype, dist.spp.var.type = dist.sppvartype, environmental.var.type = envirvartype, strata = strata,put.together=put.together)
+	}
+return(res)
 }

@@ -8,6 +8,7 @@
 #'
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
+#' @importFrom utils combn
 #' @aliases optimal print.optimal
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
@@ -93,19 +94,19 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 #	envir <- as.matrix(envir)
 	#traits <- as.matrix(traits)
 	if (!missing(comm)=="TRUE"){
-	commvartype<-vartype(comm)
+	commvartype<-var.type(comm)
 	if(any(commvartype=="n")){
 		stop("\n comm must contain only numeric, binary or ordinal variables \n")
 		}
 	}
     if (!missing(traits) == "TRUE") {
-	traitsvartype<-vartype(traits)
+	traitsvartype<-var.type(traits)
 		if(any(traitsvartype=="n")){
 			stop("\n trait must contain only numeric, binary or ordinal variables \n")
 		}
 	}
 	if (!missing(envir) == "TRUE") {
-		envirvartype<-vartype(envir)
+		envirvartype<-var.type(envir)
 		if(any(envirvartype=="n")){
 			stop("\n envir must contain only numeric, binary or ordinal variables \n")
 		}
@@ -189,7 +190,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 	comb <- matrix(NA, nrow = sum(bin[subset.min:subset.max]), ncol = 1)
 	n = 0
 	for (i in subset.min:subset.max) {
-		combinations <- combn(names.traits, i, simplify = TRUE) #mudei
+		combinations <- utils::combn(names.traits, i, simplify = TRUE) #mudei
 		for (j in 1:bin[i]) {
 			n = n + 1
 			comb[n, 1] <- paste(combinations[, j], collapse = " ")
@@ -198,7 +199,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 	n = 0
 	correlation <- matrix(NA, nrow = sum(bin[subset.min:subset.max]), ncol = 1)
 	for (i in subset.min:subset.max) {
-		combinations1 <- combn(names.traits, i, simplify = TRUE)
+		combinations1 <- utils::combn(names.traits, i, simplify = TRUE)
 		for (j in 1:bin[i]) {
 			if (pattern == 1) {
 				n = n + 1

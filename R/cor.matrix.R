@@ -9,7 +9,7 @@
 #' Procrustes as a measure of concordance between data sets. For more details,
 #' see \code{\link{procrustes}} and \code{\link{syncsa}}.
 #' 
-#' The null model is based on permutations in the matrix m2, typically the
+#' The null model is based on permutations in the matrix mx2, typically the
 #' matrices B, U and Q.
 #' 
 #' Null model described by Pillar et al. (2009) and Pillar & Duarte (2010). For
@@ -17,13 +17,13 @@
 #' 
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
-#' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial
-#' @param mx1 m1 Matrix that multiplied by mx2 results in the matrix x.
-#' @param mx2 m2 Matrix that when multiplied by mx1 results in the matrix x. See
-#' @param m1 Matrix that multiplied by mx2 results in the matrix x.
-#' @param m2 Matrix that when multiplied by mx1 results in the matrix x. See
+#' @importFrom parallel makeCluster parRapply stopCluster
+#' @importFrom stats as.dist 
+#' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial cor.mantel cor.procrustes
+#' @param mx1 Matrix that multiplied by mx2 results in the matrix x.
+#' @param mx2 Matrix that when multiplied by mx1 results in the matrix x. See
 #' `details` below.
-#' @param x Matrix obtained by multiplication of m1 and m2.
+#' @param x Matrix obtained by multiplication of mx1 and mx2.
 #' @param my1 Matrix that multiplied by my2 results in the matrix y.
 #' @param my2 Matrix that when multiplied by my1 results in the matrix y. See
 #' `details` below.
@@ -33,6 +33,10 @@
 #' `details` below.
 #' @param z Matrix whose effect will be removed from the correlation between x
 #' and y.
+#' @param dist.x Dissimilarity matrices of class dist.
+#' @param dist.y Dissimilarity matrices of class dist.
+#' @param mx Matrix that will be correlated using procrustes.
+#' @param my Matrix that will be correlated using procrustes.
 #' @param method Correlation method, as accepted by cor: "pearson", "spearman"
 #' or "kendall".
 #' @param dist Dissimilarity index, as accepted by vegdist: "manhattan",
@@ -55,6 +59,13 @@
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' deletion of missing observations when computing dissimilarities (Default
 #' na.rm = FALSE).
+#' @param seqpermutation A pre set permutations, with the same dimensions of 
+#' permutations (Default seqpermutation = NULL).
+#' @param parallel Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).
+#' @param newClusters Logical argument (TRUE or FALSE) to specify if make new parallel 
+#' processes or use predefined socket cluster. Only if parallel is different of NULL (Default newClusters = TRUE).
+#' @param CL A predefined socket cluster done with parallel package.
+
 #' @return \item{Obs}{Correlation between matrices.} \item{p}{Significance
 #' level based on permutations.}
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
@@ -69,27 +80,51 @@
 #' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #' @keywords SYNCSA
 #' @export
-cor.matrix<-function (m1, m2, x, y, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE) 
+cor.matrix<-function (mx1, mx2, x, y, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters=TRUE, CL =  NULL) 
 {
-    m1<-as.matrix(m1)
-    m2<-as.matrix(m2)
+	if(!is.null(seqpermutation)){
+		if(dim(seqpermutation)[1]!=permutations){
+			stop("\n The seqpermutation must be the dimension of permutations\n")
+		}
+	}
+    mx1<-as.matrix(mx1)
+    mx2<-as.matrix(mx2)
     x<-as.matrix(x)
     y<-as.matrix(y)
     dist.y <- vegan::vegdist(y, method = dist, na.rm = na.rm)
     dist.x <- vegan::vegdist(x, method = dist, na.rm = na.rm)
     correlation <- cor(dist.x, dist.y, method = method)
-    value <- matrix(NA, nrow = permutations, ncol = 1)
-    for (i in 1: permutations) {
-        m2.permut <- permut.row.matrix(m2, strata = strata)$permut.matrix
-        x.permut <- m1 %*% m2.permut
-        if (norm == "TRUE") {
-            matrix.permut <- apply(x.permut^2, 2, sum)
-            x.permut <- sweep(x.permut, 2, sqrt(matrix.permut), "/")
-        }
-        dist.x.permut <- vegan::vegdist(x.permut, method = dist , na.rm = na.rm)
-        cor.x.permut <- cor(dist.x.permut, dist.y, method = method)
-        value[i,] <- cor.x.permut
-    }
+    N <- dim(mx2)[1]
+    if(is.null(seqpermutation)){
+		seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
+	}
+	if(!is.null(CL)){
+		parallel<-length(CL)
+	}
+	ptest<-function(samp,mx1,mx2,norm,dist.y,dist,na.rm,method){
+		x.permut <- mx1 %*% mx2[samp,,drop=FALSE]
+		if (norm) {
+			matrix.permut <- apply(x.permut^2, 2, sum)
+			x.permut <- sweep(x.permut, 2, sqrt(matrix.permut), "/")
+		}
+		dist.x.permut <- vegan::vegdist(x.permut, method = dist , na.rm = na.rm)
+		cor.x.permut <- cor(dist.x.permut, dist.y, method = method)   
+		return(cor.x.permut)
+	}
+    if(is.null(parallel)){
+    	value <- matrix(NA, nrow = permutations, ncol = 1)
+	    for (i in 1: permutations) {
+	        value[i,] <- ptest(samp = seqpermutation[i,],mx1=mx1,mx2=mx2, norm=norm,dist.y=dist.y, dist=dist,na.rm=na.rm,method=method)
+    	}
+	} else {
+		if (newClusters) {
+			CL <- parallel::makeCluster(parallel,type="PSOCK")
+		}
+		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest,mx1=mx1,mx2=mx2, norm=norm,dist.y=dist.y, dist=dist,na.rm=na.rm,method=method))
+		if (newClusters){
+			parallel::stopCluster(CL)
+		}
+	}
     signific <- (sum(abs(value) >= abs(correlation)) + 1)/(permutations + 1)
     return(list(Obs = correlation, p = signific))
 }
