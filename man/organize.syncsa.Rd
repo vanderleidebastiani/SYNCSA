@@ -5,32 +5,44 @@
 \alias{organize.syncsa}
 \title{Function for organize data for Package SYNCSA}
 \usage{
-organize.syncsa(comm, traits, dist.spp, envir, strata, check.comm = TRUE)
+organize.syncsa(comm, traits = NULL, dist.spp = NULL, envir = NULL,
+  strata = NULL, check.comm = TRUE, convert.traits = FALSE,
+  ord = "metric")
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
 rows.}
 
 \item{traits}{Matrix data of species described by traits, with traits as
-columns and species as rows.}
+columns and species as rows (Default traits = NULL).}
 
 \item{dist.spp}{Matrix containing phylogenetic distance between species.
 Must be a complete matrix (not a half diagonal matrix).This matrix can be
 larger than community data (more species) as long as it has at least all
-species that are in community data.}
+species that are in community data (Default dist.spp = NULL).}
 
 \item{envir}{Environmental variables for each community, with variables as
-columns and sampling units as rows.}
+columns and sampling units as rows (Default envir = NULL).}
 
 \item{strata}{Strata nomed vector to specify restricting permutations within
-species groups.}
+species groups (Default strata = NULL).}
 
 \item{check.comm}{Logical argument (TRUE or FALSE) to remove sampling units and 
 species with total sums equal or less than zero (Default check.comm = "TRUE").}
+
+\item{convert.traits}{Logical argument (TRUE or FALSE) to convert factor traits in 
+dannny traits (Default convert.traits = "FALSE").}
+
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
+(Default ord = "metric").}
 }
 \value{
 The dataframes or matrices of community, traits, phylogenetic distance and
-environmental variables. The strata vector for permutations.
+environmental variables, as well as the type of each varible in each dataframe or matrix. 
+The strata vector for permutations. If convert.traits is TRUE and some traits is of class
+factor the function returm the traits with expand traits in dummy variables and return 
+a list with sugestion to group of traits that are analysed together. If some warning messenger
+is showed a list of warning messenger is returned.
 }
 \description{
 Package \strong{SYNCSA} requires that the species and community sequence in

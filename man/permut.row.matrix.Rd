@@ -5,13 +5,15 @@
 \alias{permut.row.matrix}
 \title{Permutate rows in a matrix}
 \usage{
-permut.row.matrix(data, strata = NULL)
+permut.row.matrix(data, strata = NULL, seqpermutation = NULL)
 }
 \arguments{
 \item{data}{A matrix}
 
 \item{strata}{Argument to specify restricting permutations in rows 
 (Default strata = NULL).}
+
+\item{seqpermutation}{A pre set permutation vector (Default seqpermutation = NULL).}
 }
 \description{
 Internal function to permutate rows in a matrix.

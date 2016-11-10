@@ -12,7 +12,7 @@ syncsa(comm, traits, dist.spp, envir, ro.method = "mantel",
   method = "pearson", dist = "euclidean", scale = TRUE,
   scale.envir = TRUE, permutations = 999, strata = NULL,
   put.together = NULL, ord = "metric", na.rm = FALSE,
-  notification = TRUE)
+  notification = TRUE, parallel = NULL)
 }
 \arguments{
 \item{x}{An object of class syncsa.}
@@ -79,6 +79,8 @@ distances should be deleted in cases of missing observations (Default na.rm
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notification of missing observations should to be shown (Default
 notification = TRUE).}
+
+\item{parallel}{Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).}
 }
 \value{
 Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
