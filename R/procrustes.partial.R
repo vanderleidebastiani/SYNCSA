@@ -14,7 +14,7 @@ procrustes.partial<-function(x, y, z)
 	return(res)
 	}
 	scoresofz<-stats::prcomp(z,scale = TRUE)$x
-	nm<-round(dim(x)[1]/2)
+	nm<-round((dim(x)[1]-2)/2)
 	if(nm<dim(scoresofz)[2]){
 		scoresofz<-scoresofz[,1:nm,drop=FALSE]
 	}

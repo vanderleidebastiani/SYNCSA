@@ -457,12 +457,11 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
     	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
     	    }
     	    if(romethod == 1){
-            	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm) # VER TUDO DA BF, CLUSTER, PROCRUSTES
+            	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
 	            if (scale == "TRUE") {
     	            dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
         	    }
-            	roBF <- cor.mantel(dist.traits, stats::as.dist(dist.spp), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL) #VER
-	            #roBF <- c(BF$statistic, BF$signif)
+            	roBF <- cor.mantel(dist.traits, stats::as.dist(dist.spp), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
             }
             if(romethod == 2){
 			    #dist.spp.t <- sweep(dist.spp, 2, sqrt(apply(dist.spp^2,2,sum)), "/")
