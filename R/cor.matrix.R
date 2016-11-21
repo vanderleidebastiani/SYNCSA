@@ -80,7 +80,7 @@
 #' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #' @keywords SYNCSA
 #' @export
-cor.matrix<-function (mx1, mx2, x, y, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters=TRUE, CL =  NULL) 
+cor.matrix<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALSE, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, norm.y = FALSE, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters=TRUE, CL =  NULL) 
 {
 	if(!is.null(seqpermutation)){
 		if(dim(seqpermutation)[1]!=permutations){
@@ -90,6 +90,10 @@ cor.matrix<-function (mx1, mx2, x, y, method = "pearson", dist = "euclidean", pe
     mx1<-as.matrix(mx1)
     mx2<-as.matrix(mx2)
     x<-as.matrix(x)
+	if(permute.my2){
+	    my1<-as.matrix(my1)
+    	my2<-as.matrix(my2)
+    }
     y<-as.matrix(y)
     dist.y <- vegan::vegdist(y, method = dist, na.rm = na.rm)
     dist.x <- vegan::vegdist(x, method = dist, na.rm = na.rm)
@@ -101,26 +105,39 @@ cor.matrix<-function (mx1, mx2, x, y, method = "pearson", dist = "euclidean", pe
 	if(!is.null(CL)){
 		parallel<-length(CL)
 	}
-	ptest<-function(samp,mx1,mx2,norm,dist.y,dist,na.rm,method){
+	ptest<-function(samp, mx1, mx2, my1, my2, dist.y, permute.my2, norm, norm.y, dist, na.rm, method){
 		x.permut <- mx1 %*% mx2[samp,,drop=FALSE]
 		if (norm) {
 			matrix.permut <- apply(x.permut^2, 2, sum)
 			x.permut <- sweep(x.permut, 2, sqrt(matrix.permut), "/")
 		}
+		if(permute.my2){
+			y.permut <- my1 %*% my2[samp,,drop=FALSE]
+			if (norm.y) {
+	            matrix.permut <- apply(y.permut^2, 2, sum)
+    	        y.permut <- sweep(y.permut, 2, sqrt(matrix.permut), "/")
+        	}
+        	dist.y.permut <- vegan::vegdist(y.permut, method = dist , na.rm = na.rm)
+        }
 		dist.x.permut <- vegan::vegdist(x.permut, method = dist , na.rm = na.rm)
-		cor.x.permut <- cor(dist.x.permut, dist.y, method = method)   
+		if(!permute.my2){
+			cor.x.permut <- cor(dist.x.permut, dist.y, method = method)
+		}
+		if(permute.my2){
+			cor.x.permut <- cor(dist.x.permut, dist.y.permut, method = method)
+		}		
 		return(cor.x.permut)
 	}
     if(is.null(parallel)){
     	value <- matrix(NA, nrow = permutations, ncol = 1)
 	    for (i in 1: permutations) {
-	        value[i,] <- ptest(samp = seqpermutation[i,],mx1=mx1,mx2=mx2, norm=norm,dist.y=dist.y, dist=dist,na.rm=na.rm,method=method)
+	        value[i,] <- ptest(samp = seqpermutation[i,],mx1=mx1,mx2=mx2,my1=my1,my2=my2,dist.y=dist.y, permute.my2=permute.my2, norm=norm, norm.y= norm.y, dist=dist,na.rm=na.rm,method=method)
     	}
 	} else {
 		if (newClusters) {
 			CL <- parallel::makeCluster(parallel,type="PSOCK")
 		}
-		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest,mx1=mx1,mx2=mx2, norm=norm,dist.y=dist.y, dist=dist,na.rm=na.rm,method=method))
+		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest,mx1=mx1,mx2=mx2,my1=my1,my2=my2,dist.y=dist.y, permute.my2=permute.my2, norm=norm, norm.y= norm.y, dist=dist,na.rm=na.rm,method=method))
 		if (newClusters){
 			parallel::stopCluster(CL)
 		}

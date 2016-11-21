@@ -15,8 +15,9 @@ cor.mantel(dist.x, dist.y, method = "pearson", permutations = 999,
   strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL,
   newClusters = TRUE, CL = NULL)
 
-cor.matrix(mx1, mx2, x, y, method = "pearson", dist = "euclidean",
-  permutations = 999, norm = FALSE, strata = NULL, na.rm = FALSE,
+cor.matrix(mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALSE,
+  method = "pearson", dist = "euclidean", permutations = 999,
+  norm = FALSE, norm.y = FALSE, strata = NULL, na.rm = FALSE,
   seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL = NULL)
 
 cor.matrix.partial(mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL,
@@ -29,9 +30,9 @@ cor.matrix.partial(mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL,
 cor.procrustes(mx, my, permutations = 999, strata = NULL, na.rm = FALSE,
   seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL = NULL)
 
-pro.matrix(mx1, mx2, x, y, permutations = 999, norm = FALSE,
-  strata = NULL, seqpermutation = NULL, parallel = NULL,
-  newClusters = TRUE, CL = NULL)
+pro.matrix(mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALSE,
+  permutations = 999, norm = FALSE, norm.y = FALSE, strata = NULL,
+  seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL = NULL)
 
 pro.matrix.partial(mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL,
   mz2 = NULL, z, permute.my2 = FALSE, permute.mz2 = FALSE,
@@ -73,7 +74,15 @@ processes or use predefined socket cluster. Only if parallel is different of NUL
 
 \item{x}{Matrix obtained by multiplication of mx1 and mx2.}
 
+\item{my1}{Matrix that multiplied by my2 results in the matrix y.}
+
+\item{my2}{Matrix that when multiplied by my1 results in the matrix y. See
+`details` below.}
+
 \item{y}{Matrix that will be correlated with the matrix x.}
+
+\item{permute.my2}{Logical argument (TRUE or FALSE) to specify if realize 
+parallel permutation in matrix my2.}
 
 \item{dist}{Dissimilarity index, as accepted by vegdist: "manhattan",
 "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower",
@@ -83,10 +92,8 @@ However, some of these will not make sense in this case.}
 \item{norm}{Logical argument (TRUE or FALSE) to specify if x is standardized
 within variables (Default norm = FALSE).}
 
-\item{my1}{Matrix that multiplied by my2 results in the matrix y.}
-
-\item{my2}{Matrix that when multiplied by my1 results in the matrix y. See
-`details` below.}
+\item{norm.y}{Logical argument (TRUE or FALSE) to specify if y is standardized
+within variables (Default norm = FALSE).}
 
 \item{mz1}{Matrix that multiplied by mz2 results in the matrix z.}
 
@@ -96,14 +103,8 @@ within variables (Default norm = FALSE).}
 \item{z}{Matrix whose effect will be removed from the correlation between x
 and y.}
 
-\item{permute.my2}{Logical argument (TRUE or FALSE) to specify if realize 
-parallel permutation in matrix my2.}
-
 \item{permute.mz2}{Logical argument (TRUE or FALSE) to specify if realize 
 parallel permutation in matrix mz2.}
-
-\item{norm.y}{Logical argument (TRUE or FALSE) to specify if y is standardized
-within variables (Default norm = FALSE).}
 
 \item{norm.z}{Logical argument (TRUE or FALSE) to specify if z is standardized
 within variables (Default norm = FALSE).}

@@ -20,8 +20,6 @@ procrustes.partial<-function(x, y, z)
 	}
 	x.r<-pro.residuals(x,scoresofz)
 	y.r<-pro.residuals(y,scoresofz)
-#	x.r<-sweep(x.r, 2, sqrt(apply(x.r^2,2,sum)), "/")
-#	y.r<-sweep(x.r, 2, sqrt(apply(x.r^2,2,sum)), "/")
 	statistic<-procrustes.syncsa(x.r,y.r)
 #	rxy <- procrustes.syncsa(x, y)
 #	rxz <- procrustes.syncsa(x, z)

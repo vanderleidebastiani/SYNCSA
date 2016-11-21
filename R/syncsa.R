@@ -438,23 +438,23 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             }
             if (!missing(traits) == "TRUE") {
             	if(romethod == 1){
-                	roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	                roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+                	roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	                roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
                 }
                 if(romethod == 2){
-                	roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	                roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+                	roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	                roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
                 }
             }
         }
         if (!missing(traits) == "TRUE") {
         	if(romethod == 1){
-	            roPT <- cor.matrix(mx1 = W, mx2 = Q, x = P, y = T, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	            roPT <- cor.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, method = method, dist = dist, permutations = N, norm.y = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    	        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
     	    }
     	    if(romethod == 2){
-	            roPT <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = T, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+	            roPT <- pro.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, permutations = N, norm.y = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
     	    }
     	    if(romethod == 1){
             	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
@@ -464,14 +464,9 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             	roBF <- cor.mantel(dist.traits, stats::as.dist(dist.spp), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
             }
             if(romethod == 2){
-			    #dist.spp.t <- sweep(dist.spp, 2, sqrt(apply(dist.spp^2,2,sum)), "/")
-			    dist.spp.t<-dist.spp
-			    vectors <- vegan::wcmdscale(dist.spp.t,eig = TRUE)$points
-			    #vectors <- prcomp(dist.spp.t,scale = TRUE)$x
+			    vectors <- vegan::wcmdscale(dist.spp/max(dist.spp),eig = TRUE)$points
 			    traits.t <- sweep(traits, 2, sqrt(apply(traits^2,2,sum)), "/")
-				#BF <- suppressWarnings(vegan::protest(vectors,traits.t,permutations = permute::how(nperm = N, blocks = strata))) #VER
 				roBF <- cor.procrustes(vectors,traits.t,permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	            #roBF <- c(sqrt(1 - BF$ss), BF$signif)
             }
         }
     }
