@@ -1,6 +1,7 @@
 #' @rdname procrustes.syncsa
 #' @encoding UTF-8
 #' @export
+#' @importFrom RcppArmadillo fastLm
 procrustes.partial<-function(x, y, z)
 {
 	x <- as.matrix(x)
@@ -8,8 +9,10 @@ procrustes.partial<-function(x, y, z)
 	z <- as.matrix(z)
 	pro.residuals<-function(x,scoresofz){
 		res<-matrix(NA,dim(x)[1],dim(x)[2])
-		for(i in 1:dim(x)[2]){ 
-			res[,i]<-cbind(stats::residuals(stats::lm(V1~.,data=as.data.frame(cbind(x[,i],scoresofz)))))
+		for(i in 1:dim(x)[2]){
+		  dff <- data.frame(V1 = x[,i], scoresofz)
+		  fmod <- fastLm(V1~.,data=dff)
+			res[,i]<-cbind(fmod[["residuals"]])
 		}
 	return(res)
 	}
