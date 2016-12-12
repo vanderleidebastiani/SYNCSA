@@ -24,7 +24,7 @@
 #' @param check.comm Logical argument (TRUE or FALSE) to remove sampling units and 
 #' species with total sums equal or less than zero (Default check.comm = "TRUE").
 #' @param convert.traits Logical argument (TRUE or FALSE) to convert factor traits in 
-#' dannny traits (Default convert.traits = "FALSE").
+#' dummy traits (Default convert.traits = "FALSE").
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
 #' (Default ord = "metric").
 #' @return The dataframes or matrices of community, traits, phylogenetic distance and

@@ -31,7 +31,7 @@ species groups (Default strata = NULL).}
 species with total sums equal or less than zero (Default check.comm = "TRUE").}
 
 \item{convert.traits}{Logical argument (TRUE or FALSE) to convert factor traits in 
-dannny traits (Default convert.traits = "FALSE").}
+dummy traits (Default convert.traits = "FALSE").}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
 (Default ord = "metric").}
