@@ -20,13 +20,13 @@ procrustes.partial<-function(x, y, z)
 #		Yres<-Y-Yfit
 #	return(Yres)
 #	}
-	pro.residuals <- function(xs, scores){
-		res<-matrix(NA,dim(xs)[1],dim(xs)[2])
-		for(i in 1:dim(xs)[2]){
-			mat <- cbind(1, scores)
-			fast_mod <- RcppArmadillo::fastLmPure(mat, x[,i])
+	pro.residuals <- function(Y, X){
+		res<-matrix(NA,dim(Y)[1],dim(Y)[2])
+		for(i in 1:dim(Y)[2]){
+			mat <- cbind(1, X)
+			fast_mod <- RcppArmadillo::fastLmPure(mat, Y[,i])
 			coeffs <- fast_mod$coefficients
-			res[,i] <- x[,i] - mat %*% coeffs
+			res[,i] <- Y[,i] - mat %*% coeffs
 		}
 	return(res)
 	}
