@@ -2,15 +2,14 @@ Package: SYNCSA
 Type: Package
 Title: Analysis of Functional and Phylogenetic Patterns in Metacommunities
 Version: 1.3.3
-Date: 2016-11-04
+Date: 2016-12-13
 Author: Vanderlei Julio Debastiani
 Maintainer: Vanderlei Julio Debastiani
     <vanderleidebastiani@yahoo.com.br>
 Imports:
     vegan,
     FD,
-    permute,
-    RcppArmadillo
+    permute
 Description: Analysis of metacommunities based on functional traits and
     phylogeny of the community components. The functions that are offered here
     implement for the R environment methods that have been available in the

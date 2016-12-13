@@ -1,7 +1,6 @@
 #' @rdname procrustes.syncsa
 #' @encoding UTF-8
 #' @export
-#' @importFrom RcppArmadillo fastLm
 procrustes.partial<-function(x, y, z)
 {
 	x <- as.matrix(x)
