@@ -465,7 +465,7 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
             }
             if(romethod == 2){
 			    vectors <- vegan::wcmdscale(dist.spp/max(dist.spp),eig = TRUE)$points
-			    traits.t <- sweep(traits, 2, sqrt(apply(traits^2,2,sum)), "/")
+			    traits.t <- sweep(B, 2, sqrt(apply(B^2,2,sum, na.rm = na.rm)), "/")
 				roBF <- cor.procrustes(vectors,traits.t,permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
             }
         }
