@@ -6,10 +6,27 @@ procrustes.partial<-function(x, y, z)
 	x <- as.matrix(x)
 	y <- as.matrix(y)
 	z <- as.matrix(z)
-	pro.residuals<-function(x,scoresofz){
-		res<-matrix(NA,dim(x)[1],dim(x)[2])
-		for(i in 1:dim(x)[2]){ 
-			res[,i]<-cbind(stats::residuals(stats::lm(V1~.,data=as.data.frame(cbind(x[,i],scoresofz)))))
+#	pro.residuals<-function(x,scoresofz){
+#		res<-matrix(NA,dim(x)[1],dim(x)[2])
+#		for(i in 1:dim(x)[2]){ 
+#			res[,i]<-cbind(stats::residuals(stats::lm(V1~.,data=as.data.frame(cbind(x[,i],scoresofz)))))
+#		}
+#	return(res)
+#	}	
+#	pro.residuals<-function(Y,X){
+#		X<-base::scale(X, scale = FALSE)
+#		Y<-base::scale(Y, scale = FALSE)
+#		Yfit<-X%*%solve(t(X)%*%X)%*%(t(X))%*%Y
+#		Yres<-Y-Yfit
+#	return(Yres)
+#	}
+	pro.residuals <- function(xs, scores){
+		res<-matrix(NA,dim(xs)[1],dim(xs)[2])
+		for(i in 1:dim(xs)[2]){
+			mat <- cbind(1, scores)
+			fast_mod <- RcppArmadillo::fastLmPure(mat, x[,i])
+			coeffs <- fast_mod$coefficients
+			res[,i] <- x[,i] - mat %*% coeffs
 		}
 	return(res)
 	}
