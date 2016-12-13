@@ -25,6 +25,7 @@ var.dummy<-function(data){
 	type<-var.type(data)
 	n<-dim(data)[1]
 	RES <- as.data.frame(rep(NA,n))
+	rownames(RES)<-rownames(data)
 	m<-1
 	l<-1
 	together<-list()
