@@ -354,6 +354,12 @@ syncsa<-function (comm, traits, dist.spp, envir, ro.method = "mantel", method = 
 		if(any(envirvartype=="n")){
 			stop("\n envir must contain only numeric, binary or ordinal variables \n")
 		}
+		if(romethod == 1 & any(is.na(suppressWarnings(vegdist(envir,method=dist,na.rm=TRUE))))){
+			stop("\n envir with too much NA \n")
+		}
+		if(romethod == 2 & any(is.na(envir))){
+			stop("\n envir with NA \n")
+		}		
     }
     if(!is.null(parallel)){
     	CL <- parallel::makeCluster(parallel,type="PSOCK")	
