@@ -6,13 +6,25 @@ procrustes.partial<-function(x, y, z)
 	x <- as.matrix(x)
 	y <- as.matrix(y)
 	z <- as.matrix(z)
-
-	pro.residuals <- function(Y,X){
-	  X<-sweep(X,2,colMeans(X,na.rm=TRUE),check.margin = FALSE)
-	  Y<-sweep(Y,2,colMeans(Y,na.rm=TRUE),check.margin = FALSE)
-	  Yfit<-X%*%solve(t(X)%*%X)%*%(t(X))%*%Y
-	  Yres<-Y-Yfit
-	  return(Yres)
+	if(!options("SYNCSA.speed")$SYNCSA.speed){
+		pro.residuals <- function(Y, X){
+			res<-matrix(NA,dim(Y)[1],dim(Y)[2])
+			for(i in 1:dim(Y)[2]){
+				mat <- cbind(1, X)
+				fast_mod <- RcppArmadillo::fastLmPure(mat, Y[,i])
+				coeffs <- fast_mod$coefficients
+				res[,i] <- Y[,i] - mat %*% coeffs
+			}
+		return(res)
+		}
+	} else {
+		pro.residuals <- function(Y,X){
+		  X<-sweep(X,2,colMeans(X,na.rm=TRUE),check.margin = FALSE)
+		  Y<-sweep(Y,2,colMeans(Y,na.rm=TRUE),check.margin = FALSE)
+		  Yfit<-X%*%solve(t(X)%*%X)%*%(t(X))%*%Y
+		  Yres<-Y-Yfit
+		  return(Yres)
+		}
 	}
 	scoresofz<-stats::prcomp(z,scale = TRUE)$x
 	nm<-round((dim(x)[1]-2)/2)
