@@ -24,8 +24,10 @@
 #' @param check.comm Logical argument (TRUE or FALSE) to remove sampling units and 
 #' species with total sums equal or less than zero (Default check.comm = "TRUE").
 #' @param convert.traits Logical argument (TRUE or FALSE) to convert factor traits in 
-#' dummy traits (Default convert.traits = "FALSE").
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' dummy traits and/or convert ordinal variables in numeric (see ord option) (Default convert.traits = FALSE).
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}.
+#' When ord = "podani" or ord = "metric", all ordered variable are replaced by their ranks
+#' and if ord = "classic" all ordinal variables are simply treated as continuous variables
 #' (Default ord = "metric").
 #' @return The dataframes or matrices of community, traits, phylogenetic distance and
 #' environmental variables, as well as the type of each varible in each dataframe or matrix. 
