@@ -31,9 +31,11 @@ species groups (Default strata = NULL).}
 species with total sums equal or less than zero (Default check.comm = "TRUE").}
 
 \item{convert.traits}{Logical argument (TRUE or FALSE) to convert factor traits in 
-dummy traits (Default convert.traits = "FALSE").}
+dummy traits and/or convert ordinal variables in numeric (see ord option) (Default convert.traits = FALSE).}
 
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}.
+When ord = "podani" or ord = "metric", all ordered variable are replaced by their ranks
+and if ord = "classic" all ordinal variables are simply treated as continuous variables
 (Default ord = "metric").}
 }
 \value{
