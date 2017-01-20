@@ -1,16 +1,17 @@
 #' Function to obtain the correlation between two matrices and partial matrix
 #' correlation between three matrices.
 #' 
-#' Function obtains the correlation between two matrices or to obtain the
-#' partial matrix correlation between three matrices. The functions cor.matrix
-#' and cor.matrix.partial are similar the function mantel and partial mantel,
-#' although the significance of the statistics is evaluated differently from
-#' mantel. The functions pro.matrix and pro.matrix.partial uses symmetric
-#' Procrustes as a measure of concordance between data sets. For more details,
-#' see \code{\link{procrustes}} and \code{\link{syncsa}}.
+#' The functions cor.matrix and cor.matrix.partial are similar the function 
+#' \code{\link{mantel}} and \code{\link{mantel.partial}}, although the significance
+#' of the statistics is evaluated differently from Mantel. The functions pro.matrix 
+#' and pro.matrix.partial uses symmetric Procrustes as a measure of concordance between
+#' data sets. The function cor.mantel is similar the function \code{\link{mantel}}, but 
+#' allow the use of a set of predefined permutation. For more details, see 
+#' \code{\link{syncsa}}.
 #' 
 #' The null model is based on permutations in the matrix mx2, typically the
-#' matrices B, U and Q.
+#' matrices B, U and Q, except in the function cor.mantel when the permutations 
+#' are done in one of distance matrix.
 #' 
 #' Null model described by Pillar et al. (2009) and Pillar & Duarte (2010). For
 #' more details on the matrices and the null model, see \code{\link{syncsa}}.
@@ -23,7 +24,7 @@
 #' @param mx1 Matrix that multiplied by mx2 results in the matrix x.
 #' @param mx2 Matrix that when multiplied by mx1 results in the matrix x. See
 #' `details` below.
-#' @param x Matrix obtained by multiplication of mx1 and mx2.
+#' @param x Matrix that will be correlated with the matrix y.
 #' @param my1 Matrix that multiplied by my2 results in the matrix y.
 #' @param my2 Matrix that when multiplied by my1 results in the matrix y. See
 #' `details` below.
@@ -35,8 +36,6 @@
 #' and y.
 #' @param dist.x Dissimilarity matrices of class dist.
 #' @param dist.y Dissimilarity matrices of class dist.
-#' @param mx Matrix that will be correlated using procrustes.
-#' @param my Matrix that will be correlated using procrustes.
 #' @param method Correlation method, as accepted by cor: "pearson", "spearman"
 #' or "kendall".
 #' @param dist Dissimilarity index, as accepted by vegdist: "manhattan",
@@ -59,18 +58,17 @@
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' deletion of missing observations when computing dissimilarities (Default
 #' na.rm = FALSE).
-#' @param seqpermutation A pre set permutations, with the same dimensions of 
+#' @param seqpermutation A set of predefined permutation, with the same dimensions of 
 #' permutations (Default seqpermutation = NULL).
 #' @param parallel Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).
 #' @param newClusters Logical argument (TRUE or FALSE) to specify if make new parallel 
 #' processes or use predefined socket cluster. Only if parallel is different of NULL (Default newClusters = TRUE).
 #' @param CL A predefined socket cluster done with parallel package.
-
 #' @return \item{Obs}{Correlation between matrices.} \item{p}{Significance
 #' level based on permutations.}
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
-#' @seealso \code{\link{procrustes}}, \code{\link{mantel}},
-#' \code{\link{syncsa}}
+#' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{mantel}}, 
+#' \code{\link{procrustes}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 #' 587-596.
@@ -80,7 +78,7 @@
 #' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #' @keywords SYNCSA
 #' @export
-cor.matrix<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALSE, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, norm.y = FALSE, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters=TRUE, CL =  NULL) 
+cor.matrix<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALSE, method = "pearson", dist = "euclidean", permutations = 999, norm = FALSE, norm.y = FALSE, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL =  NULL) 
 {
 	if(!is.null(seqpermutation)){
 		if(dim(seqpermutation)[1]!=permutations){
@@ -131,13 +129,13 @@ cor.matrix<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALS
     if(is.null(parallel)){
     	value <- matrix(NA, nrow = permutations, ncol = 1)
 	    for (i in 1: permutations) {
-	        value[i,] <- ptest(samp = seqpermutation[i,],mx1=mx1,mx2=mx2,my1=my1,my2=my2,dist.y=dist.y, permute.my2=permute.my2, norm=norm, norm.y= norm.y, dist=dist,na.rm=na.rm,method=method)
+	        value[i,] <- ptest(samp = seqpermutation[i,], mx1 = mx1, mx2 = mx2, my1 = my1, my2 = my2, dist.y = dist.y, permute.my2 = permute.my2, norm = norm, norm.y = norm.y, dist = dist, na.rm = na.rm, method = method)
     	}
 	} else {
 		if (newClusters) {
-			CL <- parallel::makeCluster(parallel,type="PSOCK")
+			CL <- parallel::makeCluster(parallel, type = "PSOCK")
 		}
-		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest,mx1=mx1,mx2=mx2,my1=my1,my2=my2,dist.y=dist.y, permute.my2=permute.my2, norm=norm, norm.y= norm.y, dist=dist,na.rm=na.rm,method=method))
+		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest, mx1 = mx1, mx2 = mx2, my1 = my1, my2 = my2, dist.y = dist.y, permute.my2 = permute.my2, norm = norm, norm.y = norm.y, dist = dist, na.rm = na.rm, method = method))
 		if (newClusters){
 			parallel::stopCluster(CL)
 		}

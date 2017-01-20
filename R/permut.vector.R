@@ -1,20 +1,21 @@
 #' Permutate a vector
 #' 
-#' Internal function to permutate a vector of size n.
+#' Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
 #' 
 #' 
 #' @encoding UTF-8
 #' @importFrom permute how Within Plots shuffleSet
-#' @param n The length of vector
-#' @param strata Argument to specify restricting permutations 
-#' @param nset The number of permutations to generate for the set
-#' (Default strata = NULL).
+#' @param n The length of vector.
+#' @param strata Argument to specify restricting permutations.
+#' @param nset The number of permutations to generate for the set (Default strata = NULL).
+#' @return A matrix of permutations, where each row is a separate permutation.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
+#' @seealso \code{\link{syncsa}}, \code{\link{permut.row.matrix}}
 #' @keywords SYNCSA
 #' @export
 permut.vector <- function(n, strata = NULL, nset = 999){
 	if(is.null(strata)){
-		CTRL<-permute::how(within = permute::Within(type = "free"),plots = permute::Plots(type = "free"))
+		CTRL<-permute::how(within = permute::Within(type = "free"), plots = permute::Plots(type = "free"))
 		samp<-permute::shuffleSet(n = n, nset = nset, control = CTRL, check = FALSE)
 	}
 	if(!is.null(strata)){
@@ -26,15 +27,3 @@ permut.vector <- function(n, strata = NULL, nset = 999){
 	}
 	return(as.matrix(samp))
 }
-
-# Mudar blocos de lugar (somente se os blocos tiverem o mesmo tamanho)
-#CTRL <- how(within = Within(type = "none"),
-#            plots = Plots(strata = strata, type = "free"))
-#shuffleSet(N, 1, control = CTRL, check = FALSE)
-#numPerms(N, control = CTRL)
-#
-# Mudar blocos e parcelas dentro de blocos (somente se os blocos tiverem o mesmo tamanho)
-#CTRL <- how(within = Within(type = "free"),
-#            plots = Plots(strata = strata, type = "free"))
-#shuffleSet(N, 1, control = CTRL, check = FALSE)
-#numPerms(N, control = CTRL)

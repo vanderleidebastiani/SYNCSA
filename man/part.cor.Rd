@@ -14,11 +14,17 @@ part.cor(rxy, rxz, ryz)
 
 \item{ryz}{Correlation between yz}
 }
+\value{
+The first-order partial correlation coefficient.
+}
 \description{
 Internal function to obtain the first-order partial correlation coefficient.
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
+\seealso{
+\code{\link{syncsa}}, \code{\link{cor.matrix}},
 }
 \keyword{SYNCSA}
 

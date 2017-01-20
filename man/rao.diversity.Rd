@@ -12,11 +12,11 @@ rao.diversity(comm, traits = NULL, phylodist = NULL, checkdata = TRUE,
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{traits}{Matrix data of species described by traits, with traits as
-columns and species as rows (optional).}
+\item{traits}{Data frame or matrix data of species described by traits, with traits as
+columns and species as rows (Default traits = NULL).}
 
 \item{phylodist}{Matrix containing phylogenetic distance between species
-(optional).}
+(Default phylodist = NULL).}
 
 \item{checkdata}{Logical argument (TRUE or FALSE) to check if species
 sequence in the community data follows the same order as the one in the
@@ -25,9 +25,10 @@ trait and in the phylodist matrices (Default checkdata = TRUE).}
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
 (Default ord = "metric").}
 
-\item{put.together}{List to specify group traits that are added or removed
-together (Default put.together = NULL). This argument must be a list, see
-examples.}
+\item{put.together}{List to specify group of traits. Each group specify receive the 
+same weight that one trait outside any group, in the way each group is considered 
+as unique trait (Default put.together = NULL). This argument must be a list, see
+examples in \code{\link{syncsa}}.}
 
 \item{...}{Parameters for \code{\link{gowdis}} function.}
 }
@@ -69,9 +70,9 @@ See \code{\link{organize.syncsa}}.
 }
 \examples{
 
-data(flona)
-rao.diversity(flona$community)
-rao.diversity(flona$community,traits=flona$traits)
+data(ADRS)
+rao.diversity(ADRS$community)
+rao.diversity(ADRS$community, traits = ADRS$traits)
 
 }
 \author{

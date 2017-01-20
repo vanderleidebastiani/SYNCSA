@@ -1,7 +1,7 @@
 #' @rdname cor.matrix
 #' @encoding UTF-8
 #' @export
-pro.matrix.partial<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL, mz2 = NULL, z, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = 999, norm = FALSE, norm.y = FALSE, norm.z = FALSE, strata = NULL, seqpermutation = NULL, parallel = NULL, newClusters=TRUE, CL =  NULL)
+pro.matrix.partial<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL, mz2 = NULL, z, permute.my2 = FALSE, permute.mz2 = FALSE, permutations = 999, norm = FALSE, norm.y = FALSE, norm.z = FALSE, strata = NULL, seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL =  NULL)
 {
 	if(!is.null(seqpermutation)){
 		if(dim(seqpermutation)[1]!=permutations){
@@ -66,13 +66,13 @@ pro.matrix.partial<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL
 	if(is.null(parallel)){
 		value <- matrix(NA, nrow = permutations, ncol = 1)
 	    for (i in 1: permutations) {
-	        value[i,] <- ptest(samp = seqpermutation[i,],mx1=mx1, mx2=mx2, my1=my1, my2=my2, mz1=mz1, mz2=mz2, permute.my2=permute.my2, permute.mz2=permute.mz2, norm=norm, norm.y=norm.y, norm.z=norm.z)
+	        value[i,] <- ptest(samp = seqpermutation[i,], mx1 = mx1, mx2 = mx2, my1 = my1, my2 = my2, mz1 = mz1, mz2 = mz2, permute.my2 = permute.my2, permute.mz2 = permute.mz2, norm = norm, norm.y = norm.y, norm.z = norm.z)
     	}
 	} else {
 		if (newClusters) {
 			CL <- parallel::makeCluster(parallel,type="PSOCK")
 		}
-		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest,mx1=mx1, mx2=mx2, my1=my1, my2=my2, mz1=mz1, mz2=mz2, permute.my2=permute.my2, permute.mz2=permute.mz2, norm=norm, norm.y=norm.y, norm.z=norm.z))
+		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest, mx1 = mx1, mx2 = mx2, my1 = my1, my2 = my2, mz1 = mz1, mz2 = mz2, permute.my2 = permute.my2, permute.mz2 = permute.mz2, norm = norm, norm.y = norm.y, norm.z = norm.z))
 		if (newClusters){
 			parallel::stopCluster(CL)
 		}

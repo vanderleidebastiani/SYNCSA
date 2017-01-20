@@ -5,13 +5,13 @@
 \alias{matrix.p}
 \title{Matrix P}
 \usage{
-matrix.p(comm, dist.spp, notification = TRUE)
+matrix.p(comm, phylodist, notification = TRUE)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{dist.spp}{Matrix containing phylogenetic distance between species.
+\item{phylodist}{Matrix containing phylogenetic distance between species.
 Must be a complete matrix (not a half diagonal matrix).}
 
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
@@ -37,8 +37,8 @@ matrix MUST be the same as they show up in phylogenetic distance matrix. See
 }
 \examples{
 
-data(flona)
-matrix.p(flona$community,flona$phylo)
+data(ADRS)
+matrix.x(ADRS$community, ADRS$phylo)
 
 }
 \author{
@@ -50,8 +50,8 @@ metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 587-596.
 }
 \seealso{
-\code{\link{matrix.t}}, \code{\link{matrix.x}},
-\code{\link{syncsa}}, \code{\link{organize.syncsa}}
+\code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{belonging}},
+\code{\link{matrix.t}}, \code{\link{matrix.x}}
 }
 \keyword{SYNCSA}
 

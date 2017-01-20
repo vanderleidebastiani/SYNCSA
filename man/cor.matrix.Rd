@@ -27,7 +27,7 @@ cor.matrix.partial(mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NULL,
   na.rm = FALSE, seqpermutation = NULL, parallel = NULL,
   newClusters = TRUE, CL = NULL)
 
-cor.procrustes(mx, my, permutations = 999, strata = NULL, na.rm = FALSE,
+cor.procrustes(x, y, permutations = 999, strata = NULL, na.rm = FALSE,
   seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL = NULL)
 
 pro.matrix(mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALSE,
@@ -57,7 +57,7 @@ groups (Default strata = NULL).}
 deletion of missing observations when computing dissimilarities (Default
 na.rm = FALSE).}
 
-\item{seqpermutation}{A pre set permutations, with the same dimensions of 
+\item{seqpermutation}{A set of predefined permutation, with the same dimensions of 
 permutations (Default seqpermutation = NULL).}
 
 \item{parallel}{Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).}
@@ -72,7 +72,7 @@ processes or use predefined socket cluster. Only if parallel is different of NUL
 \item{mx2}{Matrix that when multiplied by mx1 results in the matrix x. See
 `details` below.}
 
-\item{x}{Matrix obtained by multiplication of mx1 and mx2.}
+\item{x}{Matrix that will be correlated with the matrix y.}
 
 \item{my1}{Matrix that multiplied by my2 results in the matrix y.}
 
@@ -108,27 +108,24 @@ parallel permutation in matrix mz2.}
 
 \item{norm.z}{Logical argument (TRUE or FALSE) to specify if z is standardized
 within variables (Default norm = FALSE).}
-
-\item{mx}{Matrix that will be correlated using procrustes.}
-
-\item{my}{Matrix that will be correlated using procrustes.}
 }
 \value{
 \item{Obs}{Correlation between matrices.} \item{p}{Significance
 level based on permutations.}
 }
 \description{
-Function obtains the correlation between two matrices or to obtain the
-partial matrix correlation between three matrices. The functions cor.matrix
-and cor.matrix.partial are similar the function mantel and partial mantel,
-although the significance of the statistics is evaluated differently from
-mantel. The functions pro.matrix and pro.matrix.partial uses symmetric
-Procrustes as a measure of concordance between data sets. For more details,
-see \code{\link{procrustes}} and \code{\link{syncsa}}.
+The functions cor.matrix and cor.matrix.partial are similar the function 
+\code{\link{mantel}} and \code{\link{mantel.partial}}, although the significance
+of the statistics is evaluated differently from Mantel. The functions pro.matrix 
+and pro.matrix.partial uses symmetric Procrustes as a measure of concordance between
+data sets. The function cor.mantel is similar the function \code{\link{mantel}}, but 
+allow the use of a set of predefined permutation. For more details, see 
+\code{\link{syncsa}}.
 }
 \details{
 The null model is based on permutations in the matrix mx2, typically the
-matrices B, U and Q.
+matrices B, U and Q, except in the function cor.mantel when the permutations 
+are done in one of distance matrix.
 
 Null model described by Pillar et al. (2009) and Pillar & Duarte (2010). For
 more details on the matrices and the null model, see \code{\link{syncsa}}.
@@ -146,8 +143,8 @@ Discriminating trait-convergence and trait-divergence assembly patterns in
 ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 }
 \seealso{
-\code{\link{procrustes}}, \code{\link{mantel}},
-\code{\link{syncsa}}
+\code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{mantel}}, 
+\code{\link{procrustes}}
 }
 \keyword{SYNCSA}
 

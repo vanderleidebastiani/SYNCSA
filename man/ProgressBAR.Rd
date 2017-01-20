@@ -8,11 +8,11 @@
 ProgressBAR(n, N, ...)
 }
 \arguments{
-\item{n}{Number of current progress}
+\item{n}{Number of current progress.}
 
-\item{N}{Total number of cases}
+\item{N}{Total number of cases.}
 
-\item{...}{Other parameters for the txtProgressBar function}
+\item{...}{Other parameters for the txtProgressBar function.}
 }
 \description{
 Text progress bar in the R console. See \code{\link{txtProgressBar}}.

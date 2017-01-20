@@ -3,15 +3,13 @@
 #' Function extracted (with small changes) of the function \code{\link{gowdis}} 
 #' to check the type of variables in a dataframe or matrix.
 #'
-#' The variable types, where 'c' is continuous/numeric, 'o' is ordinal, 'b' is
-#' binary, 'n' is nominal and 'f' is factor.
-#'
 #'
 #' @encoding UTF-8
 #' @param data A dataframe or matrix.
-#' @return \item{type}{The variable type.}
+#' @return A vector with the variable types, where 'c' is continuous/numeric, 'o' is 
+#' ordinal, 'b' is binary, 'n' is nominal and 'f' is factor.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
-#' @seealso  \code{\link{syncsa}}, \code{\link{organize.syncsa}}
+#' @seealso  \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.dummy}}
 #' @keywords SYNCSA
 #' @export
 var.type<-function(data){

@@ -6,11 +6,11 @@
 \alias{print.optimal}
 \title{Searching for optimal traits}
 \usage{
-optimal(comm, envir, traits, subset.min = 2, subset.max = 3,
-  pattern = "tcap", ro.method = "mantel", dist = "euclidean",
-  method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE,
-  notification = TRUE, put.together = NULL, ord = "metric",
-  progressbar = FALSE)
+optimal(comm, traits, envir, subset.min = 1, subset.max = ncol(traits),
+  pattern = NULL, ro.method = "mantel", dist = "euclidean",
+  method = "pearson", scale = TRUE, scale.envir = TRUE, ranks = TRUE,
+  ord = "metric", put.together = NULL, na.rm = FALSE,
+  notification = TRUE, progressbar = FALSE)
 
 \method{print}{optimal}(x, ...)
 }
@@ -18,21 +18,21 @@ optimal(comm, envir, traits, subset.min = 2, subset.max = 3,
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{envir}{Environmental variables for each community, with variables as
-columns and sampling units as rows.}
-
 \item{traits}{Matrix data of species described by traits, with traits as
 columns and species as rows.}
 
-\item{subset.min}{Minimum of traits in each subset (Default subset.min=2).}
+\item{envir}{Environmental variables for each community, with variables as
+columns and sampling units as rows.}
 
-\item{subset.max}{Maximum of traits in each subset (Default subset.max=3).}
+\item{subset.min}{Minimum of traits in each subset (Default subset.min = 1).}
+
+\item{subset.max}{Maximum of traits in each subset (Default subset.max = ncol(traits)).}
 
 \item{pattern}{Patterns for maximize correlation, "tcap","tdap" or
-"tcap.tdap" (Default pattern="tcap").}
+"tcap.tdap" (Default pattern = NULL).}
 
 \item{ro.method}{Method to obtain the correlation, "mantel" or "procrustes"
-(Default ro.method="mantel").}
+(Default ro.method = "mantel").}
 
 \item{dist}{Dissimilarity index, as accepted by vegdist: "manhattan",
 "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower",
@@ -53,10 +53,20 @@ traits is not subjected to standardization, and Euclidean distance is
 calculated to determine the degree of belonging to the species.}
 
 \item{scale.envir}{Logical argument (TRUE or FALSE) to specify if the
-environmental variables are measured on different scales (Default Scale =
+environmental variables are measured on different scales (Default scale =
 TRUE). If the enviromental variables are measured on different scales, the
 matrix is subjected to centralization and standardization within each
 variable.}
+
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+convert to ranks (Default ranks = TRUE).}
+
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
+(Default ord = "metric").}
+
+\item{put.together}{List to specify group traits that are added or removed
+together (Default put.together = NULL). This argument must be a list, see
+examples.}
 
 \item{na.rm}{Logical argument (TRUE or FALSE) to specify if pairwise
 deletion of missing observations when computing dissimilarities (Default
@@ -65,13 +75,6 @@ na.rm = FALSE).}
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications of missing observations are shown (Default notification =
 TRUE).}
-
-\item{put.together}{List to specify group traits that are added or removed
-together (Default put.together = NULL). This argument must be a list, see
-examples.}
-
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "metric").}
 
 \item{progressbar}{Logical argument (TRUE or FALSE) to specify if display a
 progress bar on the R console (Default progressbar = FALSE).}
@@ -98,13 +101,13 @@ matrix MUST be the same as they show up in traits matrix. See
 \examples{
 
 data(flona)
-optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tcap")
-optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tdap")
-optimal(flona$community,flona$environment,flona$traits,
+optimal(flona$community,flona$traits,flona$environment,subset.min=3,subset.max=5,pattern="tcap")
+optimal(flona$community,flona$traits,flona$environment,subset.min=3,subset.max=5,pattern="tdap")
+optimal(flona$community,flona$traits,flona$environment,
 	subset.min=3,subset.max=5,pattern="tcap.tdap")
 put.together<-list(c("fol","sem"),c("tam","red"))
 put.together
-optimal(flona$community,flona$environment,flona$traits,
+optimal(flona$community,flona$traits,flona$environment,
 	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
 
 }

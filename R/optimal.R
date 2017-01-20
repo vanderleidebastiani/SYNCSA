@@ -16,12 +16,12 @@
 #' columns and species as rows.
 #' @param envir Environmental variables for each community, with variables as
 #' columns and sampling units as rows.
-#' @param subset.min Minimum of traits in each subset (Default subset.min=2).
-#' @param subset.max Maximum of traits in each subset (Default subset.max=3).
+#' @param subset.min Minimum of traits in each subset (Default subset.min = 1).
+#' @param subset.max Maximum of traits in each subset (Default subset.max = ncol(traits)).
 #' @param pattern Patterns for maximize correlation, "tcap","tdap" or
-#' "tcap.tdap" (Default pattern="tcap").
+#' "tcap.tdap" (Default pattern = NULL).
 #' @param ro.method Method to obtain the correlation, "mantel" or "procrustes"
-#' (Default ro.method="mantel").
+#' (Default ro.method = "mantel").
 #' @param method Correlation method, as accepted by cor: "pearson", "spearman"
 #' or "kendall".
 #' @param dist Dissimilarity index, as accepted by vegdist: "manhattan",
@@ -38,10 +38,14 @@
 #' traits is not subjected to standardization, and Euclidean distance is
 #' calculated to determine the degree of belonging to the species.
 #' @param scale.envir Logical argument (TRUE or FALSE) to specify if the
-#' environmental variables are measured on different scales (Default Scale =
+#' environmental variables are measured on different scales (Default scale =
 #' TRUE). If the enviromental variables are measured on different scales, the
 #' matrix is subjected to centralization and standardization within each
 #' variable.
+#' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+#' convert to ranks (Default ranks = TRUE).
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
+#' (Default ord = "metric").
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' deletion of missing observations when computing dissimilarities (Default
 #' na.rm = FALSE).
@@ -51,8 +55,7 @@
 #' @param put.together List to specify group traits that are added or removed
 #' together (Default put.together = NULL). This argument must be a list, see
 #' examples.
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "metric").
+
 #' @param progressbar Logical argument (TRUE or FALSE) to specify if display a
 #' progress bar on the R console (Default progressbar = FALSE).
 #' @param x An object of class optimal.
@@ -75,28 +78,25 @@
 #' @examples
 #'
 #' data(flona)
-#' optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tcap")
-#' optimal(flona$community,flona$environment,flona$traits,subset.min=3,subset.max=5,pattern="tdap")
-#' optimal(flona$community,flona$environment,flona$traits,
+#' optimal(flona$community,flona$traits,flona$environment,subset.min=3,subset.max=5,pattern="tcap")
+#' optimal(flona$community,flona$traits,flona$environment,subset.min=3,subset.max=5,pattern="tdap")
+#' optimal(flona$community,flona$traits,flona$environment,
 #' 	subset.min=3,subset.max=5,pattern="tcap.tdap")
 #' put.together<-list(c("fol","sem"),c("tam","red"))
 #' put.together
-#' optimal(flona$community,flona$environment,flona$traits,
+#' optimal(flona$community,flona$traits,flona$environment,
 #' 	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
 #'
 #' @export
-optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
-    pattern = "tcap", ro.method = "mantel", dist = "euclidean",
-    method = "pearson", scale = TRUE, scale.envir = TRUE, na.rm = FALSE,
-    notification = TRUE, put.together = NULL, ord = "metric", progressbar = FALSE)
+optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits),
+    pattern = NULL, ro.method = "mantel", dist = "euclidean", method = "pearson",
+    scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord = "metric", 
+    put.together = NULL, na.rm = FALSE, notification = TRUE, progressbar = FALSE)
 {
-#	comm <- as.matrix(comm)
-#	envir <- as.matrix(envir)
-	#traits <- as.matrix(traits)
 	if (!missing(comm)=="TRUE"){
-	commvartype<-var.type(comm)
-	if(any(commvartype=="n")){
-		stop("\n comm must contain only numeric, binary or ordinal variables \n")
+		commvartype<-var.type(comm)
+		if(any(commvartype=="n")){
+			stop("\n comm must contain only numeric, binary or ordinal variables \n")
 		}
 	}
     if (!missing(traits) == "TRUE") {
@@ -172,8 +172,6 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 		for(k in 1:length(put.together)){
 			names.traits[which(names.traits==put.together[[k]][1])]<-paste(put.together[[k]], collapse = " ")
 			names.traits<-setdiff(names.traits,put.together[[k]][-1])
-#			put.together[[k]]
-#			length(put.together[[k]])
 			weights[put.together[[k]]]<-1/length(put.together[[k]])
 		}
 		m<-length(names.traits)
@@ -190,7 +188,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 	comb <- matrix(NA, nrow = sum(bin[subset.min:subset.max]), ncol = 1)
 	n = 0
 	for (i in subset.min:subset.max) {
-		combinations <- utils::combn(names.traits, i, simplify = TRUE) #mudei
+		combinations <- utils::combn(names.traits, i, simplify = TRUE)
 		for (j in 1:bin[i]) {
 			n = n + 1
 			comb[n, 1] <- paste(combinations[, j], collapse = " ")
@@ -218,17 +216,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits<-c(choose.traits3,setdiff(choose.traits,unlist(put.together2)))
 					}
 				}
-#				class(traits)
-#				class(traits[, choose.traits])
-#				str(traits[, choose.traits])
-				
-				#B<-matrix(NA,A$nrow,A$ncol)
-				#for(i in 1:A$ncol){
-				#	B[,i]<-as.numeric(A$data[,i])
-				#}
-
-				####
-				T <- matrix.t(comm, traits[, choose.traits, drop=FALSE], scale = scale, notification = FALSE)
+				T <- matrix.t(comm, traits[, choose.traits, drop=FALSE], scale = scale, ranks = ranks, notification = FALSE)
 				if (romethod == 1) {
 					correlation[n, 1] <- cor(vegan::vegdist(as.matrix(T$matrix.T), method = dist, na.rm = na.rm), dist.y, method = method)
 					if (progressbar) {
@@ -259,8 +247,8 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits<-c(choose.traits3,setdiff(choose.traits,unlist(put.together2)))
 					}
 				}
-				T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, notification = FALSE)
-				X <- matrix.x(comm, traits[, choose.traits, drop=FALSE], scale = scale, notification = FALSE, ord = ord, w = weights[choose.traits])
+				T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, ranks = ranks, notification = FALSE)
+				X <- matrix.x(comm, traits[, choose.traits, drop=FALSE], scale = scale, ranks = ranks, ord = ord, notification = FALSE, w = weights[choose.traits])
 				if (romethod == 1) {
 					dist.x <- vegan::vegdist(X$matrix.X, method = dist, na.rm = na.rm)
 					dist.z <- vegan::vegdist(T$matrix.T, method = dist, na.rm = na.rm)
@@ -296,7 +284,7 @@ optimal<-function (comm, envir, traits, subset.min = 2, subset.max = 3,
 						choose.traits<-c(choose.traits3,setdiff(choose.traits,unlist(put.together2)))
 					}
 				}
-				X <- matrix.x(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, notification = FALSE, ord = ord, w = weights[choose.traits])
+				X <- matrix.x(comm, traits[, choose.traits, drop=FALSE], scale = scale, ranks = ranks, ord = ord, notification = FALSE, w = weights[choose.traits])
 				if (romethod == 1) {
 					correlation[n, 1] <- cor(vegan::vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
 					if (progressbar) {

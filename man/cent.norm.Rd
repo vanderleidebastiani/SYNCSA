@@ -19,5 +19,8 @@ Internal function for centralization and standardization in a matrix.
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
+\seealso{
+\code{\link{syncsa}}
+}
 \keyword{SYNCSA}
 

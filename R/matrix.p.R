@@ -7,7 +7,7 @@
 #' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
-#' @param dist.spp Matrix containing phylogenetic distance between species.
+#' @param phylodist Matrix containing phylogenetic distance between species.
 #' Must be a complete matrix (not a half diagonal matrix).
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notifications of missing observations are shown (Default notification =
@@ -22,23 +22,23 @@
 #' matrix MUST be the same as they show up in phylogenetic distance matrix. See
 #' \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
-#' @seealso \code{\link{matrix.t}}, \code{\link{matrix.x}},
-#' \code{\link{syncsa}}, \code{\link{organize.syncsa}}
+#' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{belonging}},
+#' \code{\link{matrix.t}}, \code{\link{matrix.x}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 #' 587-596.
 #' @keywords SYNCSA
 #' @examples
 #' 
-#' data(flona)
-#' matrix.p(flona$community,flona$phylo)
+#' data(ADRS)
+#' matrix.x(ADRS$community, ADRS$phylo)
 #' 
 #' @export
-matrix.p<-function (comm, dist.spp, notification = TRUE)
+matrix.p<-function (comm, phylodist, notification = TRUE)
 {
 	comm<-as.matrix(comm)
-	dist.spp<-as.matrix(dist.spp)
-    matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")
+	phylodist<-as.matrix(phylodist)
+    matrix.w <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
 	w.NA <- apply(matrix.w, 2, is.na)
     matrix.w[w.NA] <-0
     if(notification){
@@ -46,7 +46,7 @@ matrix.p<-function (comm, dist.spp, notification = TRUE)
 			warning("Warning: NA in community data",call.=FALSE)		
     	}  	 
     }
-    similar.phy <- 1 - (dist.spp/max(dist.spp))
+    similar.phy <- 1 - (phylodist/max(phylodist))
     matrix.phy <- 1/colSums(similar.phy)
     matrix.q <- sweep(similar.phy, 1, matrix.phy, "*")
     matrix.P <- matrix.w %*% matrix.q

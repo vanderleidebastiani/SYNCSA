@@ -14,11 +14,11 @@
 #' are measured on different scales, the matrix T is subjected to
 #' standardization within each trait. Scale = FALSE is traits are measured on
 #' the same scale, the matrix T is not subjected to standardization.
+#' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+#' convert to ranks (Default ranks = TRUE).
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notifications of missing observations are shown (Default notification =
 #' TRUE).
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "metric").
 #' @return \item{matriz.w}{Standardized community matrix, where rows are
 #' communities and columns species. Row totals (communities) = 1.}
 #' \item{matriz.b}{Matrix of traits, exactly the same data input.}
@@ -28,8 +28,8 @@
 #' matrix MUST be the same as they show up in traits matrix. See
 #' \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
-#' @seealso \code{\link{matrix.p}}, \code{\link{matrix.x}},
-#' \code{\link{syncsa}}, \code{\link{organize.syncsa}}
+#' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}},
+#' \code{\link{matrix.p}}, \code{\link{matrix.x}}
 #' @references Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 #' metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 #' 587-596.
@@ -40,11 +40,11 @@
 #' @keywords SYNCSA
 #' @examples
 #' 
-#' data(flona)
-#' matrix.t(flona$community,flona$traits,scale=TRUE)
+#' data(ADRS)
+#' matrix.t(ADRS$community, ADRS$traits)
 #' 
 #' @export
-matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "metric") 
+matrix.t<-function (comm, traits, scale = TRUE, ranks = TRUE, notification = TRUE) 
 {
 	comm<-as.matrix(comm)
 	vartype<-var.type(traits)
@@ -52,7 +52,7 @@ matrix.t<-function (comm, traits, scale = TRUE, notification = TRUE, ord = "metr
 		stop("\n trait must contain only numeric, binary or ordinal variables \n")
 	}
 	for(i in 1:length(vartype)){
-		if(ord != "classic" & vartype[i]=="o"){
+		if(ranks & vartype[i]=="o"){
 			traits[, i] <- rank(traits[, i], na.last = "keep")
 		}
 		traits[, i] <- as.numeric(traits[, i])

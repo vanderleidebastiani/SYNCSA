@@ -5,9 +5,9 @@
 \alias{organize.syncsa}
 \title{Function for organize data for Package SYNCSA}
 \usage{
-organize.syncsa(comm, traits = NULL, dist.spp = NULL, envir = NULL,
+organize.syncsa(comm, traits = NULL, phylodist = NULL, envir = NULL,
   strata = NULL, check.comm = TRUE, convert.traits = FALSE,
-  ord = "metric")
+  ranks = TRUE)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -16,35 +16,36 @@ rows.}
 \item{traits}{Matrix data of species described by traits, with traits as
 columns and species as rows (Default traits = NULL).}
 
-\item{dist.spp}{Matrix containing phylogenetic distance between species.
+\item{phylodist}{Matrix containing phylogenetic distance between species.
 Must be a complete matrix (not a half diagonal matrix).This matrix can be
 larger than community data (more species) as long as it has at least all
-species that are in community data (Default dist.spp = NULL).}
+species that are in community data (Default phylodist = NULL).}
 
 \item{envir}{Environmental variables for each community, with variables as
 columns and sampling units as rows (Default envir = NULL).}
 
-\item{strata}{Strata nomed vector to specify restricting permutations within
+\item{strata}{Strata named vector to specify restricting permutations within
 species groups (Default strata = NULL).}
 
 \item{check.comm}{Logical argument (TRUE or FALSE) to remove sampling units and 
 species with total sums equal or less than zero (Default check.comm = "TRUE").}
 
 \item{convert.traits}{Logical argument (TRUE or FALSE) to convert factor traits in 
-dummy traits and/or convert ordinal variables in numeric (see ord option) (Default convert.traits = FALSE).}
+dummy traits and/or convert ordinal variables in numeric (see ranks argument) 
+(Default convert.traits = FALSE).}
 
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}.
-When ord = "podani" or ord = "metric", all ordered variable are replaced by their ranks
-and if ord = "classic" all ordinal variables are simply treated as continuous variables
-(Default ord = "metric").}
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+convert to ranks. If ranks = TRUE all ordered variable are replaced by their ranks
+and if ranks = FALSE all ordinal variables are simply treated as continuous variables
+(Default ranks = TRUE).}
 }
 \value{
 The dataframes or matrices of community, traits, phylogenetic distance and
 environmental variables, as well as the type of each varible in each dataframe or matrix. 
 The strata vector for permutations. If convert.traits is TRUE and some traits is of class
 factor the function returm the traits with expand traits in dummy variables and return 
-a list with sugestion to group of traits that are analysed together. If some warning messenger
-is showed a list of warning messenger is returned.
+a list with sugestion to group of traits that are analysed together. Warning messenger
+are returned as a list of warning.
 }
 \description{
 Package \strong{SYNCSA} requires that the species and community sequence in
@@ -52,20 +53,33 @@ the dataframe or matrix must be the same for all dataframe/matrices.
 }
 \details{
 The function organizes the data for the functions of the package
-\strong{SYNCSA}, placing the matrices of community, traits, phylogenetic
-distance and environmental varibles in the same order.
+SYNCSA, placing the matrices of community, traits, phylogenetic
+distance, environmental varibles and strata vector in the same order. 
+The function use as reference the community data for organize all data frame or matrices
+in the same order that the sampling units names and species names found in community
+data set. For this all data sets entered must be correctly named, with rows and columns 
+named. The matrices phylodist, traits, envir can be larger than community
+data (more species and/or more sampling units) as long as it has at least 
+all species and/or sampling units that are in community data. The function 
+organizes the data despite the absence of one of the dataframes or matrices,
+provided that the community data had been entered. Unspecified data will 
+appear as NULL.
+
+The strata must be a named vector. The strata vector is a vector for restrict
+permutation within species groups, insofar as the SYNCSA package the null 
+models are based in permutation of species rather than permutation of sample units.
 }
-\note{
-The function organizes the data despite the absence of one of the
-dataframes or matrices, provided that the community data had been entered. Unspecified
-data will appear as NULL.
+\examples{
+
+data(ADRS)
+organize.syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir)
+
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
 \seealso{
-\code{\link{matrix.t}}, \code{\link{matrix.x}},
-\code{\link{matrix.p}}, \code{\link{syncsa}}
+\code{\link{syncsa}}, \code{\link{var.dummy}}, \code{\link{var.type}}
 }
 \keyword{SYNCSA}
 

@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{var.dummy}
 \alias{var.dummy}
-\title{Generate dunny variable}
+\title{Generate dummy variable}
 \usage{
 var.dummy(data)
 }
@@ -11,15 +11,15 @@ var.dummy(data)
 \item{data}{A dataframe.}
 }
 \value{
-\item{data}{The data with all variables of class factor expanded} \item{together}{A list
+\item{data}{The data with all variables of class factor expanded.} \item{together}{A list
 with sugestion to group of traits that are analysed together.}
 }
 \description{
-Function to expand factor variables in dummy variables in a dataframe.
+Function to expand factor variables in dummy variables in a dataframe. See details.
 }
 \details{
 Variables in the dataframe of class factor is expanded in dummy variables. Each
-level of factor produce an new column in the dataframe, with presence (1) or
+level of factor produce a new column in the dataframe, with presence (1) or
 absense (0) of level. The name of columns is a combination of orginal variable name 
 plus the level separate by underscore ( _ ). Ordered factor and character class are
 not expanded.
@@ -28,7 +28,7 @@ not expanded.
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
 \seealso{
-\code{\link{syncsa}}, \code{\link{organize.syncsa}}
+\code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.type}}
 }
 \keyword{SYNCSA}
 

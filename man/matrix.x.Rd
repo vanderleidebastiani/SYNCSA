@@ -5,14 +5,14 @@
 \alias{matrix.x}
 \title{Matrix X}
 \usage{
-matrix.x(comm, traits, scale = TRUE, notification = TRUE, ord = "metric",
-  ...)
+matrix.x(comm, traits, scale = TRUE, ranks = TRUE, ord,
+  notification = TRUE, ...)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{traits}{Matrix data of species described by traits, with traits as
+\item{traits}{A data frame or matrix data of species described by traits, with traits as
 columns and species as rows.}
 
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are
@@ -24,14 +24,17 @@ the same scale, the matrix of traits is not subjected to standardization,
 and Euclidean distance is calculated to determine the degree of belonging to
 the species.}
 
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+convert to ranks (Default ranks = TRUE).}
+
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
+method is forneced the rank parameter is not apply.}
+
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications of missing observations are shown (Default notification =
 TRUE).}
 
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "metric").}
-
-\item{...}{Another parameters for \code{\link{gowdis}} function.}
+\item{...}{Parameters for \code{\link{gowdis}} function.}
 }
 \value{
 \item{matriz.w}{Standardized community matrix, where rows are
@@ -52,8 +55,8 @@ matrix MUST be the same as they show up in traits matrix. See
 }
 \examples{
 
-data(flona)
-matrix.x(flona$community,flona$traits,scale=TRUE)
+data(ADRS)
+matrix.x(ADRS$community, ADRS$traits)
 
 }
 \author{
@@ -69,8 +72,8 @@ Discriminating trait-convergence and trait-divergence assembly patterns in
 ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 }
 \seealso{
-\code{\link{matrix.t}}, \code{\link{matrix.p}},
-\code{\link{syncsa}}, \code{\link{organize.syncsa}}
+\code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{belonging}},
+\code{\link{matrix.t}}, \code{\link{matrix.p}}, \code{\link{gowdis}}
 }
 \keyword{SYNCSA}
 

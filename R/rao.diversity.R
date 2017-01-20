@@ -24,18 +24,19 @@
 #' @importFrom FD gowdis
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
-#' @param traits Matrix data of species described by traits, with traits as
-#' columns and species as rows (optional).
+#' @param traits Data frame or matrix data of species described by traits, with traits as
+#' columns and species as rows (Default traits = NULL).
 #' @param phylodist Matrix containing phylogenetic distance between species
-#' (optional).
+#' (Default phylodist = NULL).
 #' @param checkdata Logical argument (TRUE or FALSE) to check if species
 #' sequence in the community data follows the same order as the one in the
 #' trait and in the phylodist matrices (Default checkdata = TRUE).
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
 #' (Default ord = "metric").
-#' @param put.together List to specify group traits that are added or removed
-#' together (Default put.together = NULL). This argument must be a list, see
-#' examples.
+#' @param put.together List to specify group of traits. Each group specify receive the 
+#' same weight that one trait outside any group, in the way each group is considered 
+#' as unique trait (Default put.together = NULL). This argument must be a list, see
+#' examples in \code{\link{syncsa}}.
 #' @param ... Parameters for \code{\link{gowdis}} function.
 #' @return \item{Simpson}{Gini-Simpson index within each community (equivalent
 #' to Rao quadratic entropy with null, crisp, similarities).} \item{FunRao}{Rao
@@ -63,28 +64,28 @@
 #' @keywords SYNCSA
 #' @examples
 #'
-#' data(flona)
-#' rao.diversity(flona$community)
-#' rao.diversity(flona$community,traits=flona$traits)
+#' data(ADRS)
+#' rao.diversity(ADRS$community)
+#' rao.diversity(ADRS$community, traits = ADRS$traits)
 #'
 #' @export
 rao.diversity<-function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE, ord = "metric", put.together = NULL, ...){
 	comm <- as.matrix(comm)
     N <- dim(comm)[1]
     S <- dim(comm)[2]
-    tij2 <- 1 - diag(x = rep(1, S))
+    dist.1 <- 1 - diag(x = rep(1, S))
     if (!is.null(traits)) {
 		if (checkdata) {
-        if (is.null(rownames(traits))) {
-            stop("\n Erro in row names of traits\n")
-        }
-        if (is.null(colnames(comm))) {
-            stop("\n Erro in row names of comm\n")
-        }
-		match.names <- match(colnames(comm), rownames(traits))
-        if (sum(is.na(match.names)) > 0) {
-            stop("\n There are species from community data that are not on traits matrix\n")
-        }
+	        if (is.null(rownames(traits))) {
+    	        stop("\n Erro in row names of traits\n")
+        	}
+	        if (is.null(colnames(comm))) {
+    	        stop("\n Erro in row names of comm\n")
+        	}
+			match.names <- match(colnames(comm), rownames(traits))
+    	    if (sum(is.na(match.names)) > 0) {
+        	    stop("\n There are species from community data that are not on traits matrix\n")
+	        }
     		traits<-as.data.frame(traits[match.names,])
     	}
        	m <- dim(traits)[2]
@@ -112,39 +113,37 @@ rao.diversity<-function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE,
 			}
 		}    	
     	D1<-as.matrix(FD::gowdis(x=traits, asym.bin = NULL, ord = ord, w = weights))
-    	#S1<-1-D1
-    	#tij<-sqrt(1-S1)
-    	tij<-sqrt(D1)
+    	dist.2<-sqrt(D1)
     }
     if (!is.null(phylodist)) {
 		if (checkdata) {
-        if (is.null(rownames(phylodist))) {
-            stop("\n Erro in row names of phylodist\n")
-        }
-		if (is.null(colnames(phylodist))) {
-            stop("\n Erro in column names of phylodist\n")
-        }
-        if (is.null(colnames(comm))) {
-            stop("\n Erro in row names of comm\n")
-        }
-        match.names <- match(colnames(comm), colnames(phylodist))
-        if (sum(is.na(match.names)) > 0) {
-            stop("\n There are species from community data that are not on phylogenetic distance matrix\n")
-        }
-        phylodist <- as.matrix(phylodist[match.names, match.names])
+	        if (is.null(rownames(phylodist))) {
+    	        stop("\n Erro in row names of phylodist\n")
+	        }
+			if (is.null(colnames(phylodist))) {
+        	    stop("\n Erro in column names of phylodist\n")
+	        }
+    	    if (is.null(colnames(comm))) {
+        	    stop("\n Erro in row names of comm\n")
+	        }
+    	    match.names <- match(colnames(comm), colnames(phylodist))
+        	if (sum(is.na(match.names)) > 0) {
+            	stop("\n There are species from community data that are not on phylogenetic distance matrix\n")
+	        }
+    	    phylodist <- as.matrix(phylodist[match.names, match.names])
     	}
     	D1<-as.matrix(phylodist)
-    	tij3<-D1/max(D1)
+    	dist.3<-D1/max(D1)
     }
 	comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
-	inter<-comm%*%tij2
+	inter<-comm%*%dist.1
 	SD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))
 	if (!is.null(traits)){
-		inter<-comm%*%tij
+		inter<-comm%*%dist.2
 		RD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))
 	}
 	if (!is.null(phylodist)){
-		inter<-comm%*%tij3
+		inter<-comm%*%dist.3
 		FRD<-rowSums(sweep(comm,1,inter,"*",check.margin=F))
 	}
     Res<-list(Simpson=SD)

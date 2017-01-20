@@ -5,3 +5,6 @@ require(SYNCSA)
 ?mice
 rao.diversity
 gowdis
+require(SYNCSa)
+require(SYNCSA)
+?vartype

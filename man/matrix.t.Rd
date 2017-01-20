@@ -5,7 +5,7 @@
 \alias{matrix.t}
 \title{Matrix T}
 \usage{
-matrix.t(comm, traits, scale = TRUE, notification = TRUE, ord = "metric")
+matrix.t(comm, traits, scale = TRUE, ranks = TRUE, notification = TRUE)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -20,12 +20,12 @@ are measured on different scales, the matrix T is subjected to
 standardization within each trait. Scale = FALSE is traits are measured on
 the same scale, the matrix T is not subjected to standardization.}
 
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+convert to ranks (Default ranks = TRUE).}
+
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications of missing observations are shown (Default notification =
 TRUE).}
-
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "metric").}
 }
 \value{
 \item{matriz.w}{Standardized community matrix, where rows are
@@ -45,8 +45,8 @@ matrix MUST be the same as they show up in traits matrix. See
 }
 \examples{
 
-data(flona)
-matrix.t(flona$community,flona$traits,scale=TRUE)
+data(ADRS)
+matrix.t(ADRS$community, ADRS$traits)
 
 }
 \author{
@@ -62,8 +62,8 @@ Discriminating trait-convergence and trait-divergence assembly patterns in
 ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 }
 \seealso{
-\code{\link{matrix.p}}, \code{\link{matrix.x}},
-\code{\link{syncsa}}, \code{\link{organize.syncsa}}
+\code{\link{syncsa}}, \code{\link{organize.syncsa}},
+\code{\link{matrix.p}}, \code{\link{matrix.x}}
 }
 \keyword{SYNCSA}
 

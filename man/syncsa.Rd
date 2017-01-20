@@ -8,11 +8,11 @@
 \usage{
 \method{print}{syncsa}(x, ...)
 
-syncsa(comm, traits, dist.spp, envir, ro.method = "mantel",
+syncsa(comm, traits, phylodist, envir, ro.method = "mantel",
   method = "pearson", dist = "euclidean", scale = TRUE,
-  scale.envir = TRUE, permutations = 999, strata = NULL,
-  put.together = NULL, ord = "metric", na.rm = FALSE,
-  notification = TRUE, parallel = NULL)
+  scale.envir = TRUE, ranks = TRUE, ord, put.together = NULL,
+  na.rm = FALSE, strata = NULL, permutations = 999, parallel = NULL,
+  notification = TRUE)
 }
 \arguments{
 \item{x}{An object of class syncsa.}
@@ -22,79 +22,94 @@ syncsa(comm, traits, dist.spp, envir, ro.method = "mantel",
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{traits}{Matrix data of species described by traits, with traits as
+\item{traits}{Data frame or matrix data of species described by traits, with traits as
 columns and species as rows.}
 
-\item{dist.spp}{Matrix containing phylogenetic distance between species.
+\item{phylodist}{Matrix containing phylogenetic distance between species.
 Must be a complete matrix (not a half diagonal matrix).}
 
 \item{envir}{Environmental variables for each community, with variables as
 columns and sampling units as rows.}
 
 \item{ro.method}{Method to obtain the correlation, "mantel" or "procrustes"
-(Default ro.method="mantel").}
+(Default ro.method = "mantel").}
 
 \item{method}{Mantel correlation method, as accepted by cor: "pearson",
-"spearman" or "kendall".}
+"spearman" or "kendall" (Default method = "pearson")}
 
 \item{dist}{Dissimilarity index used for Mantel correlation, as accepted by
 vegdist: "manhattan", "euclidean", "canberra", "bray", "kulczynski",
 "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" ,
 "binomial" or "chao". However, some of these will not make sense in this
-case.}
+case (Default dist = "euclidean").}
 
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are
-measured on different scales (Default Scale = TRUE). Scale = TRUE if traits
+measured on different scales (Default Scale = TRUE). If scale = TRUE traits
 are measured on different scales, the matrix T is subjected to
-standardization within each trait. Scale = FALSE if traits are measured on
+standardization within each trait. If scale = FALSE traits are measured on
 the same scale, the matrix T is not subjected to standardization.
-Furthermore, if Scale = TRUE the matrix of traits is subjected to
+Furthermore, if scale = TRUE the matrix of traits is subjected to
 standardization within each trait, and Gower Index is used to calculate the
-degree of belonging to the species, and if Scale = FALSE the matrix of
+degree of belonging to the species, and if scale = FALSE the matrix of
 traits is not subjected to standardization, and Euclidean distance is
 calculated to determine the degree of belonging to the species.}
 
 \item{scale.envir}{Logical argument (TRUE or FALSE) to specify if the
-environmental variables are measured on different scales (Default Scale =
-TRUE). If the enviromental variables are measured on different scales, the
-matrix is subjected to centralization and standardization within each
-variable.}
+environmental variables are measured on different scales. If the 
+enviromental variables are measured on different scales, the scale.envir
+= TRUE the matrix with enviromental variables is subjected to centralization
+and standardization within each variable. (Default scale.envir = TRUE).}
 
-\item{permutations}{Number of permutations in assessing significance.}
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+convert to ranks (Default ranks = TRUE).}
 
-\item{strata}{Argument to specify restricting permutations within species
-groups (Default strata = NULL).}
+\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}.}
 
-\item{put.together}{List to specify group traits that are analysed
-together (Default put.together = NULL). This argument must be a list, see
+\item{put.together}{List to specify group of traits. Each group specify receive the 
+same weight that one trait outside any group, in the way each group is considered 
+as unique trait (Default put.together = NULL). This argument must be a list, see
 examples.}
-
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "metric").}
 
 \item{na.rm}{Logical argument (TRUE or FALSE) to specify if pairwise
 distances should be deleted in cases of missing observations (Default na.rm
 = FALSE).}
 
+\item{strata}{Argument to specify restricting permutations within species
+groups (Default strata = NULL).}
+
+\item{permutations}{Number of permutations in assessing significance.}
+
+\item{parallel}{Number of parallel processes. Tip: use detectCores() (Default parallel = NULL).}
+
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notification of missing observations should to be shown (Default
 notification = TRUE).}
-
-\item{parallel}{Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).}
 }
 \value{
-Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
-and roBF, and their significance levels based on permutations.
+\item{call}{The arguments used.} \item{notes}{Some notes about the statistics.} 
+\item{statistics}{Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P 
+and roBF, and their significance levels based on permutations.} \item{matrices}{The matrices produced for the functions, see details.} \item{weights}{Weight for each trait.}
 }
 \description{
 This function integrates several steps for the analysis of phylogenetic
 assembly patterns and their links to traits and ecological processes in a
-metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). It requires data
-organized into the following matrices: (1) the presences or abundances of
-species in a set of communities (\strong{W}); (2) the phylogenetic pairwise
-dissimilarities of these species (\strong{DF}, in the range 0 to 1); (3) a
-set of functional traits describing the species (\strong{B}), which may be a
-mixture of binary and quantitative traits (ordinal, interval, ratio scales),
+metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). The function implement 
+methods that have been available in the SYNCSA
+application written in C++ (by Valerio Pillar, available at
+http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html). See details.
+}
+\details{
+Package \strong{SYNCSA} requires that the species and community sequence in
+the dataframe or matrix must be the same for all dataframe/matrices. 
+The function \code{\link{organize.syncsa}} organizes the data for the functions 
+of the package, placing the matrices of community, traits, phylogenetic distance,
+environmental varibles and strata vector in the same order. The function
+use of function organize.syncsa is not requered for run the functions, but
+is recommended. It requires data organized into the following matrices: (1) the
+presences or abundances of species in a set of communities (\strong{W}); (2) the 
+phylogenetic pairwise dissimilarities of these species (\strong{DF}); (3) a set of
+functional traits describing the species (\strong{B}), which 
+may be a mixture of binary and quantitative traits (continual and ordinal),
 but not nominal ones (these should be expanded into binary traits); and (4)
 the ecological gradient of interest, which may be one or more factors to
 which the communities respond or ecosystem effects of the communities
@@ -104,11 +119,6 @@ trait-divergence assembly patterns (TDAP), and phylogenetic signal in
 functional traits at the species pool level and at the metacomunity level.
 This function also generates P-values by permutation testing based on null
 models (Pillar et al. 2009, Pillar & Duarte 2010).
-}
-\details{
-The function implement methods that have been available in the SYNCSA
-application written in C++ (by Valerio Pillar, available at
-http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html).
 
 \strong{ro(TE)}
 
@@ -224,15 +234,45 @@ computed, which may be useful for evaluating causal models in path analysis.
 
 \strong{Mantel correlations}
 
+The Mantel and Partial Mantel statistics are calculated simply as the correlation
+entries the dissimilarity matrices, using standard Mantel test (see 
+\code{\link{mantel}} and \code{\link{cor.mantel}}). Partial Mantel 
+statistic use paired correlation between the three matrices and obtains the partial
+correlation using the formula of first-order partial correlation coefficient. The 
+significances are obtained using a different procedure than standard Mantel test,
+see section Testing against null models below.
+
 \strong{Procrustes correlations}
 
-\strong{Partial correlations}
+The Procrustes correlation uses symmetric Procrustes as a measure of concordance 
+between the data matrices (see \code{\link{procrustes}} and 
+\code{\link{cor.procrustes}}). Procrustes procedure use rotation, translation, 
+and rescaling for minimizing sum of squared differences between two data sets. 
+The correlation of Procrustes is calculated as the statistic derived from the 
+symmetric Procrustes sum of squares, representing the optimal fit between the two 
+data matrices. Partial Procrustes correlation is obtained by Procrustes correlation
+between residuals matrices. Firstly one Principal Components Analysis (PCA, 
+see \code{\link{prcomp}}) is performed in the matrix Z for dimensionality reduction. 
+The max number of axis kept in the analysis is the number of sampling units divided 
+by 2, this axes of PCA represent the total variation in the Z matrix. After the 
+kept axes are used as predictor in one linear model for each variable of the 
+matrices X and Y. For this a linear model is build using as response one variable 
+of X (same via for Y matrix) and as predictor all remaining axes of PCA, after model
+fitted and the residual are extracted with the aim of form the residual matrix. The linear
+model is repeated in the other variables, only with the changed the response variable.
+The same procedure is performed in the matrix 
+Y. Both residual matrices are submitted to Procrustes analysis and the statistic is 
+returned as a partial correlation, the Partial Procrustes statistic. The significances
+are obtained using the same procedure than Mantel test, see section Testing against 
+null models below.
 
 \strong{Testing against null models}
 
 All the matrix correlations are tested against null models. The null model
-is defined accoding to the correlation being tested. For ro(\strong{TE}),
-each permutation generates a random matrix \strong{T} calculated after the
+is defined accoding to the correlation being tested. Usually in the SYNCSA package
+the null models are based in permutation of species rather than permutation 
+of sample units. For ro(\strong{TE}),each permutation generates a random 
+matrix \strong{T} calculated after the
 permutation among the species vectors in matrix \strong{B}. For
 ro(\strong{XE}) and ro(\strong{XE.T}), each permutation generates a random
 matrix \strong{X} after the permutation among species fuzzy sets (rows) in
@@ -243,18 +283,10 @@ For ro(\strong{BF}), a conventional Mantel test is performed with
 dissimilarity matrices \strong{DF} and \strong{DB}. Analogous null models
 are used for testing the additional matrix correlations; that is, the same
 null model for ro(\strong{TE}) is used for ro(\strong{TE.P}), the same model
-for ro(\strong{XE}) is used for ro(\strong{XE.P}).
-}
-\note{
-The function calculates the correlations despite the lack of one of
-the matrices, provided that community data had been entered. Correlations
-including unspecified matrices will appear with ro = 0.
+for ro(\strong{XE}) is used for ro(\strong{XE.P}). The permutation can be restrict
+within species groups specifying the strata argument.
 
-\strong{IMPORTANT}: The sequence of species in the community data matrix
-MUST be the same as that in the phylogenetic distance matrix and in traits
-matrix. Similarly, the sequence of communities in the community data matrix
-MUST be the same as that in the environmental data matrix. See
-\code{\link{organize.syncsa}}.
+\strong{Missing data}
 
 The functions ignore missing data when specified. In the case of direct
 multiplication of matrices (matrices \strong{W} and matrix \strong{B}) the
@@ -266,12 +298,38 @@ In some cases the dissimilarity matrices obtained by the function
 \code{\link{vegdist}} still contain some missing values. In these cases the
 rest of the procedure will be affected. In these cases you can find
 solutions in the package mice.
+
+\strong{Error messenger and options}
+
+The data pass by several ckeck points that can produce error messenger. The 
+matrices or data frames must be contain only numeric, binary or ordinal 
+variables, in the way that nominal variable should be expanded into binary 
+(see \code{\link{var.dummy}}). For enhance the code speed some functions use
+by default matrix algebra, this option can produce error under certain circumstances. This
+global option can be changed using options("SYNCSA.speed" = FALSE). If SYNCSA.speed = TRUE 
+for use matrix algebra and if SYNCSA.speed = FALSE use not another function of same procedure.
+}
+\note{
+The function calculates the correlations despite the lack of one of
+the matrices, provided that community data had been entered. Correlations
+including unspecified matrices will appear with ro = 0.
+
+\strong{IMPORTANT}: The sequence of species in the community data matrix
+MUST be the same as that in the phylogenetic distance matrix and in traits
+matrix. Similarly, the sequence of communities in the community data matrix
+MUST be the same as that in the environmental data matrix. See
+\code{\link{organize.syncsa}}.
 }
 \examples{
 
+data(ADRS)
+syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir)
 data(flona)
-syncsa(comm=flona$community,traits=flona$traits,dist.spp=flona$phylo,envir=flona$environment)
-syncsa(flona$community,traits=flona$traits,envir=flona$environment)
+put.together<-list(c("fol","sem"),c("tam","red"))
+put.together
+res<-syncsa(flona$community, flona$traits, envir = flona$environment, put.together = put.together)
+res
+res$weights
 
 }
 \author{
@@ -301,9 +359,10 @@ limiting similarity lives! A reply to Grime. Journal of Vegetation Science,
 18, 451:452.
 }
 \seealso{
-\code{\link{matrix.t}}, \code{\link{matrix.x}},
-\code{\link{matrix.p}}, \code{\link{optimal}}, \code{\link{belonging}},
-\code{\link{organize.syncsa}}, \code{\link{rao.diversity}}
+\code{\link{organize.syncsa}}, \code{\link{matrix.t}}, 
+\code{\link{matrix.x}}, \code{\link{matrix.p}}, \code{\link{optimal}},
+\code{\link{rao.diversity}}, \code{\link{cor.matrix}}, \code{\link{var.type}},
+\code{\link{var.dummy}}
 }
 \keyword{SYNCSA}
 

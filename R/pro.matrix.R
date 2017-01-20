@@ -46,13 +46,13 @@ pro.matrix<-function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FALS
 	if(is.null(parallel)){
     	value <- matrix(NA, nrow = permutations, ncol = 1)
 	    for (i in 1: permutations) {
-	        value[i,] <- ptest(samp = seqpermutation[i,], mx1=mx1, mx2=mx2, my1=my1, my2=my2, y=y, permute.my2=permute.my2, norm=norm, norm.y=norm.y)
+	        value[i,] <- ptest(samp = seqpermutation[i,], mx1 = mx1, mx2 = mx2, my1 = my1, my2 = my2, y = y, permute.my2 = permute.my2, norm = norm, norm.y = norm.y)
     	}
 	} else {
 		if (newClusters) {
-			CL <- parallel::makeCluster(parallel,type="PSOCK")
+			CL <- parallel::makeCluster(parallel, type = "PSOCK")
 		}
-		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest, mx1=mx1, mx2=mx2, my1=my1, my2=my2, y=y, permute.my2=permute.my2, norm=norm, norm.y=norm.y))
+		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest, mx1 = mx1, mx2 = mx2, my1 = my1, my2 = my2, y = y, permute.my2 = permute.my2, norm = norm, norm.y = norm.y))
 		if (newClusters){
 			parallel::stopCluster(CL)
 		}

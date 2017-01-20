@@ -25,8 +25,8 @@ species. For more details, see \code{\link{matrix.p}},
 }
 \examples{
 
-data(flona)
-belonging(flona$phylo)
+data(ADRS)
+belonging(ADRS$phylo)
 
 }
 \author{

@@ -8,18 +8,23 @@
 permut.row.matrix(data, strata = NULL, seqpermutation = NULL)
 }
 \arguments{
-\item{data}{A matrix}
+\item{data}{A matrix.}
 
-\item{strata}{Argument to specify restricting permutations in rows 
-(Default strata = NULL).}
+\item{strata}{Argument to specify restricting permutations in rows (Default strata = NULL).}
 
-\item{seqpermutation}{A pre set permutation vector (Default seqpermutation = NULL).}
+\item{seqpermutation}{A set of predefined permutation vector (Default seqpermutation = NULL).}
+}
+\value{
+\item{permut.matrix}{The matrix permuted.} \item{samp}{The sequence of permutation.}
 }
 \description{
 Internal function to permutate rows in a matrix.
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
+\seealso{
+\code{\link{syncsa}}, \code{\link{permut.vector}}
 }
 \keyword{SYNCSA}
 

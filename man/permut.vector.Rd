@@ -8,18 +8,23 @@
 permut.vector(n, strata = NULL, nset = 999)
 }
 \arguments{
-\item{n}{The length of vector}
+\item{n}{The length of vector.}
 
-\item{strata}{Argument to specify restricting permutations}
+\item{strata}{Argument to specify restricting permutations.}
 
-\item{nset}{The number of permutations to generate for the set
-(Default strata = NULL).}
+\item{nset}{The number of permutations to generate for the set (Default strata = NULL).}
+}
+\value{
+A matrix of permutations, where each row is a separate permutation.
 }
 \description{
-Internal function to permutate a vector of size n.
+Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
+\seealso{
+\code{\link{syncsa}}, \code{\link{permut.row.matrix}}
 }
 \keyword{SYNCSA}
 

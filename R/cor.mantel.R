@@ -1,7 +1,7 @@
 #' @rdname cor.matrix
 #' @encoding UTF-8
 #' @export
-cor.mantel<-function (dist.x, dist.y, method = "pearson", permutations = 999, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters=TRUE, CL =  NULL) 
+cor.mantel<-function (dist.x, dist.y, method = "pearson", permutations = 999, strata = NULL, na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL =  NULL) 
 {
 	if(!is.null(seqpermutation)){
 		if(dim(seqpermutation)[1]!=permutations){
@@ -23,16 +23,16 @@ cor.mantel<-function (dist.x, dist.y, method = "pearson", permutations = 999, st
 		use <- "all.obs"
 	}
 	ptest <- function(samp,mx,dist.y,method,use) {
-		res<-cor(stats::as.dist(mx[samp, samp]), dist.y, method = method,use = use)
+		res<-cor(stats::as.dist(mx[samp, samp]), dist.y, method = method, use = use)
     }
     if(is.null(parallel)){
     	value <- matrix(NA, nrow = permutations, ncol = 1)
 	    for (i in 1: permutations) {
-	        value[i,] <- ptest(samp = seqpermutation[i,],mx = mx, dist.y=dist.y, method=method, use=use)
+	        value[i,] <- ptest(samp = seqpermutation[i,], mx = mx, dist.y = dist.y, method = method, use = use)
     	}
 	} else {
 		if (newClusters) {
-			CL <- parallel::makeCluster(parallel,type="PSOCK")
+			CL <- parallel::makeCluster(parallel, type = "PSOCK")
 		}
 		value <- cbind(parallel::parRapply(CL, seqpermutation, ptest, mx = mx, dist.y = dist.y, method = method, use = use))
 		if (newClusters){

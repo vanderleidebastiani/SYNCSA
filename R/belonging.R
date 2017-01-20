@@ -21,8 +21,8 @@
 #' @keywords SYNCSA
 #' @examples
 #' 
-#' data(flona)
-#' belonging(flona$phylo)
+#' data(ADRS)
+#' belonging(ADRS$phylo)
 #' 
 #' @export
 belonging<-function (dis, standardize=TRUE){
