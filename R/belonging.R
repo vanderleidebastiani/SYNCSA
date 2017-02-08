@@ -1,8 +1,9 @@
 #' Degree of belonging of species
 #' 
-#' Function to obtain a matrix containing the degree of belonging of each
-#' species based on its ecological or phylogenetic resemblance to other
-#' species. For more details, see \code{\link{matrix.p}},
+#' Function to obtain a matrix containing the degrees of belongings of each
+#'  and every species. The degree of belonging of each species is defined based on 
+#' its ecological or phylogenetic resemblance to every other
+#' species in the community. For more details, see \code{\link{matrix.p}},
 #' \code{\link{matrix.x}} and \code{\link{syncsa}}.
 #' 
 #' 
