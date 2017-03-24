@@ -18,11 +18,10 @@ ordinal, 'b' is binary, 'n' is nominal and 'f' is factor.
 Function extracted (with small changes) of the function \code{\link{gowdis}} 
 to check the type of variables in a dataframe or matrix.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.dummy}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

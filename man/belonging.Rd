@@ -18,9 +18,10 @@ Standardized matrix containing the degree of belonging of species in
 relation to each other. Row totals (species) = 1.
 }
 \description{
-Function to obtain a matrix containing the degree of belonging of each
-species based on its ecological or phylogenetic resemblance to other
-species. For more details, see \code{\link{matrix.p}},
+Function to obtain a matrix containing the degrees of belongings of each
+ and every species. The degree of belonging of each species is defined based on 
+its ecological or phylogenetic resemblance to every other
+species in the community. For more details, see \code{\link{matrix.p}},
 \code{\link{matrix.x}} and \code{\link{syncsa}}.
 }
 \examples{
@@ -28,9 +29,6 @@ species. For more details, see \code{\link{matrix.p}},
 data(ADRS)
 belonging(ADRS$phylo)
 
-}
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
@@ -41,5 +39,7 @@ metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
 \code{\link{matrix.p}}, \code{\link{matrix.x}},
 \code{\link{syncsa}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

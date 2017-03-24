@@ -20,11 +20,10 @@ The first-order partial correlation coefficient.
 \description{
 Internal function to obtain the first-order partial correlation coefficient.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}, \code{\link{cor.matrix}},
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

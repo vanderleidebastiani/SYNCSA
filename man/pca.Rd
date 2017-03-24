@@ -3,8 +3,8 @@
 \encoding{UTF-8}
 \name{pca}
 \alias{pca}
-\alias{plot.pcasyncsa}
 \alias{print.pcasyncsa}
+\alias{plot.pcasyncsa}
 \title{Principal Components Analysis (PCA) with NA (missing data)}
 \usage{
 pca(data)
@@ -36,6 +36,7 @@ and variables in columns.}
 \item{...}{Parameters for \code{\link{plot}} function.}
 }
 \value{
+\item{decomposition}{list with the results of decomposition of correlation matrix.}
 \item{eigenvalues}{Data frame containing all the eigenvalues, the
 percentage of inertia and the cumulative percentage of inertia.} 
 \item{individuals}{Coordinates for the individuals.}
@@ -61,12 +62,11 @@ plot(res, show = "individuals", axis = c(1, 2), text = TRUE)
 plot(res, show = "individuals", text = FALSE, points = TRUE)
 
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}
 \code{\link{syncsa}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

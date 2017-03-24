@@ -16,11 +16,10 @@ observations are removed (Default na.rm = FALSE).}
 \description{
 Internal function for centralization and standardization in a matrix.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

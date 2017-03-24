@@ -21,4 +21,4 @@ Description: Analysis of metacommunities based on functional traits and
     SYNCSA application written in C++ (by Valerio Pillar, available at http://
     ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html).
 License: GPL-2
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

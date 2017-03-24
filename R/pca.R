@@ -18,7 +18,8 @@
 #' @param text Logical argument (TRUE or FALSE) to specify if text are showed for individuals (Default text = TRUE).
 #' @param points Logical argument (TRUE or FALSE) to specify if points are showed for individuals (Default points = FALSE).
 #' @param ... Parameters for \code{\link{plot}} function.
-#' @return \item{eigenvalues}{Data frame containing all the eigenvalues, the
+#' @return \item{decomposition}{list with the results of decomposition of correlation matrix.}
+#' \item{eigenvalues}{Data frame containing all the eigenvalues, the
 #' percentage of inertia and the cumulative percentage of inertia.} 
 #' \item{individuals}{Coordinates for the individuals.}
 #' \item{variables}{Correlation between original variables and axes.}
@@ -50,6 +51,7 @@ pca <- function(data){
 	data.NA <- apply(data.norm, 2, is.na)
     data.norm[data.NA] <- 0
 	RES_eig<-eigen(COR)
+	res$decomposition<-RES_eig
 	eig <- RES_eig$values
 	res.eig <- data.frame(Eigenvalues = eig, Perc.Inertia = eig/sum(eig), Cum.Inertia = cumsum(eig/sum(eig)))
 	rownames(res.eig)<-paste("Axis.", 1:length(eig), sep="")

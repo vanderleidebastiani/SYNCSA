@@ -20,11 +20,10 @@ A matrix of permutations, where each row is a separate permutation.
 \description{
 Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}, \code{\link{permut.row.matrix}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

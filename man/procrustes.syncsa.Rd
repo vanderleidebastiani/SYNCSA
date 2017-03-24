@@ -4,6 +4,7 @@
 \name{procrustes.partial}
 \alias{procrustes.partial}
 \alias{procrustes.syncsa}
+\alias{procrustes.partial}
 \title{Procrustes and Partial Procrustes correlations.}
 \usage{
 procrustes.partial(x, y, z)
@@ -31,9 +32,6 @@ correlations is obtained by Procrustes correlation of residuals between
 each variable in z being used as linear predictor of all variables in x and y. 
 For more details, see \code{\link{syncsa}}.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \references{
 Peres-Neto, P.R. and Jackson, D.A. (2001). How well do
 multivariate data sets match? The advantages of a Procrustean
@@ -42,5 +40,7 @@ superimposition approach over the Mantel test. Oecologia 129: 169-178.
 \seealso{
 \code{\link{syncsa}}, \code{\link{cor.matrix}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

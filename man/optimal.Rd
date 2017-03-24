@@ -4,6 +4,7 @@
 \name{optimal}
 \alias{optimal}
 \alias{print.optimal}
+\alias{print.optimal}
 \title{Searching for optimal traits}
 \usage{
 optimal(comm, traits, envir, subset.min = 1, subset.max = ncol(traits),
@@ -111,9 +112,6 @@ optimal(flona$community,flona$traits,flona$environment,
 	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
 
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
 metacommunity analysis of phylogenetic structure. Ecology Letters, 13,
@@ -126,5 +124,7 @@ ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 \seealso{
 \code{\link{syncsa}}, \code{\link{organize.syncsa}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

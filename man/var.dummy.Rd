@@ -24,11 +24,10 @@ absense (0) of level. The name of columns is a combination of orginal variable n
 plus the level separate by underscore ( _ ). Ordered factor and character class are
 not expanded.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.type}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-
