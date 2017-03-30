@@ -21,4 +21,3 @@ Text progress bar in the R console. See \code{\link{txtProgressBar}}.
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
 \keyword{SYNCSA}
-

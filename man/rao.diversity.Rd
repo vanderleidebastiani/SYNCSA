@@ -75,9 +75,6 @@ rao.diversity(ADRS$community)
 rao.diversity(ADRS$community, traits = ADRS$traits)
 
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \references{
 de Bello, F.; Leps, J.; Lavorel, S. & Moretti, M. (2007).
 Importance of species abundance for assessment of trait composition: an
@@ -94,5 +91,7 @@ approach. Theoretical Population Biology, 21, 24:43.
 \code{\link{organize.syncsa}}, \code{\link{gowdis}},
 \code{\link{syncsa}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

@@ -20,11 +20,10 @@ permut.row.matrix(data, strata = NULL, seqpermutation = NULL)
 \description{
 Internal function to permutate rows in a matrix.
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}, \code{\link{permut.vector}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

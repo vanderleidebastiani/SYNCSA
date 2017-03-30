@@ -75,11 +75,10 @@ data(ADRS)
 organize.syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir)
 
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \seealso{
 \code{\link{syncsa}}, \code{\link{var.dummy}}, \code{\link{var.type}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-

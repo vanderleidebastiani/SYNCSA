@@ -332,9 +332,6 @@ res
 res$weights
 
 }
-\author{
-Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
-}
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for metacommunity analysis
 of phylogenetic structure. Ecology Letters, 13, 587:596.
@@ -364,5 +361,7 @@ limiting similarity lives! A reply to Grime. Journal of Vegetation Science,
 \code{\link{rao.diversity}}, \code{\link{cor.matrix}}, \code{\link{var.type}},
 \code{\link{var.dummy}}
 }
+\author{
+Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
+}
 \keyword{SYNCSA}
-
