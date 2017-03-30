@@ -124,9 +124,9 @@ level based on permutations.}
 The functions cor.matrix and cor.matrix.partial are similar the function 
 \code{\link{mantel}} and \code{\link{mantel.partial}}, although the significance
 of the statistics is evaluated differently from Mantel. The functions pro.matrix 
-and pro.matrix.partial uses symmetric Procrustes as a measure of concordance between
-data sets. The function cor.mantel is similar the function \code{\link{mantel}}, but 
-allow the use of a set of predefined permutation. For more details, see 
+and pro.matrix.partial use symmetric Procrustes as a measure of concordance between
+data sets. The function cor.mantel is similar to the function \code{\link{mantel}}, but 
+allows the use of a set of predefined permutation. For more details, see 
 \code{\link{syncsa}}.
 }
 \details{

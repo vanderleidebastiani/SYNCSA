@@ -12,10 +12,10 @@ matrix.p(comm, phylodist, notification = TRUE)
 rows. This matrix can contain either presence/absence or abundance data.}
 
 \item{phylodist}{Matrix containing phylogenetic distance between species.
-Must be a complete matrix (not a half diagonal matrix).}
+Must be a complete matrix (not a diagonal resemblance matrix).}
 
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
-notifications of missing observations are shown (Default notification =
+notifications for missing observations are to be shown (Default notification =
 TRUE).}
 }
 \value{
@@ -31,8 +31,8 @@ Function to obtain a matrix containing phylogeny-weighted species
 composition. For more details, see \code{\link{syncsa}}.
 }
 \note{
-\strong{IMPORTANT}: The sequence species show up in community data
-matrix MUST be the same as they show up in phylogenetic distance matrix. See
+\strong{IMPORTANT}: Species sequence in the community data
+matrix MUST be the same as the one in the phylogenetic distance matrix. See
 \code{\link{organize.syncsa}}.
 }
 \examples{
