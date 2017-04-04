@@ -52,12 +52,12 @@ pca <- function(data){
     data.norm[data.NA] <- 0
 	RES_eig<-eigen(COR)
 	res$decomposition<-RES_eig
-	eig <- RES_eig$values
+	eig <- RES_eig$values[RES_eig$values>=0]
 	res.eig <- data.frame(Eigenvalues = eig, Perc.Inertia = eig/sum(eig), Cum.Inertia = cumsum(eig/sum(eig)))
 	rownames(res.eig)<-paste("Axis.", 1:length(eig), sep="")
 	res$eigenvalues <- res.eig    
 	ind.coord<-data.norm%*%RES_eig$vectors
-	colnames(ind.coord)<-rownames(res.eig)
+	colnames(ind.coord)<-paste("Axis.", 1:ncol(ind.coord), sep="")
 	var.coord <- cor(data, ind.coord, use = "pairwise.complete.obs")
 	res$individuals<-ind.coord
 	res$variables<-var.coord
