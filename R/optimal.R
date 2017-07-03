@@ -301,7 +301,11 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
 		}
 	}
 	result <- data.frame(Subset = comb, ro = correlation, stringsAsFactors = FALSE)
-	result <- result[order(abs(result[, 2]), decreasing = TRUE), ]
+	if(pattern == 1 | pattern ==3){
+	  result <- result[order(result[, 2], decreasing = TRUE), ] 
+	} else{
+	  result <- result[order(abs(result[, 2]), decreasing = TRUE), ]
+	}
 	Res <- list(call = match.call(), N_subset = nT, optimization = result, weights = weights)
 	class(Res) <- "optimal"
 	return(Res)
