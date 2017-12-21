@@ -1,7 +1,9 @@
 #' @rdname pca
 #' @encoding UTF-8
 #' @export
-plot.pcasyncsa<-function(x, show = c("variables", "individuals"), axis = c(1, 2), xlab = axis[1], ylab = axis[2], arrows = TRUE, text = TRUE, points = FALSE, ...){
+plot.pcasyncsa <- function(x, show = c("variables", "individuals"), axis = c(1, 2), xlab = axis[1],
+                         ylab = axis[2], arrows = TRUE, text = TRUE, points = FALSE, ...)
+{
 	if (length(show) > 1) {
 		stop("\n Only one argument is accepted in show \n")
 	}
@@ -10,7 +12,7 @@ plot.pcasyncsa<-function(x, show = c("variables", "individuals"), axis = c(1, 2)
 	if(show == 1){
 		circle <- seq(0, 2*pi, length = 200)
 		graphics::plot(cos(circle), sin(circle), type = 'l', col = "gray", xlab = xlab, ylab = ylab, xlim = c(-1, 1), ylim = c(-1, 1), asp = 1, ...)
-		graphics::abline(h = 0, v = 0, lty = 3,col="gray")
+		graphics::abline(h = 0, v = 0, lty = 3, col = "gray")
 		if(arrows){
 			graphics::arrows(0 ,0, x1 = x$variables[, axis[1]]*0.9, y1 = x$variables[, axis[2]]*0.9, length = 0.09, ...)
 		}

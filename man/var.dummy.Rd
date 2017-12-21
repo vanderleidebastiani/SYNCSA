@@ -20,7 +20,7 @@ Function to expand factor variables in dummy variables in a dataframe. See detai
 \details{
 Variables in the dataframe of class factor is expanded in dummy variables. Each
 level of factor produce a new column in the dataframe, with presence (1) or
-absense (0) of level. The name of columns is a combination of orginal variable name 
+absense (0) of level. The name of columns is a combination of orginal variable name
 plus the level separate by underscore ( _ ). Ordered factor and character class are
 not expanded.
 }

@@ -19,16 +19,14 @@ relation to each other. Row totals (species) = 1.
 }
 \description{
 Function to obtain a matrix containing the degrees of belongings of each
- and every species. The degree of belonging of each species is defined based on 
+and every species. The degree of belonging of each species is defined based on
 its ecological or phylogenetic resemblance to every other
 species in the community. For more details, see \code{\link{matrix.p}},
 \code{\link{matrix.x}} and \code{\link{syncsa}}.
 }
 \examples{
-
 data(ADRS)
 belonging(ADRS$phylo)
-
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for

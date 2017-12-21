@@ -6,7 +6,7 @@
 \usage{
 data(ADRS)
 }
-\description{Artificial Data for Run SYNCSA}
+\description{Artificial data for run SYNCSA.}
 \format{
   A list with 4 matrices.
   \describe{

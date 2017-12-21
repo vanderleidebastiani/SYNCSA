@@ -64,12 +64,12 @@ groups (Default strata = NULL).}
 deletion of missing observations when computing dissimilarities (Default
 na.rm = FALSE).}
 
-\item{seqpermutation}{A set of predefined permutation, with the same dimensions of 
+\item{seqpermutation}{A set of predefined permutation, with the same dimensions of
 permutations (Default seqpermutation = NULL).}
 
-\item{parallel}{Number of parallel processes.  Tip: use detectCores() (Default parallel = NULL).}
+\item{parallel}{Number of parallel processes.  Tip: use parallel::detectCores() (Default parallel = NULL).}
 
-\item{newClusters}{Logical argument (TRUE or FALSE) to specify if make new parallel 
+\item{newClusters}{Logical argument (TRUE or FALSE) to specify if make new parallel
 processes or use predefined socket cluster. Only if parallel is different of NULL (Default newClusters = TRUE).}
 
 \item{CL}{A predefined socket cluster done with parallel package.}
@@ -88,13 +88,12 @@ processes or use predefined socket cluster. Only if parallel is different of NUL
 
 \item{y}{Matrix that will be correlated with the matrix x.}
 
-\item{permute.my2}{Logical argument (TRUE or FALSE) to specify if realize 
+\item{permute.my2}{Logical argument (TRUE or FALSE) to specify if realize
 parallel permutation in matrix my2.}
 
 \item{dist}{Dissimilarity index, as accepted by vegdist: "manhattan",
 "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower",
-"altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao".
-However, some of these will not make sense in this case.}
+"altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao".}
 
 \item{norm}{Logical argument (TRUE or FALSE) to specify if x is standardized
 within variables (Default norm = FALSE).}
@@ -110,7 +109,7 @@ within variables (Default norm = FALSE).}
 \item{z}{Matrix whose effect will be removed from the correlation between x
 and y.}
 
-\item{permute.mz2}{Logical argument (TRUE or FALSE) to specify if realize 
+\item{permute.mz2}{Logical argument (TRUE or FALSE) to specify if realize
 parallel permutation in matrix mz2.}
 
 \item{norm.z}{Logical argument (TRUE or FALSE) to specify if z is standardized
@@ -121,17 +120,17 @@ within variables (Default norm = FALSE).}
 level based on permutations.}
 }
 \description{
-The functions cor.matrix and cor.matrix.partial are similar the function 
+The functions cor.matrix and cor.matrix.partial are similar the function
 \code{\link{mantel}} and \code{\link{mantel.partial}}, although the significance
-of the statistics is evaluated differently from Mantel. The functions pro.matrix 
+of the statistics is evaluated differently from Mantel. The functions pro.matrix
 and pro.matrix.partial use symmetric Procrustes as a measure of concordance between
-data sets. The function cor.mantel is similar to the function \code{\link{mantel}}, but 
-allows the use of a set of predefined permutation. For more details, see 
+data sets. The function cor.mantel is similar to the function \code{\link{mantel}}, but
+allows the use of a set of predefined permutation. For more details, see
 \code{\link{syncsa}}.
 }
 \details{
 The null model is based on permutations in the matrix mx2, typically the
-matrices B, U and Q, except in the function cor.mantel when the permutations 
+matrices B, U and Q, except in the function cor.mantel when the permutations
 are done in one of distance matrix.
 
 Null model described by Pillar et al. (2009) and Pillar & Duarte (2010). For
@@ -147,7 +146,7 @@ Discriminating trait-convergence and trait-divergence assembly patterns in
 ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 }
 \seealso{
-\code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{mantel}}, 
+\code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{mantel}},
 \code{\link{procrustes}}
 }
 \author{

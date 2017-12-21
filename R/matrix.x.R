@@ -1,25 +1,24 @@
-#' Matrix X
+#' @title Matrix X
 #'
-#' Function to obtain a matrix containing trait-weighted species composition.
+#' @description Function to obtain a matrix containing trait-weighted species composition.
 #' For more details, see \code{\link{syncsa}}.
-#'
 #'
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
 #' @importFrom FD gowdis
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
-#' @param traits A data frame or matrix data of species described by traits, with traits as
+#' @param traits Matrix or data frame of species described by traits, with traits as
 #' columns and species as rows.
 #' @param scale Logical argument (TRUE or FALSE) to specify if the traits are
-#' measured on different scales (Default scale = TRUE). Scale = TRUE if traits
-#' are measured on different scales, the matrix of traits is subjected to
+#' measured on different scales (Default scale = TRUE). When scale = TRUE traits
+#' are measured on different scales the matrix of traits is subjected to
 #' standardization within each trait, and Gower Index is used to calculate the
-#' degree of belonging to the species. Scale = FALSE if traits are measured on
-#' the same scale, the matrix of traits is not subjected to standardization,
+#' degree of belonging to the species. When scale = FALSE traits are measured on
+#' the same scale the matrix of traits is not subjected to standardization,
 #' and Euclidean distance is calculated to determine the degree of belonging to
 #' the species.
-#' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+#' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are
 #' convert to ranks (Default ranks = TRUE).
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
 #' method is forneced the rank parameter is not apply.
@@ -48,60 +47,58 @@
 #' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #' @keywords SYNCSA
 #' @examples
-#'
 #' data(ADRS)
 #' matrix.x(ADRS$community, ADRS$traits)
-#'
 #' @export
-matrix.x<-function (comm, traits, scale = TRUE, ranks = TRUE, ord, notification = TRUE, ...)
+matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord, notification = TRUE, ...)
 {
-	comm<-as.matrix(comm)
-	vartype<-var.type(traits)
-	if(any(vartype=="n")){
-		stop("\n trait must contain only numeric, binary or ordinal variables \n")
-	}
-	if(missing(ord)){
-		for(i in 1:length(vartype)){
-			if(ranks & vartype[i]=="o"){
-				traits[, i] <- rank(traits[, i], na.last = "keep")
-			}
-			traits[, i] <- as.numeric(traits[, i])
-		}
-		traits<-as.matrix(traits)
-	}
-    matrix.w <- sweep(comm, 1, rowSums(comm, na.rm=TRUE), "/")
-	w.NA <- apply(matrix.w, 2, is.na)
-    matrix.w[w.NA] <-0
-    if(notification){
-    	if(any(w.NA)){
-			warning("Warning: NA in community data",call. = FALSE)		
-    	}  	 
+  comm <- as.matrix(comm)
+  vartype <- var.type(traits)
+  if(any(vartype == "n")){
+    stop("\n trait must contain only numeric, binary or ordinal variables \n")
+  }
+  if(missing(ord)){
+    for(i in 1:length(vartype)){
+      if(ranks & vartype[i] == "o"){
+        traits[, i] <- rank(traits[, i], na.last = "keep")
+      }
+      traits[, i] <- as.numeric(traits[, i])
     }
-    x.NA <- apply(traits, 2, is.na)
-    if(notification){
-    	if(any(x.NA)){
-			warning("Warning: NA in traits matrix", call. = FALSE)	
-    	}
+    traits <- as.matrix(traits)
+  }
+  matrix.w <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
+  w.NA <- apply(matrix.w, 2, is.na)
+  matrix.w[w.NA] <- 0
+  if(notification){
+    if(any(w.NA)){
+      warning("Warning: NA in community data", call. = FALSE)
     }
-    if (scale) {
-        dist.traits <- FD::gowdis(traits, asym.bin = NULL, ...)
-        similar.traits <- 1 - as.matrix(dist.traits)
-        matrix.traits <- 1/colSums(similar.traits,na.rm=TRUE)
-        matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
+  }
+  x.NA <- apply(traits, 2, is.na)
+  if(notification){
+    if(any(x.NA)){
+      warning("Warning: NA in traits matrix", call. = FALSE)
     }
-    else{
-    	dist.traits <- as.matrix(vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm =TRUE))
-	    similar.traits <- 1 - (dist.traits/max(dist.traits, na.rm = TRUE))
-    	matrix.traits <- 1/colSums(similar.traits, na.rm = TRUE)
-	    matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
+  }
+  if (scale) {
+    dist.traits <- FD::gowdis(traits, asym.bin = NULL, ...)
+    similar.traits <- 1 - as.matrix(dist.traits)
+    matrix.traits <- 1/colSums(similar.traits, na.rm = TRUE)
+    matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
+  }
+  else{
+    dist.traits <- as.matrix(vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = TRUE))
+    similar.traits <- 1 - (dist.traits/max(dist.traits, na.rm = TRUE))
+    matrix.traits <- 1/colSums(similar.traits, na.rm = TRUE)
+    matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
+  }
+  u.NA <- apply(matrix.u, 2, is.na)
+  if(notification){
+    if(any(u.NA)){
+      warning("Warning: NA in matrix U", call. = FALSE)
     }
-	u.NA <- apply(matrix.u, 2, is.na)
-    if(notification){
-    	if(any(u.NA)){
-			warning("Warning: NA in matrix U", call. = FALSE)	
-    	}
-    }
-    matrix.u[u.NA] <- 0
-    matrix.X <- matrix.w %*% matrix.u
-    return(list(matrix.w = matrix.w, matrix.u = matrix.u, matrix.X = matrix.X))
+  }
+  matrix.u[u.NA] <- 0
+  matrix.X <- matrix.w %*% matrix.u
+  return(list(matrix.w = matrix.w, matrix.u = matrix.u, matrix.X = matrix.X))
 }

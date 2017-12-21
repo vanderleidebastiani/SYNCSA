@@ -28,8 +28,8 @@ partial Procrustes correlation between three matrices.
 The function procrustes.syncsa is a small change in the function
 \code{\link{procrustes}}. The function uses a correlation-like statistic
 derived from the symmetric Procrustes sum of squares. Partial Procrustes
-correlations is obtained by Procrustes correlation of residuals between 
-each variable in z being used as linear predictor of all variables in x and y. 
+correlations is obtained by Procrustes correlation of residuals between
+each variable in z being used as linear predictor of all variables in x and y.
 For more details, see \code{\link{syncsa}}.
 }
 \references{

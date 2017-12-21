@@ -8,7 +8,7 @@
 ProgressBAR(n, N, ...)
 }
 \arguments{
-\item{n}{Number of current progress.}
+\item{n}{Number of the current progress.}
 
 \item{N}{Total number of cases.}
 

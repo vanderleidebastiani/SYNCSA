@@ -25,8 +25,8 @@ trait and in the phylodist matrices (Default checkdata = TRUE).}
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
 (Default ord = "metric").}
 
-\item{put.together}{List to specify group of traits. Each group specify receive the 
-same weight that one trait outside any group, in the way each group is considered 
+\item{put.together}{List to specify group of traits. Each group specify receive the
+same weight that one trait outside any group, in the way each group is considered
 as unique trait (Default put.together = NULL). This argument must be a list, see
 examples in \code{\link{syncsa}}.}
 
@@ -69,11 +69,9 @@ matrix MUST be the same as they show up in traits and phylodist matrices.
 See \code{\link{organize.syncsa}}.
 }
 \examples{
-
 data(ADRS)
 rao.diversity(ADRS$community)
 rao.diversity(ADRS$community, traits = ADRS$traits)
-
 }
 \references{
 de Bello, F.; Leps, J.; Lavorel, S. & Moretti, M. (2007).

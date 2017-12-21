@@ -1,15 +1,14 @@
-#' Procrustes and Partial Procrustes correlations.
-#' 
-#' 
-#' Function to obtain the Procrustes correlation between two matrices and
+#' @title Procrustes and Partial Procrustes correlations.
+#'
+#' @description Function to obtain the Procrustes correlation between two matrices and
 #' partial Procrustes correlation between three matrices.
-#' 
-#' The function procrustes.syncsa is a small change in the function
+#'
+#' @details The function procrustes.syncsa is a small change in the function
 #' \code{\link{procrustes}}. The function uses a correlation-like statistic
 #' derived from the symmetric Procrustes sum of squares. Partial Procrustes
-#' correlations is obtained by Procrustes correlation of residuals between 
-#' each variable in z being used as linear predictor of all variables in x and y. 
-#' For more details, see \code{\link{syncsa}}. 
+#' correlations is obtained by Procrustes correlation of residuals between
+#' each variable in z being used as linear predictor of all variables in x and y.
+#' For more details, see \code{\link{syncsa}}.
 #'
 #' @encoding UTF-8
 #' @importFrom stats lm residuals prcomp
@@ -26,23 +25,23 @@
 #' @seealso \code{\link{syncsa}}, \code{\link{cor.matrix}}
 #' @keywords SYNCSA
 #' @export
-procrustes.syncsa<-function (x, y)
+procrustes.syncsa <- function (x, y)
 {
-	x <- cbind(x)
-	y <- cbind(y)
-	if (ncol(x) < ncol(y)){
-		addcols <- ncol(y) - ncol(x)
-		for (i in 1:addcols) x <- cbind(x, 0)
-	}
-	ctrace <- function(MAT) sum(diag(crossprod(MAT)))
-	x <- scale(x, scale = FALSE)
-	y <- scale(y, scale = FALSE)
-	x <- x/sqrt(ctrace(x))
-	y <- y/sqrt(ctrace(y))
-	xy <- crossprod(x, y)
-	sol <- svd(xy)
-	c <- sum(sol$d)/ctrace(y)
-	r2 <- ctrace(x) + c * c * ctrace(y) - 2 * c * sum(sol$d)
-	ro<-sqrt(1 - r2)
-return(ro)
+  x <- cbind(x)
+  y <- cbind(y)
+  if (ncol(x) < ncol(y)){
+    addcols <- ncol(y) - ncol(x)
+    for (i in 1:addcols) x <- cbind(x, 0)
+  }
+  ctrace <- function(MAT) sum(diag(crossprod(MAT)))
+  x <- scale(x, scale = FALSE)
+  y <- scale(y, scale = FALSE)
+  x <- x/sqrt(ctrace(x))
+  y <- y/sqrt(ctrace(y))
+  xy <- crossprod(x, y)
+  sol <- svd(xy)
+  c <- sum(sol$d)/ctrace(y)
+  r2 <- ctrace(x) + c * c * ctrace(y) - 2 * c * sum(sol$d)
+  ro <- sqrt(1 - r2)
+  return(ro)
 }

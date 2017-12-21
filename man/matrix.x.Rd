@@ -12,19 +12,19 @@ matrix.x(comm, traits, scale = TRUE, ranks = TRUE, ord,
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{traits}{A data frame or matrix data of species described by traits, with traits as
+\item{traits}{Matrix or data frame of species described by traits, with traits as
 columns and species as rows.}
 
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are
-measured on different scales (Default scale = TRUE). Scale = TRUE if traits
-are measured on different scales, the matrix of traits is subjected to
+measured on different scales (Default scale = TRUE). When scale = TRUE traits
+are measured on different scales the matrix of traits is subjected to
 standardization within each trait, and Gower Index is used to calculate the
-degree of belonging to the species. Scale = FALSE if traits are measured on
-the same scale, the matrix of traits is not subjected to standardization,
+degree of belonging to the species. When scale = FALSE traits are measured on
+the same scale the matrix of traits is not subjected to standardization,
 and Euclidean distance is calculated to determine the degree of belonging to
 the species.}
 
-\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
@@ -54,10 +54,8 @@ matrix MUST be the same as they show up in traits matrix. See
 \code{\link{organize.syncsa}}.
 }
 \examples{
-
 data(ADRS)
 matrix.x(ADRS$community, ADRS$traits)
-
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for

@@ -29,7 +29,7 @@ columns and sampling units as rows.}
 
 \item{subset.max}{Maximum of traits in each subset (Default subset.max = ncol(traits)).}
 
-\item{pattern}{Patterns for maximize correlation, "tcap","tdap" or
+\item{pattern}{Patterns for maximize correlation, "tcap", "tdap" or
 "tcap.tdap" (Default pattern = NULL).}
 
 \item{ro.method}{Method to obtain the correlation, "mantel" or "procrustes"
@@ -43,13 +43,13 @@ columns and sampling units as rows.}
 or "kendall".}
 
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are
-measured on different scales (Default Scale = TRUE). Scale = TRUE if traits
-are measured on different scales, the matrix T is subjected to
-standardization within each trait. Scale = FALSE if traits are measured on
-the same scale, the matrix T is not subjected to standardization.
-Furthermore, if Scale = TRUE the matrix of traits is subjected to
+measured on different scales (Default Scale = TRUE). When scale = TRUE traits
+are measured on different scales and the matrix T is subjected to
+standardization within each trait. When scale = FALSE if traits are measured on
+the same scale and the matrix T is not subjected to standardization.
+Furthermore, if scale = TRUE the matrix of traits is subjected to
 standardization within each trait, and Gower Index is used to calculate the
-degree of belonging to the species, and if Scale = FALSE the matrix of
+degree of belonging to the species, and if scale = FALSE the matrix of
 traits is not subjected to standardization, and Euclidean distance is
 calculated to determine the degree of belonging to the species.}
 
@@ -59,7 +59,7 @@ TRUE). If the enviromental variables are measured on different scales, the
 matrix is subjected to centralization and standardization within each
 variable.}
 
-\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
@@ -100,17 +100,13 @@ matrix MUST be the same as they show up in traits matrix. See
 \code{\link{organize.syncsa}}.
 }
 \examples{
-
 data(flona)
-optimal(flona$community,flona$traits,flona$environment,subset.min=3,subset.max=5,pattern="tcap")
-optimal(flona$community,flona$traits,flona$environment,subset.min=3,subset.max=5,pattern="tdap")
-optimal(flona$community,flona$traits,flona$environment,
-	subset.min=3,subset.max=5,pattern="tcap.tdap")
-put.together<-list(c("fol","sem"),c("tam","red"))
+optimal(flona$community, flona$traits, flona$environment, subset.min = 3, subset.max = 5, pattern = "tcap")
+optimal(flona$community, flona$traits, flona$environment, subset.min = 3, subset.max = 5, pattern = "tdap")
+optimal(flona$community, flona$traits, flona$environment, subset.min = 3, subset.max = 5, pattern = "tcap.tdap")
+put.together <- list(c("fol", "sem"), c("tam", "red"))
 put.together
-optimal(flona$community,flona$traits,flona$environment,
-	subset.min=1,subset.max=3,pattern="tcap",put.together=put.together)
-
+optimal(flona$community, flona$traits, flona$environment, subset.min = 1, subset.max = 3, pattern = "tcap", put.together = put.together)
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for

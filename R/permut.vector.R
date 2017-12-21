@@ -1,8 +1,7 @@
-#' Permutate a vector
-#' 
-#' Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
-#' 
-#' 
+#' @title Permutate a vector
+#'
+#' @description Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
+#'
 #' @encoding UTF-8
 #' @importFrom permute how Within Plots shuffleSet
 #' @param n The length of vector.
@@ -13,17 +12,19 @@
 #' @seealso \code{\link{syncsa}}, \code{\link{permut.row.matrix}}
 #' @keywords SYNCSA
 #' @export
-permut.vector <- function(n, strata = NULL, nset = 999){
-	if(is.null(strata)){
-		CTRL<-permute::how(within = permute::Within(type = "free"), plots = permute::Plots(type = "free"))
-		samp<-permute::shuffleSet(n = n, nset = nset, control = CTRL, check = FALSE)
-	}
-	if(!is.null(strata)){
-		if(n!=length(strata)){
-			stop("\n The strata must be the length of n\n")
-		}
-		CTRL <- permute::how(within = permute::Within(type = "free"), plots = permute::Plots(strata = strata, type = "none"))
-		samp<-permute::shuffleSet(n = n, nset = nset, control = CTRL, check = FALSE)
-	}
-	return(as.matrix(samp))
+permut.vector <- function(n, strata = NULL, nset = 999)
+{
+  if(is.null(strata)){
+    CTRL <- permute::how(within = permute::Within(type = "free"), plots = permute::Plots(type = "free"))
+    samp <- permute::shuffleSet(n = n, nset = nset, control = CTRL, check = FALSE)
+  }
+  if(!is.null(strata)){
+    if(n != length(strata)){
+      stop("\nstrata must be the length of n\n")
+    }
+    CTRL <- permute::how(within = permute::Within(type = "free"), plots = permute::Plots(strata = strata, type = "none"))
+    samp <- permute::shuffleSet(n = n, nset = nset, control = CTRL, check = FALSE)
+  }
+  res <- as.matrix(samp)
+  return(res)
 }

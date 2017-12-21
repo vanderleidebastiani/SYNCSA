@@ -11,16 +11,16 @@ matrix.t(comm, traits, scale = TRUE, ranks = TRUE, notification = TRUE)
 \item{comm}{Community data, with species as columns and sampling units as
 rows. This matrix can contain either presence/absence or abundance data.}
 
-\item{traits}{Matrix data of species described by traits, with traits as
+\item{traits}{Matrix or data frame of species described by traits, with traits as
 columns and species as rows.}
 
 \item{scale}{Logical argument (TRUE or FALSE) to specify if the traits are
-measured on different scales (Default Scale = TRUE). Scale = TRUE if traits
-are measured on different scales, the matrix T is subjected to
-standardization within each trait. Scale = FALSE is traits are measured on
-the same scale, the matrix T is not subjected to standardization.}
+measured on different scales (Default scale = TRUE). When scale = TRUE traits
+are measured on different scales and the matrix T is subjected to
+standardization within each trait. When scale = FALSE traits are measured on
+the same scale the matrix T is not subjected to standardization.}
 
-\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+\item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
 
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
@@ -44,10 +44,8 @@ matrix MUST be the same as they show up in traits matrix. See
 \code{\link{organize.syncsa}}.
 }
 \examples{
-
 data(ADRS)
 matrix.t(ADRS$community, ADRS$traits)
-
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for

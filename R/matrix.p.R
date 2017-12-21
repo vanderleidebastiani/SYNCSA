@@ -1,9 +1,8 @@
-#' Matrix P
-#' 
-#' Function to obtain a matrix containing phylogeny-weighted species
+#' @title Matrix P
+#'
+#' @description Function to obtain a matrix containing phylogeny-weighted species
 #' composition. For more details, see \code{\link{syncsa}}.
-#' 
-#' 
+#'
 #' @encoding UTF-8
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
@@ -29,26 +28,24 @@
 #' 587-596.
 #' @keywords SYNCSA
 #' @examples
-#' 
 #' data(ADRS)
-#' matrix.x(ADRS$community, ADRS$phylo)
-#' 
+#' matrix.p(ADRS$community, ADRS$phylo)
 #' @export
 matrix.p<-function (comm, phylodist, notification = TRUE)
 {
-	comm<-as.matrix(comm)
-	phylodist<-as.matrix(phylodist)
-    matrix.w <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
-	w.NA <- apply(matrix.w, 2, is.na)
-    matrix.w[w.NA] <-0
-    if(notification){
-    	if(any(w.NA)){
-			warning("Warning: NA in community data",call.=FALSE)		
-    	}  	 
+  comm <- as.matrix(comm)
+  phylodist <- as.matrix(phylodist)
+  matrix.w <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
+  w.NA <- apply(matrix.w, 2, is.na)
+  matrix.w[w.NA] <-0
+  if(notification){
+    if(any(w.NA)){
+      warning("Warning: NA in community data", call.=FALSE)
     }
-    similar.phy <- 1 - (phylodist/max(phylodist))
-    matrix.phy <- 1/colSums(similar.phy)
-    matrix.q <- sweep(similar.phy, 1, matrix.phy, "*")
-    matrix.P <- matrix.w %*% matrix.q
-    return(list(matrix.w = matrix.w, matrix.q = matrix.q, matrix.P = matrix.P))
+  }
+  similar.phy <- 1 - (phylodist/max(phylodist))
+  matrix.phy <- 1/colSums(similar.phy)
+  matrix.q <- sweep(similar.phy, 1, matrix.phy, "*")
+  matrix.P <- matrix.w %*% matrix.q
+  return(list(matrix.w = matrix.w, matrix.q = matrix.q, matrix.P = matrix.P))
 }

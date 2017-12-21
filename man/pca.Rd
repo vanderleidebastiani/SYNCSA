@@ -14,8 +14,7 @@ pca(data)
   text = TRUE, points = FALSE, ...)
 }
 \arguments{
-\item{data}{A data frame  or matrix with individuals in rows (individuals)
-and variables in columns.}
+\item{data}{A data frame  or matrix with individuals in rows and variables in columns.}
 
 \item{x}{A object of class pcasyncsa.}
 
@@ -38,21 +37,20 @@ and variables in columns.}
 \value{
 \item{decomposition}{list with the results of decomposition of correlation matrix.}
 \item{eigenvalues}{Data frame containing all the eigenvalues, the
-percentage of inertia and the cumulative percentage of inertia.} 
+percentage of inertia and the cumulative percentage of inertia.}
 \item{individuals}{Coordinates for the individuals.}
 \item{variables}{Correlation between original variables and axes.}
 }
 \description{
-The function use the option "pairwise.complete.obs" 
-(in function \code{\link{cor}}) for calc the correlation between each pair 
-of variables. The calc use all complete pairs of observations on those variables.
+The function use the option "pairwise.complete.obs" (in function \code{\link{cor}}) for
+calculate the correlation. The correlation between each pair of variables is computed
+using all complete pairs of observations on those variables.
 }
 \examples{
-
 data(ADRS)
 traits<-ADRS$traits
 # Some NA
-traits[c(1,5),1]<-NA 
+traits[c(1,5),1]<-NA
 traits[3,2]<-NA
 traits
 res<-pca(traits)
@@ -60,7 +58,6 @@ res
 plot(res, show = "variables", arrows = TRUE)
 plot(res, show = "individuals", axis = c(1, 2), text = TRUE)
 plot(res, show = "individuals", text = FALSE, points = TRUE)
-
 }
 \seealso{
 \code{\link{syncsa}}

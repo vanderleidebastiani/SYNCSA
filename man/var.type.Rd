@@ -11,11 +11,11 @@ var.type(data)
 \item{data}{A dataframe or matrix.}
 }
 \value{
-A vector with the variable types, where 'c' is continuous/numeric, 'o' is 
+A vector with the variable types, where 'c' is continuous/numeric, 'o' is
 ordinal, 'b' is binary, 'n' is nominal and 'f' is factor.
 }
 \description{
-Function extracted (with small changes) of the function \code{\link{gowdis}} 
+Function extracted (with small changes) of the function \code{\link{gowdis}}
 to check the type of variables in a dataframe or matrix.
 }
 \seealso{

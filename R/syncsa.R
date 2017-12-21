@@ -1,23 +1,23 @@
-#' Syncsa
+#' @title SYNCSA
 #'
-#' This function integrates several steps for the analysis of phylogenetic
+#' @description This function integrates several steps for the analysis of phylogenetic
 #' assembly patterns and their links to traits and ecological processes in a
-#' metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). The function implement 
+#' metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). The function implement
 #' methods that have been available in the SYNCSA
 #' application written in C++ (by Valerio Pillar, available at
 #' http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html). See details.
 #'
 #'
-#' Package \strong{SYNCSA} requires that the species and community sequence in
-#' the dataframe or matrix must be the same for all dataframe/matrices. 
-#' The function \code{\link{organize.syncsa}} organizes the data for the functions 
+#' @details Package \strong{SYNCSA} requires that the species and community sequence in
+#' the dataframe or matrix must be the same for all dataframe/matrices.
+#' The function \code{\link{organize.syncsa}} organizes the data for the functions
 #' of the package, placing the matrices of community, traits, phylogenetic distance,
 #' environmental varibles and strata vector in the same order. The function
 #' use of function organize.syncsa is not requered for run the functions, but
 #' is recommended. It requires data organized into the following matrices: (1) the
-#' presences or abundances of species in a set of communities (\strong{W}); (2) the 
+#' presences or abundances of species in a set of communities (\strong{W}); (2) the
 #' phylogenetic pairwise dissimilarities of these species (\strong{DF}); (3) a set of
-#' functional traits describing the species (\strong{B}), which 
+#' functional traits describing the species (\strong{B}), which
 #' may be a mixture of binary and quantitative traits (continual and ordinal),
 #' but not nominal ones (these should be expanded into binary traits); and (4)
 #' the ecological gradient of interest, which may be one or more factors to
@@ -27,7 +27,7 @@
 #' trait-divergence assembly patterns (TDAP), and phylogenetic signal in
 #' functional traits at the species pool level and at the metacomunity level.
 #' This function also generates P-values by permutation testing based on null
-#' models (Pillar et al. 2009, Pillar & Duarte 2010). 
+#' models (Pillar et al. 2009, Pillar & Duarte 2010).
 #'
 #' \strong{ro(TE)}
 #'
@@ -143,44 +143,44 @@
 #'
 #' \strong{Mantel correlations}
 #'
-#'	The Mantel and Partial Mantel statistics are calculated simply as the correlation
-#' entries the dissimilarity matrices, using standard Mantel test (see 
-#' \code{\link{mantel}} and \code{\link{cor.mantel}}). Partial Mantel 
+#' The Mantel and Partial Mantel statistics are calculated simply as the correlation
+#' entries the dissimilarity matrices, using standard Mantel test (see
+#' \code{\link{mantel}} and \code{\link{cor.mantel}}). Partial Mantel
 #' statistic use paired correlation between the three matrices and obtains the partial
-#' correlation using the formula of first-order partial correlation coefficient. The 
+#' correlation using the formula of first-order partial correlation coefficient. The
 #' significances are obtained using a different procedure than standard Mantel test,
 #' see section Testing against null models below.
 #'
 #' \strong{Procrustes correlations}
 #'
-#' The Procrustes correlation uses symmetric Procrustes as a measure of concordance 
-#' between the data matrices (see \code{\link{procrustes}} and 
-#' \code{\link{cor.procrustes}}). Procrustes procedure use rotation, translation, 
-#' and rescaling for minimizing sum of squared differences between two data sets. 
-#' The correlation of Procrustes is calculated as the statistic derived from the 
-#' symmetric Procrustes sum of squares, representing the optimal fit between the two 
+#' The Procrustes correlation uses symmetric Procrustes as a measure of concordance
+#' between the data matrices (see \code{\link{procrustes}} and
+#' \code{\link{cor.procrustes}}). Procrustes procedure use rotation, translation,
+#' and rescaling for minimizing sum of squared differences between two data sets.
+#' The correlation of Procrustes is calculated as the statistic derived from the
+#' symmetric Procrustes sum of squares, representing the optimal fit between the two
 #' data matrices. Partial Procrustes correlation is obtained by Procrustes correlation
-#' between residuals matrices. Firstly one Principal Components Analysis (PCA, 
-#' see \code{\link{prcomp}}) is performed in the matrix Z for dimensionality reduction. 
-#' The max number of axis kept in the analysis is the number of sampling units divided 
-#' by 2, this axes of PCA represent the total variation in the Z matrix. After the 
-#' kept axes are used as predictor in one linear model for each variable of the 
-#' matrices X and Y. For this a linear model is build using as response one variable 
+#' between residuals matrices. Firstly one Principal Components Analysis (PCA,
+#' see \code{\link{prcomp}}) is performed in the matrix Z for dimensionality reduction.
+#' The max number of axis kept in the analysis is the number of sampling units divided
+#' by 2, this axes of PCA represent the total variation in the Z matrix. After the
+#' kept axes are used as predictor in one linear model for each variable of the
+#' matrices X and Y. For this a linear model is build using as response one variable
 #' of X (same via for Y matrix) and as predictor all remaining axes of PCA, after model
 #' fitted and the residual are extracted with the aim of form the residual matrix. The linear
 #' model is repeated in the other variables, only with the changed the response variable.
-#' The same procedure is performed in the matrix 
-#' Y. Both residual matrices are submitted to Procrustes analysis and the statistic is 
+#' The same procedure is performed in the matrix
+#' Y. Both residual matrices are submitted to Procrustes analysis and the statistic is
 #' returned as a partial correlation, the Partial Procrustes statistic. The significances
-#' are obtained using the same procedure than Mantel test, see section Testing against 
+#' are obtained using the same procedure than Mantel test, see section Testing against
 #' null models below.
 #'
 #' \strong{Testing against null models}
 #'
 #' All the matrix correlations are tested against null models. The null model
 #' is defined accoding to the correlation being tested. Usually in the SYNCSA package
-#' the null models are based in permutation of species rather than permutation 
-#' of sample units. For ro(\strong{TE}),each permutation generates a random 
+#' the null models are based in permutation of species rather than permutation
+#' of sample units. For ro(\strong{TE}),each permutation generates a random
 #' matrix \strong{T} calculated after the
 #' permutation among the species vectors in matrix \strong{B}. For
 #' ro(\strong{XE}) and ro(\strong{XE.T}), each permutation generates a random
@@ -209,16 +209,17 @@
 #' solutions in the package mice.
 #'
 #' \strong{Error messenger and options}
-#' 
-#' The data pass by several ckeck points that can produce error messenger. The 
-#' matrices or data frames must be contain only numeric, binary or ordinal 
-#' variables, in the way that nominal variable should be expanded into binary 
+#'
+#' The data pass by several ckeck points that can produce error messenger. The
+#' matrices or data frames must be contain only numeric, binary or ordinal
+#' variables, in the way that nominal variable should be expanded into binary
 #' (see \code{\link{var.dummy}}). For enhance the code speed some functions use
 #' by default matrix algebra, this option can produce error under certain circumstances. This
-#' global option can be changed using options("SYNCSA.speed" = FALSE). If SYNCSA.speed = TRUE 
+#' global option can be changed using options("SYNCSA.speed" = FALSE). If SYNCSA.speed = TRUE
 #' for use matrix algebra and if SYNCSA.speed = FALSE use not another function of same procedure.
 #'
 #' @encoding UTF-8
+#' @aliases SYNCSA syncsa print.syncsa
 #' @importFrom stats cor as.dist
 #' @importFrom vegan wcmdscale protest vegdist
 #' @importFrom permute how
@@ -234,32 +235,31 @@
 #' @param ro.method Method to obtain the correlation, "mantel" or "procrustes"
 #' (Default ro.method = "mantel").
 #' @param method Mantel correlation method, as accepted by cor: "pearson",
-#' "spearman" or "kendall" (Default method = "pearson")
+#' "spearman" or "kendall" (Default method = "pearson").
 #' @param dist Dissimilarity index used for Mantel correlation, as accepted by
 #' vegdist: "manhattan", "euclidean", "canberra", "bray", "kulczynski",
 #' "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" ,
-#' "binomial" or "chao". However, some of these will not make sense in this
-#' case (Default dist = "euclidean").
+#' "binomial" or "chao" (Default dist = "euclidean").
 #' @param scale Logical argument (TRUE or FALSE) to specify if the traits are
-#' measured on different scales (Default Scale = TRUE). If scale = TRUE traits
-#' are measured on different scales, the matrix T is subjected to
-#' standardization within each trait. If scale = FALSE traits are measured on
-#' the same scale, the matrix T is not subjected to standardization.
+#' measured on different scales (Default Scale = TRUE). When scale = TRUE traits
+#' are measured on different scales the the matrix T is subjected to
+#' standardization within each trait. When scale = FALSE traits are measured on
+#' the same scale and the matrix T is not subjected to standardization.
 #' Furthermore, if scale = TRUE the matrix of traits is subjected to
 #' standardization within each trait, and Gower Index is used to calculate the
 #' degree of belonging to the species, and if scale = FALSE the matrix of
 #' traits is not subjected to standardization, and Euclidean distance is
 #' calculated to determine the degree of belonging to the species.
 #' @param scale.envir Logical argument (TRUE or FALSE) to specify if the
-#' environmental variables are measured on different scales. If the 
+#' environmental variables are measured on different scales. If the
 #' enviromental variables are measured on different scales, the scale.envir
 #' = TRUE the matrix with enviromental variables is subjected to centralization
 #' and standardization within each variable. (Default scale.envir = TRUE).
-#' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are 
+#' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are
 #' convert to ranks (Default ranks = TRUE).
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}. 
-#' @param put.together List to specify group of traits. Each group specify receive the 
-#' same weight that one trait outside any group, in the way each group is considered 
+#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}.
+#' @param put.together List to specify group of traits. Each group specify receive the
+#' same weight that one trait outside any group, in the way each group is considered
 #' as unique trait (Default put.together = NULL). This argument must be a list, see
 #' examples.
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
@@ -268,19 +268,20 @@
 #' @param strata Argument to specify restricting permutations within species
 #' groups (Default strata = NULL).
 #' @param permutations Number of permutations in assessing significance.
-#' @param parallel Number of parallel processes. Tip: use detectCores() (Default parallel = NULL).
+#' @param parallel Number of parallel processes. Tip: use parallel::detectCores() (Default parallel = NULL).
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notification of missing observations should to be shown (Default
 #' notification = TRUE).
 #' @param x An object of class syncsa.
 #' @param ... Other parameters for the respective functions.
-#' @return \item{call}{The arguments used.} \item{notes}{Some notes about the statistics.} 
-#' \item{statistics}{Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P 
-#' and roBF, and their significance levels based on permutations.} \item{matrices}{The matrices produced for the functions, see details.} \item{weights}{Weight for each trait.}
-#' 
+#' @return \item{call}{The arguments used.} \item{notes}{Some notes about the statistics.}
+#' \item{statistics}{Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
+#' and roBF, and their significance levels based on permutations.} \item{matrices}{The matrices
+#' produced for the functions, see details.} \item{weights}{Weight for each trait.}
+#'
 #' @note The function calculates the correlations despite the lack of one of
 #' the matrices, provided that community data had been entered. Correlations
-#' including unspecified matrices will appear with ro = 0.
+#' including unspecified matrices will appear with NA.
 #'
 #' \strong{IMPORTANT}: The sequence of species in the community data matrix
 #' MUST be the same as that in the phylogenetic distance matrix and in traits
@@ -289,13 +290,12 @@
 #' \code{\link{organize.syncsa}}.
 #'
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
-#' @seealso \code{\link{organize.syncsa}}, \code{\link{matrix.t}}, 
+#' @seealso \code{\link{organize.syncsa}}, \code{\link{matrix.t}},
 #' \code{\link{matrix.x}}, \code{\link{matrix.p}}, \code{\link{optimal}},
 #' \code{\link{rao.diversity}}, \code{\link{cor.matrix}}, \code{\link{var.type}},
 #' \code{\link{var.dummy}}
 #'
 #' @references
-#'
 #' Pillar, V.D.; Duarte, L.d.S. (2010). A framework for metacommunity analysis
 #' of phylogenetic structure. Ecology Letters, 13, 587:596.
 #'
@@ -319,234 +319,226 @@
 #' 18, 451:452.
 #' @keywords SYNCSA
 #' @examples
-#'
 #' data(ADRS)
 #' syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir)
 #' data(flona)
-#' put.together<-list(c("fol","sem"),c("tam","red"))
+#' put.together<-list(c("fol","sem"), c("tam", "red"))
 #' put.together
 #' res<-syncsa(flona$community, flona$traits, envir = flona$environment, put.together = put.together)
-#' res
 #' res$weights
-#'
 #' @export
-syncsa<-function (comm, traits, phylodist, envir, ro.method = "mantel", method = "pearson",
-    dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord, put.together = NULL,
-    na.rm = FALSE, strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
+syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method = "pearson",
+                    dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord, put.together = NULL,
+                    na.rm = FALSE, strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
 {
-    N <- permutations
-    roTE <- 0
-    roXE <- 0
-    roPE <- 0
-    roPT <- 0
-    roPX.T <- 0
-    roXE.T <- 0
-    roTE.P <- 0
-    roXE.P <- 0
-    roBF <- 0
-    note.roTE <- paste("Trait-convergence assembly patterns (TCAP): roTE")
-    note.roXE <- paste("Both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE")
-    note.roXE.T <- paste("Trait-divergence assembly patterns (TDAP): roXE.T")
-    note.roBF <- paste("Phylogenetic signal at species level: roBF")
-    note.roPE <- paste("Correlation of phylogenetically structured assembly patterns to ecological variables: roPE")
-    note.roPT <- paste("Correlation of phylogenetically structured assembly patterns to trait-convergence assembly patterns: roPT")
-    note.roPX.T <- paste("Correlation of phylogenetically structured assembly patterns to trait-divergence assembly patterns: roPX.T")
-    note.roTE.P <- paste("Removing phylogeny from trait-convergence assembly patterns: roTE.P")
-    note.roXE.P <- paste("Removing phylogeny from both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE.P")
-    note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P)
-    colnames(note) = "Correlation meanings"
-    RES<-list()
-    RES.matrices<-list()
-	RES$notes<-note
-    roMETHOD <- c("mantel", "procrustes")
-    romethod <- pmatch(ro.method, roMETHOD)
-    if (length(romethod) > 1) {
-        stop("\n Only one argument is accepted in ro.method \n")
+  N <- permutations
+  roTE <- NA
+  roXE <- NA
+  roPE <- NA
+  roPT <- NA
+  roPX.T <- NA
+  roXE.T <- NA
+  roTE.P <- NA
+  roXE.P <- NA
+  roBF <- NA
+  note.roTE <- paste("Trait-convergence assembly patterns (TCAP): roTE")
+  note.roXE <- paste("Both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE")
+  note.roXE.T <- paste("Trait-divergence assembly patterns (TDAP): roXE.T")
+  note.roBF <- paste("Phylogenetic signal at species level: roBF")
+  note.roPE <- paste("Correlation of phylogenetically structured assembly patterns to ecological variables: roPE")
+  note.roPT <- paste("Correlation of phylogenetically structured assembly patterns to trait-convergence assembly patterns: roPT")
+  note.roPX.T <- paste("Correlation of phylogenetically structured assembly patterns to trait-divergence assembly patterns: roPX.T")
+  note.roTE.P <- paste("Removing phylogeny from trait-convergence assembly patterns: roTE.P")
+  note.roXE.P <- paste("Removing phylogeny from both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE.P")
+  note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P)
+  colnames(note) <- "Correlation meanings"
+  res <- list(call = match.call())
+  res.matrices <- list()
+  res$notes <- note
+  roMETHOD <- c("mantel", "procrustes")
+  romethod <- pmatch(ro.method, roMETHOD)
+  if (length(romethod) > 1) {
+    stop("\n Only one argument is accepted in ro.method \n")
+  }
+  if (is.na(romethod)) {
+    stop("\n Invalid ro.method \n")
+  }
+  if (!missing(comm)){
+    commvartype <- var.type(comm)
+    if(any(commvartype == "n")){
+      stop("\n comm must contain only numeric, binary or ordinal variables \n")
     }
-    if (is.na(romethod)) {
-        stop("\n Invalid ro.method \n")
+  }
+  if(notification){
+    if (!missing(comm)) {
+      c.NA <- apply(comm, 2, is.na)
+      if(length(which(unique(as.vector(c.NA)) == TRUE))>0){
+        warning("Warning: NA in community data", call. = FALSE)
+      }
     }
-    if (!missing(comm)=="TRUE"){
-		commvartype<-var.type(comm)
-		if(any(commvartype=="n")){
-			stop("\n comm must contain only numeric, binary or ordinal variables \n")
-		}
-	}
-    if(notification==TRUE){
-    	if (!missing(comm) == "TRUE") {
-    		c.NA <- apply(comm, 2, is.na)
-    		if(length(which(unique(as.vector(c.NA))==TRUE))>0)
-    		{
-				warning("Warning: NA in community data",call.=FALSE)
-    		}
-    	}
-    	if (!missing(traits) == "TRUE") {
-			t.NA <- apply(traits, 2, is.na)
-    		if(length(which(unique(as.vector(t.NA))==TRUE))>0)
-    		{
-				warning("Warning: NA in traits matrix",call.=FALSE)
-    		}
-		}
-		if (!missing(envir) == "TRUE") {
-			e.NA <- apply(envir, 2, is.na)
-			if(length(which(unique(as.vector(e.NA))==TRUE))>0)
-    		{
-				warning("Warning: NA in environmental data",call.=FALSE)
-    		}
-		}
+    if (!missing(traits)) {
+      t.NA <- apply(traits, 2, is.na)
+      if(length(which(unique(as.vector(t.NA)) == TRUE))>0){
+        warning("Warning: NA in traits matrix", call. = FALSE)
+      }
     }
-    if(!is.null(strata)){
-    	if(length(strata)!=dim(comm)[2]){
-    		stop("\n  The strata must be the same length of number of species \n")
-    	}
+    if (!missing(envir)) {
+      e.NA <- apply(envir, 2, is.na)
+      if(length(which(unique(as.vector(e.NA))==TRUE))>0){
+        warning("Warning: NA in environmental data", call. = FALSE)
+      }
     }
-    seqpermutation<-permut.vector(dim(comm)[2],strata = strata, nset = permutations)
-    if (!missing(traits) == "TRUE") {
-		traitsvartype<-var.type(traits)
-		if(any(traitsvartype=="n")){
-			stop("\n trait must contain only numeric, binary or ordinal variables \n")
-		}
-	}
-	if (!missing(phylodist) == "TRUE") {
-		phylodistvartype<-var.type(phylodist)	
-		if(any(phylodistvartype=="n")){
-			stop("\n phylodist must contain only numeric, binary or ordinal variables \n")
-		}	
-	}
-	if (!missing(envir) == "TRUE") {
-		envirvartype<-var.type(envir)
-		if(any(envirvartype=="n")){
-			stop("\n envir must contain only numeric, binary or ordinal variables \n")
-		}
-		if(romethod == 1 & any(is.na(suppressWarnings(vegdist(envir,method=dist,na.rm=TRUE))))){
-			stop("\n envir with too much NA \n")
-		}
-		if(romethod == 2 & any(is.na(envir))){
-			stop("\n envir with NA \n")
-		}		
+  }
+  if(!is.null(strata)){
+    if(length(strata) != dim(comm)[2]){
+      stop("\n strata must be the same length of number of species \n")
     }
-    if(!is.null(parallel)){
-    	CL <- parallel::makeCluster(parallel,type="PSOCK")	
-    } else {
-    	CL <- NULL
+  }
+  seqpermutation <- permut.vector(dim(comm)[2], strata = strata, nset = permutations)
+  if (!missing(traits)) {
+    traitsvartype <- var.type(traits)
+    if(any(traitsvartype == "n")){
+      stop("\n trait must contain only numeric, binary or ordinal variables \n")
     }
-    if (!missing(traits) == "TRUE") {	
-    	m <- dim(traits)[2]
-		weights<-rep(1,m)
-		make.names<-is.null(colnames(traits))
-		colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
-		names(weights)<-colnames(traits)
-		if(!is.null(put.together)){
-			if(class(put.together)!="list"){
-				stop("\n The put.together must be a object of class list\n")
-			}
-			if(make.names){
-				for(k in 1:length(put.together)){
-					put.together[[k]]<-paste("T", put.together[[k]],sep="")
-				}
-			}
-			if(max(table(unlist(put.together)))>1){
-				stop("\n The same trait appears more than once in put.together\n")
-			}
-			if(length(setdiff(unlist(put.together),colnames(traits)))>0){
-				stop("\n Check traits names in put.together\n")
-			}
-			for(k in 1:length(put.together)){
-				weights[put.together[[k]]]<-1/length(put.together[[k]])
-			}
-		}
-        matrixT <- matrix.t(comm, traits, scale = scale, ranks = ranks, notification = FALSE)
-        matrixX <- matrix.x(comm, traits, scale = scale, ranks = ranks, notification = FALSE, ord, w = weights)
-        W <- matrixT$matrix.w
-        B <- matrixT$matrix.b
-        T <- matrixT$matrix.T
-        U <- matrixX$matrix.u
-        X <- matrixX$matrix.X
-        RES.matrices$W<-W
-        RES.matrices$B<-B
-        RES.matrices$T<-T
-        RES.matrices$U<-U
-        RES.matrices$X<-X
-        RES$weights<-weights
-        if (!missing(envir) == "TRUE") {
-            E <- envir
-            if (scale.envir == "TRUE") {
-                E <- cent.norm(envir,na.rm = na.rm)
-            }
-            RES.matrices$E<-E
-            if(romethod == 1){
-            	roTE <- cor.matrix(mx1 = W, mx2 = B, x = T, y = E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	            roXE <- cor.matrix(mx1 = W, mx2 = U, x = X, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	        roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-        	}
-        	if(romethod == 2){
-            	roTE <- pro.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	            roXE <- pro.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	        roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-        	}
+  }
+  if (!missing(phylodist)) {
+    phylodistvartype <- var.type(phylodist)
+    if(any(phylodistvartype == "n")){
+      stop("\n phylodist must contain only numeric, binary or ordinal variables \n")
+    }
+  }
+  if (!missing(envir)) {
+    envirvartype <- var.type(envir)
+    if(any(envirvartype == "n")){
+      stop("\n envir must contain only numeric, binary or ordinal variables \n")
+    }
+    if(romethod == 1 & any(is.na(suppressWarnings(vegdist(envir, method = dist, na.rm = TRUE))))){
+      stop("\n envir with too much NA \n")
+    }
+    if(romethod == 2 & any(is.na(envir))){
+      stop("\n envir with NA \n")
+    }
+  }
+  if(!is.null(parallel)){
+    CL <- parallel::makeCluster(parallel, type = "PSOCK")
+  } else {
+    CL <- NULL
+  }
+  if (!missing(traits)) {
+    m <- dim(traits)[2]
+    weights <- rep(1,m)
+    make.names <- is.null(colnames(traits))
+    colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
+    names(weights) <- colnames(traits)
+    if(!is.null(put.together)){
+      if(class(put.together) != "list"){
+        stop("\n put.together must be a object of class list\n")
+      }
+      if(make.names){
+        for(k in 1:length(put.together)){
+          put.together[[k]] <- paste("T", put.together[[k]], sep = "")
         }
+      }
+      if(max(table(unlist(put.together)))>1){
+        stop("\n The same trait appears more than once in put.together\n")
+      }
+      if(length(setdiff(unlist(put.together),colnames(traits)))>0){
+        stop("\n Check traits names in put.together\n")
+      }
+      for(k in 1:length(put.together)){
+        weights[put.together[[k]]] <- 1/length(put.together[[k]])
+      }
     }
-    if (!missing(phylodist) == "TRUE") {
-        matrixP <- matrix.p(comm, phylodist, notification = FALSE)
-        W <- matrixP$matrix.w
-        Q <- matrixP$matrix.q
-        P <- matrixP$matrix.P
-        RES.matrices$W<-W
-        RES.matrices$Q<-Q
-        RES.matrices$P<-P
-        if (!missing(envir) == "TRUE") {
-            E <- envir
-            if (scale.envir == "TRUE") {
-                E <- cent.norm(envir,na.rm = na.rm)
-            }
-            RES.matrices$E<-E
-            if(romethod == 1){
-            	roPE <- cor.matrix(mx1 = W, mx2 = Q, x = P, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-            }
-            if(romethod == 2){
-            	roPE <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-            }
-            if (!missing(traits) == "TRUE") {
-            	if(romethod == 1){
-                	roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	                roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-                }
-                if(romethod == 2){
-                	roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-	                roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-                }
-            }
+    matrixT <- matrix.t(comm, traits, scale = scale, ranks = ranks, notification = FALSE)
+    matrixX <- matrix.x(comm, traits, scale = scale, ranks = ranks, notification = FALSE, ord, w = weights)
+    W <- matrixT$matrix.w
+    B <- matrixT$matrix.b
+    T <- matrixT$matrix.T
+    U <- matrixX$matrix.u
+    X <- matrixX$matrix.X
+    res.matrices$W <- W
+    res.matrices$B <- B
+    res.matrices$T <- T
+    res.matrices$U <- U
+    res.matrices$X <- X
+    res$weights <- weights
+    if (!missing(envir)) {
+      E <- envir
+      if (scale.envir) {
+        E <- cent.norm(envir, na.rm = na.rm)
+      }
+      res.matrices$E <- E
+      if(romethod == 1){
+        roTE <- cor.matrix(mx1 = W, mx2 = B, x = T, y = E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roXE <- cor.matrix(mx1 = W, mx2 = U, x = X, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 2){
+        roTE <- pro.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roXE <- pro.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+    }
+  }
+  if (!missing(phylodist)) {
+    matrixP <- matrix.p(comm, phylodist, notification = FALSE)
+    W <- matrixP$matrix.w
+    Q <- matrixP$matrix.q
+    P <- matrixP$matrix.P
+    res.matrices$W < -W
+    res.matrices$Q <-Q
+    res.matrices$P<- P
+    if (!missing(envir)) {
+      E <- envir
+      if (scale.envir) {
+        E <- cent.norm(envir, na.rm = na.rm)
+      }
+      res.matrices$E <- E
+      if(romethod == 1){
+        roPE <- cor.matrix(mx1 = W, mx2 = Q, x = P, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 2){
+        roPE <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if (!missing(traits)) {
+        if(romethod == 1){
+          roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+          roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         }
-        if (!missing(traits) == "TRUE") {
-        	if(romethod == 1){
-	            roPT <- cor.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, method = method, dist = dist, permutations = N, norm.y = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	    }
-    	    if(romethod == 2){
-	            roPT <- pro.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, permutations = N, norm.y = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-    	    }
-    	    if(romethod == 1){
-            	dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
-	            if (scale == "TRUE") {
-    	            dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
-        	    }
-            	roBF <- cor.mantel(dist.traits, stats::as.dist(phylodist), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-            }
-            if(romethod == 2){
-			    vectors <- vegan::wcmdscale(phylodist/max(phylodist),eig = TRUE)$points
-			    traits.t <- sweep(B, 2, sqrt(apply(B^2,2,sum, na.rm = na.rm)), "/")
-				roBF <- cor.procrustes(vectors,traits.t,permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-            }
+        if(romethod == 2){
+          roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+          roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         }
+      }
     }
-    SYNCSA <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF)
-    if(!is.null(parallel)){
-    	parallel::stopCluster(CL)
+    if (!missing(traits)) {
+      if(romethod == 1){
+        roPT <- cor.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, method = method, dist = dist, permutations = N, norm.y = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 2){
+        roPT <- pro.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, permutations = N, norm.y = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 1){
+        dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
+        if (scale == "TRUE") {
+          dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
+        }
+        roBF <- cor.mantel(dist.traits, stats::as.dist(phylodist), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 2){
+        vectors <- vegan::wcmdscale(phylodist/max(phylodist), eig = TRUE)$points
+        traits.t <- sweep(B, 2, sqrt(apply(B^2, 2, sum, na.rm = na.rm)), "/")
+        roBF <- cor.procrustes(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
     }
-    RES$statistics<-SYNCSA
-    RES$call<-match.call()
-    RES$matrices<-RES.matrices
-    class(RES) <- "syncsa"
-    return(RES)
+  }
+  if(!is.null(parallel)){
+    parallel::stopCluster(CL)
+  }
+  res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF)
+  res$matrices <- res.matrices
+  class(res) <- "syncsa"
+  return(res)
 }

@@ -36,10 +36,8 @@ matrix MUST be the same as the one in the phylogenetic distance matrix. See
 \code{\link{organize.syncsa}}.
 }
 \examples{
-
 data(ADRS)
-matrix.x(ADRS$community, ADRS$phylo)
-
+matrix.p(ADRS$community, ADRS$phylo)
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for
