@@ -19,7 +19,7 @@
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
 #' @importFrom parallel makeCluster parRapply stopCluster
-#' @importFrom stats as.dist
+#' @importFrom stats as.dist cor
 #' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial cor.mantel cor.procrustes
 #' @param mx1 Matrix that multiplied by mx2 results in the matrix x.
 #' @param mx2 Matrix that when multiplied by mx1 results in the matrix x. See
@@ -97,7 +97,7 @@ cor.matrix <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FA
   y <- as.matrix(y)
   dist.y <- vegan::vegdist(y, method = dist, na.rm = na.rm)
   dist.x <- vegan::vegdist(x, method = dist, na.rm = na.rm)
-  correlation <- cor(dist.x, dist.y, method = method)
+  correlation <- stats::cor(dist.x, dist.y, method = method)
   N <- dim(mx2)[1]
   if(is.null(seqpermutation)){
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
@@ -121,10 +121,10 @@ cor.matrix <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, permute.my2 = FA
     }
     dist.x.permut <- vegan::vegdist(x.permut, method = dist, na.rm = na.rm)
     if(!permute.my2){
-      cor.x.permut <- cor(dist.x.permut, dist.y, method = method)
+      cor.x.permut <- stats::cor(dist.x.permut, dist.y, method = method)
     }
     if(permute.my2){
-      cor.x.permut <- cor(dist.x.permut, dist.y.permut, method = method)
+      cor.x.permut <- stats::cor(dist.x.permut, dist.y.permut, method = method)
     }
     return(cor.x.permut)
   }

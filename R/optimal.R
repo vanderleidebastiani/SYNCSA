@@ -7,6 +7,7 @@
 #'
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
+#' @importFrom stats cor
 #' @importFrom utils combn
 #' @aliases optimal print.optimal
 #' @param comm Community data, with species as columns and sampling units as
@@ -216,7 +217,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
         }
         T <- matrix.t(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, notification = FALSE)
         if (romethod == 1) {
-          correlation[n, 1] <- cor(vegan::vegdist(as.matrix(T$matrix.T), method = dist, na.rm = na.rm), dist.y, method = method)
+          correlation[n, 1] <- stats::cor(vegan::vegdist(as.matrix(T$matrix.T), method = dist, na.rm = na.rm), dist.y, method = method)
           if (progressbar) {
             ProgressBAR(n, nT, style = 3)
           }
@@ -250,9 +251,9 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
         if (romethod == 1) {
           dist.x <- vegan::vegdist(X$matrix.X, method = dist, na.rm = na.rm)
           dist.z <- vegan::vegdist(T$matrix.T, method = dist, na.rm = na.rm)
-          rxy <- cor(dist.x, dist.y, method = method)
-          rxz <- cor(dist.x, dist.z, method = method)
-          ryz <- cor(dist.y, dist.z, method = method)
+          rxy <- stats::cor(dist.x, dist.y, method = method)
+          rxz <- stats::cor(dist.x, dist.z, method = method)
+          ryz <- stats::cor(dist.y, dist.z, method = method)
           correlation[n, 1] <- part.cor(rxy, rxz, ryz)
           if (progressbar) {
             ProgressBAR(n, nT, style = 3)
@@ -284,7 +285,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
         }
         X <- matrix.x(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, ord = ord, notification = FALSE, w = weights[choose.traits])
         if (romethod == 1) {
-          correlation[n, 1] <- cor(vegan::vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
+          correlation[n, 1] <- stats::cor(vegan::vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
           if (progressbar) {
             ProgressBAR(n, nT, style = 3)
           }

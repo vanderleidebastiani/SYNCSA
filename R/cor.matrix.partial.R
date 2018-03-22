@@ -28,9 +28,9 @@ cor.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
   dist.x <- vegan::vegdist(x, method = dist, na.rm = na.rm)
   dist.y <- vegan::vegdist(y, method = dist, na.rm = na.rm)
   dist.z <- vegan::vegdist(z, method = dist, na.rm = na.rm)
-  rxy <- cor(dist.x, dist.y, method = method)
-  rxz <- cor(dist.x, dist.z, method = method)
-  ryz <- cor(dist.y, dist.z, method = method)
+  rxy <- stats::cor(dist.x, dist.y, method = method)
+  rxz <- stats::cor(dist.x, dist.z, method = method)
+  ryz <- stats::cor(dist.y, dist.z, method = method)
   statistic <- part.cor(rxy, rxz, ryz)
   N <- dim(mx2)[1]
   if(is.null(seqpermutation)){
@@ -63,24 +63,24 @@ cor.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
       dist.z.permut <- vegan::vegdist(z.permut, method = dist, na.rm = na.rm)
     }
     if(!permute.my2 & !permute.mz2){
-      rxy.temp <- cor(dist.x.permut, dist.y, method = method)
-      rxz.temp <- cor(dist.x.permut, dist.z, method = method)
+      rxy.temp <- stats::cor(dist.x.permut, dist.y, method = method)
+      rxz.temp <- stats::cor(dist.x.permut, dist.z, method = method)
       ryz.temp <- ryz
     }
     if(permute.my2 & !permute.mz2){
-      rxy.temp <- cor(dist.x.permut, dist.y.permut, method = method)
-      rxz.temp <- cor(dist.x.permut, dist.z, method = method)
-      ryz.temp <- cor(dist.y.permut, dist.z, method = method)
+      rxy.temp <- stats::cor(dist.x.permut, dist.y.permut, method = method)
+      rxz.temp <- stats::cor(dist.x.permut, dist.z, method = method)
+      ryz.temp <- stats::cor(dist.y.permut, dist.z, method = method)
     }
     if(!permute.my2 & permute.mz2){
-      rxy.temp <- cor(dist.x.permut, dist.y, method = method)
-      rxz.temp <- cor(dist.x.permut, dist.z.permut, method = method)
-      ryz.temp <- cor(dist.y, dist.z.permut, method = method)
+      rxy.temp <- stats::cor(dist.x.permut, dist.y, method = method)
+      rxz.temp <- stats::cor(dist.x.permut, dist.z.permut, method = method)
+      ryz.temp <- stats::cor(dist.y, dist.z.permut, method = method)
     }
     if(permute.my2 & permute.mz2){
-      rxy.temp <- cor(dist.x.permut, dist.y.permut, method = method)
-      rxz.temp <- cor(dist.x.permut, dist.z.permut, method = method)
-      ryz.temp <- cor(dist.y.permut, dist.z.permut, method = method)
+      rxy.temp <- stats::cor(dist.x.permut, dist.y.permut, method = method)
+      rxz.temp <- stats::cor(dist.x.permut, dist.z.permut, method = method)
+      ryz.temp <- stats::cor(dist.y.permut, dist.z.permut, method = method)
     }
     res<- SYNCSA::part.cor(rxy.temp, rxz.temp, ryz.temp)
     return(res)

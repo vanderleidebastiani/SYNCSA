@@ -4,8 +4,7 @@ Title: Analysis of Functional and Phylogenetic Patterns in Metacommunities
 Version: 1.3.3
 Date: 2018-03-22
 Author: Vanderlei Julio Debastiani
-Maintainer: Vanderlei Julio Debastiani
-    <vanderleidebastiani@yahoo.com.br>
+Maintainer: Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 Imports:
     vegan,
     FD,
@@ -18,7 +17,7 @@ Imports:
 Description: Analysis of metacommunities based on functional traits and
     phylogeny of the community components. The functions that are offered here
     implement for the R environment methods that have been available in the
-    SYNCSA application written in C++ (by Valerio Pillar, available at http://
-    ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html).
+    SYNCSA application written in C++ (by Valerio Pillar, available at <http://
+    ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html>).
 License: GPL-2
 RoxygenNote: 6.0.1

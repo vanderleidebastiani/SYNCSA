@@ -328,11 +328,12 @@
 #' @keywords SYNCSA
 #' @examples
 #' data(ADRS)
-#' syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir)
+#' syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir, permutations = 99)
 #' data(flona)
 #' put.together<-list(c("fol","sem"), c("tam", "red"))
 #' put.together
-#' res<-syncsa(flona$community, flona$traits, envir = flona$environment, put.together = put.together)
+#' res<-syncsa(flona$community, flona$traits, envir = flona$environment,
+#'    put.together = put.together, permutations = 99)
 #' res$weights
 #' @export
 syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method = "pearson",
