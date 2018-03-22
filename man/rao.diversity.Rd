@@ -6,7 +6,7 @@
 \title{Rao's quadratic entropy}
 \usage{
 rao.diversity(comm, traits = NULL, phylodist = NULL, checkdata = TRUE,
-  ord = "metric", put.together = NULL, ...)
+  ord = "metric", put.together = NULL, standardize = TRUE, ...)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -30,6 +30,9 @@ same weight that one trait outside any group, in the way each group is considere
 as unique trait (Default put.together = NULL). This argument must be a list, see
 examples in \code{\link{syncsa}}.}
 
+\item{standardize}{Logical argument (TRUE or FALSE) to specify if standardize phylogenetic
+distance to range into range 0 to 1. (Default standardize = TRUE).}
+
 \item{...}{Parameters for \code{\link{gowdis}} function.}
 }
 \value{
@@ -51,12 +54,15 @@ species present in a community and some measure of dissimilarity among them.
 The dissimilarity range from 0 to 1 and is based on a set of specified
 functional traits or in the phylogenetic dissimilarity.
 
-For the trait data , the function calculates the square root of the
+For the trait data, the function calculates the square root of the
 one-complement of Gower`s similarity index, in order to have a dissimilarity
 matrix with Euclidean metric properties. Gower`s index ranges from 0 to 1
 and can handle traits measured indifferent scales. When the species are
 completely different in terms of their traits, Rao quadratic entropy is
-equivalent to the Gini-Simpson index.
+equivalent to the Gini-Simpson index. Traits data can be numeric, factor or
+ordered factor. For this be considered traits data must be of data.frame
+class and containing each variable type determined. For additional details and
+requirements of function please see \code{\link{gowdis}}.
 
 Functional redundancy is defined purely as the difference between species
 diversity and Rao`s quadratic entropy based on their functional

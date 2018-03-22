@@ -101,12 +101,16 @@ matrix MUST be the same as they show up in traits matrix. See
 }
 \examples{
 data(flona)
-optimal(flona$community, flona$traits, flona$environment, subset.min = 3, subset.max = 5, pattern = "tcap")
-optimal(flona$community, flona$traits, flona$environment, subset.min = 3, subset.max = 5, pattern = "tdap")
-optimal(flona$community, flona$traits, flona$environment, subset.min = 3, subset.max = 5, pattern = "tcap.tdap")
+optimal(flona$community, flona$traits, flona$environment, subset.min = 3,
+   subset.max = 5, pattern = "tcap")
+optimal(flona$community, flona$traits, flona$environment, subset.min = 3,
+   subset.max = 5, pattern = "tdap")
+optimal(flona$community, flona$traits, flona$environment, subset.min = 3,
+   subset.max = 5, pattern = "tcap.tdap")
 put.together <- list(c("fol", "sem"), c("tam", "red"))
 put.together
-optimal(flona$community, flona$traits, flona$environment, subset.min = 1, subset.max = 3, pattern = "tcap", put.together = put.together)
+optimal(flona$community, flona$traits, flona$environment, subset.min = 1,
+   subset.max = 3, pattern = "tcap", put.together = put.together)
 }
 \references{
 Pillar, V.D.; Duarte, L.d.S. (2010). A framework for

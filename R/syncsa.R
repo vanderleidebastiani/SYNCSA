@@ -195,6 +195,14 @@
 #' for ro(\strong{XE}) is used for ro(\strong{XE.P}). The permutation can be restrict
 #' within species groups specifying the strata argument.
 #'
+#' \strong{Traits types}
+#'
+#' Traits data can be numeric, factor or ordered factor. For this be considered in the
+#' analyses traits data must be of data.frame class and containing each variable type
+#' determined. Gower index is used to calculate the similarity between species, using
+#' the function gowdis of package FD. For additional details and requirements of function
+#' please see \code{\link{gowdis}}.
+#'
 #' \strong{Missing data}
 #'
 #' The functions ignore missing data when specified. In the case of direct
