@@ -17,7 +17,7 @@ Imports:
 Description: Analysis of metacommunities based on functional traits and
     phylogeny of the community components. The functions that are offered here
     implement for the R environment methods that have been available in the
-    SYNCSA application written in C++ (by Valerio Pillar, available at <http://
-    ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html>).
+    SYNCSA application written in C++ (by Valerio Pillar, available at 
+    <http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html>).
 License: GPL-2
 RoxygenNote: 6.0.1

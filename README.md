@@ -7,7 +7,7 @@ R Package - SYNCSA - Analysis of functional and phylogenetic patterns in metacom
 
 ## Previous version
 
-SYNCSA 1.3.2 available in [`CRAN`](https://cran.r-project.org/web/packages/SYNCSA/index.html)
+SYNCSA 1.3.3 available in [`CRAN`](https://cran.r-project.org/web/packages/SYNCSA/index.html)
 
 ## Installation
   
