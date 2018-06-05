@@ -1,4 +1,4 @@
-SYNCSA 1.3.3
+SYNCSA 1.3.4
 ======
 
 [![Travis-CI Build Status](https://travis-ci.org/vanderleidebastiani/SYNCSA.svg?branch=master)](https://travis-ci.org/vanderleidebastiani/SYNCSA)

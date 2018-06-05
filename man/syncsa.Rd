@@ -90,7 +90,8 @@ notification = TRUE).}
 \item{call}{The arguments used.} \item{notes}{Some notes about the statistics.}
 \item{statistics}{Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
 and roBF, and their significance levels based on permutations.} \item{matrices}{The matrices
-produced for the functions, see details.} \item{weights}{Weight for each trait.}
+produced for the functions, see details.} \item{FunRao}{Rao
+quadratic entropy within each community, considering trait distance.} \item{weights}{Weight for each trait.}
 }
 \description{
 This function integrates several steps for the analysis of phylogenetic

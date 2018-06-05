@@ -63,6 +63,10 @@
 #' @param newClusters Logical argument (TRUE or FALSE) to specify if make new parallel
 #' processes or use predefined socket cluster. Only if parallel is different of NULL (Default newClusters = TRUE).
 #' @param CL A predefined socket cluster done with parallel package.
+#' @param put.together List to specify group of traits. Each group specify receive the
+#' same weight that one trait outside any group, in the way each group is considered
+#' as unique trait (Default put.together = NULL). This argument must be a list, see
+#' examples in \code{\link{syncsa}}.
 #' @return \item{Obs}{Correlation between matrices.} \item{p}{Significance
 #' level based on permutations.}
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>

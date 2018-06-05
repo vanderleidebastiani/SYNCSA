@@ -285,7 +285,8 @@
 #' @return \item{call}{The arguments used.} \item{notes}{Some notes about the statistics.}
 #' \item{statistics}{Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
 #' and roBF, and their significance levels based on permutations.} \item{matrices}{The matrices
-#' produced for the functions, see details.} \item{weights}{Weight for each trait.}
+#' produced for the functions, see details.} \item{FunRao}{Rao
+#' quadratic entropy within each community, considering trait distance.} \item{weights}{Weight for each trait.}
 #'
 #' @note The function calculates the correlations despite the lack of one of
 #' the matrices, provided that community data had been entered. Correlations
@@ -350,6 +351,7 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   roTE.P <- NA
   roXE.P <- NA
   roBF <- NA
+  roRE <- NA
   note.roTE <- paste("Trait-convergence assembly patterns (TCAP): roTE")
   note.roXE <- paste("Both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE")
   note.roXE.T <- paste("Trait-divergence assembly patterns (TDAP): roXE.T")
@@ -359,7 +361,8 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   note.roPX.T <- paste("Correlation of phylogenetically structured assembly patterns to trait-divergence assembly patterns: roPX.T")
   note.roTE.P <- paste("Removing phylogeny from trait-convergence assembly patterns: roTE.P")
   note.roXE.P <- paste("Removing phylogeny from both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE.P")
-  note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P)
+  note.roRE <- paste("Alpha divergence (correlation between environmental variables and Rao entropy): roRE")
+  note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P, note.roRE)
   colnames(note) <- "Correlation meanings"
   res <- list(call = match.call())
   res.matrices <- list()
@@ -471,6 +474,8 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
     res.matrices$U <- U
     res.matrices$X <- X
     res$weights <- weights
+    res$FunRao <- cbind(rao.diversity(comm, traits = B, checkdata = FALSE, put.together = put.together)$FunRao)
+    colnames(res$FunRao) <- "FunRao"
     if (!missing(envir)) {
       E <- envir
       if (scale.envir) {
@@ -481,11 +486,13 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
         roTE <- cor.matrix(mx1 = W, mx2 = B, x = T, y = E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE <- cor.matrix(mx1 = W, mx2 = U, x = X, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roRE <- cor.matrix2(mx1 = comm, B, res$FunRao, E, method = method, dist = dist, put.together = put.together, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 2){
         roTE <- pro.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE <- pro.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roRE <- pro.matrix2(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
     }
   }
@@ -546,7 +553,7 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   if(!is.null(parallel)){
     parallel::stopCluster(CL)
   }
-  res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF)
+  res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF, roRE)
   res$matrices <- res.matrices
   class(res) <- "syncsa"
   return(res)
