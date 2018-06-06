@@ -1,9 +1,9 @@
 #' @title Searching for optimal traits
 #'
 #' @description Maximize trait-convergence assembly patterns (TCAP = roTE), trait-divergence
-#' assembly patterns (TDAP = roXE.T) or maximize both trait-divergence assembly
-#' patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE). For
-#' more details, see \code{\link{syncsa}}.
+#' assembly patterns (TDAP = roXE.T), maximize both trait-divergence assembly
+#' patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE) or
+#' alpha divergence (roRE) For more details, see \code{\link{syncsa}}.
 #'
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
@@ -18,8 +18,8 @@
 #' columns and sampling units as rows.
 #' @param subset.min Minimum of traits in each subset (Default subset.min = 1).
 #' @param subset.max Maximum of traits in each subset (Default subset.max = ncol(traits)).
-#' @param pattern Patterns for maximize correlation, "tcap", "tdap" or
-#' "tcap.tdap" (Default pattern = NULL).
+#' @param pattern Patterns for maximize correlation, "tcap", "tdap",
+#' "tcap.tdap" or "rao" (Default pattern = NULL).
 #' @param ro.method Method to obtain the correlation, "mantel" or "procrustes"
 #' (Default ro.method = "mantel").
 #' @param method Correlation method, as accepted by cor: "pearson", "spearman"
@@ -118,7 +118,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
   if (is.na(romethod)) {
     stop("\n Invalid ro.method \n")
   }
-  PATTERNS <- c("tcap", "tdap", "tcap.tdap")
+  PATTERNS <- c("tcap", "tdap", "tcap.tdap", "rao")
   pattern <- pmatch(pattern, PATTERNS)
   if (length(pattern) > 1) {
     stop("\n Only one argument is accepted in pattern \n")
@@ -297,10 +297,48 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
           }
         }
       }
+      if (pattern == 4) {
+        n <- n + 1
+        choose.traits <- combinations1[, j]
+        if(!missing(put.together)){
+          put.together.temp <- put.together
+          if(sum(match(choose.traits,unlist(put.together2)), na.rm = TRUE)>0){
+            choose.traits2 <- intersect(choose.traits, unlist(put.together2))
+            choose.traits3 <- c()
+            for(k in 1:length(choose.traits2)){
+              for(l in 1:length(put.together)){
+                if(choose.traits2[k] == put.together2[[l]]){
+                  choose.traits3 <- c(choose.traits3, put.together[[l]])
+                } else{
+                  put.together.temp[[l]] <- NULL
+                }
+              }
+            }
+            choose.traits <- c(choose.traits3, setdiff(choose.traits, unlist(put.together2)))
+          } else{
+            put.together.temp <- NULL
+          }
+        }
+        T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, ranks = ranks, notification = FALSE)
+        RAO <- cbind(rao.diversity(comm, traits = T$matrix.b, checkdata = FALSE, put.together = put.together.temp)$FunRao)
+        colnames(RAO) <- "FunRao"
+        if (romethod == 1) {
+          correlation[n, 1] <- stats::cor(vegan::vegdist(RAO, method = dist, na.rm = na.rm), dist.y, method = method)
+          if (progressbar) {
+            ProgressBAR(n, nT, style = 3)
+          }
+        }
+        if (romethod == 2) {
+          correlation[n, 1] <- procrustes.syncsa(RAO, envir)
+          if (progressbar) {
+            ProgressBAR(n, nT, style = 3)
+          }
+        }
+      }
     }
   }
   result <- data.frame(Subset = comb, ro = correlation, stringsAsFactors = FALSE)
-  if(pattern == 1 | pattern ==3){
+  if(pattern == 1 | pattern ==3 | pattern == 4){
     result <- result[order(result[, 2], decreasing = TRUE), ]
   } else{
     result <- result[order(abs(result[, 2]), decreasing = TRUE), ]

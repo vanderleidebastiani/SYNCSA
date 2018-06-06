@@ -118,7 +118,7 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
         weights[put.together[[k]]] <- 1/length(put.together[[k]])
       }
     }
-    D1 <- as.matrix(FD::gowdis(x=traits, asym.bin = NULL, ord = ord, w = weights))
+    D1 <- as.matrix(FD::gowdis(x=traits, asym.bin = NULL, ord = ord, w = weights, ...))
     dist.2 <- sqrt(D1)
   }
   if (!is.null(phylodist)) {

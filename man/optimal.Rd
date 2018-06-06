@@ -29,8 +29,8 @@ columns and sampling units as rows.}
 
 \item{subset.max}{Maximum of traits in each subset (Default subset.max = ncol(traits)).}
 
-\item{pattern}{Patterns for maximize correlation, "tcap", "tdap" or
-"tcap.tdap" (Default pattern = NULL).}
+\item{pattern}{Patterns for maximize correlation, "tcap", "tdap",
+"tcap.tdap" or "rao" (Default pattern = NULL).}
 
 \item{ro.method}{Method to obtain the correlation, "mantel" or "procrustes"
 (Default ro.method = "mantel").}
@@ -90,9 +90,9 @@ progress bar on the R console (Default progressbar = FALSE).}
 }
 \description{
 Maximize trait-convergence assembly patterns (TCAP = roTE), trait-divergence
-assembly patterns (TDAP = roXE.T) or maximize both trait-divergence assembly
-patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE). For
-more details, see \code{\link{syncsa}}.
+assembly patterns (TDAP = roXE.T), maximize both trait-divergence assembly
+patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE) or
+alpha divergence (roRE) For more details, see \code{\link{syncsa}}.
 }
 \note{
 \strong{IMPORTANT}: The sequence species show up in community data
