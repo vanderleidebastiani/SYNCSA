@@ -319,6 +319,9 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
             put.together.temp <- NULL
           }
         }
+        if(length(put.together.temp)==0){
+          put.together.temp <- NULL
+        }
         T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, ranks = ranks, notification = FALSE)
         RAO <- cbind(rao.diversity(comm, traits = T$matrix.b, checkdata = FALSE, put.together = put.together.temp)$FunRao)
         colnames(RAO) <- "FunRao"
