@@ -273,7 +273,7 @@
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' distances should be deleted in cases of missing observations (Default na.rm
 #' = FALSE).
-#' @param strata Argument to specify restricting permutations within species
+#' @param strata Strata named vector to specify restricting permutations within species
 #' groups (Default strata = NULL).
 #' @param permutations Number of permutations in assessing significance.
 #' @param parallel Number of parallel processes. Tip: use parallel::detectCores() (Default parallel = NULL).

@@ -201,7 +201,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
       if (pattern == 1) {
         n <- n + 1
         choose.traits <- combinations1[, j]
-        if(!missing(put.together)){
+        if(!is.null(put.together)){
           if(sum(match(choose.traits, unlist(put.together2)), na.rm = TRUE)>0){
             choose.traits2 <- intersect(choose.traits, unlist(put.together2))
             choose.traits3 <- c()
@@ -232,7 +232,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
       if (pattern == 2) {
         n <- n + 1
         choose.traits <- combinations1[, j]
-        if(!missing(put.together)){
+        if(!is.null(put.together)){
           if(sum(match(choose.traits,unlist(put.together2)), na.rm = TRUE)>0){
             choose.traits2 <- intersect(choose.traits, unlist(put.together2))
             choose.traits3 <- c()
@@ -269,7 +269,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
       if (pattern == 3) {
         n <- n + 1
         choose.traits <- combinations1[, j]
-        if(!missing(put.together)){
+        if(!is.null(put.together)){
           if(sum(match(choose.traits, unlist(put.together2)), na.rm = TRUE)>0){
             choose.traits2 <- intersect(choose.traits, unlist(put.together2))
             choose.traits3 <- c()
@@ -300,7 +300,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
       if (pattern == 4) {
         n <- n + 1
         choose.traits <- combinations1[, j]
-        if(!missing(put.together)){
+        if(!is.null(put.together)){
           put.together.temp <- put.together
           if(sum(match(choose.traits,unlist(put.together2)), na.rm = TRUE)>0){
             choose.traits2 <- intersect(choose.traits, unlist(put.together2))
@@ -309,17 +309,16 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
               for(l in 1:length(put.together)){
                 if(choose.traits2[k] == put.together2[[l]]){
                   choose.traits3 <- c(choose.traits3, put.together[[l]])
-                } else{
-                  put.together.temp[[l]] <- NULL
                 }
               }
             }
             choose.traits <- c(choose.traits3, setdiff(choose.traits, unlist(put.together2)))
-          } else{
+          }
+          put.together.temp <- put.together.temp[sapply(put.together.temp, function(x) any(x%in% choose.traits))]
+          if(length(put.together.temp)==0){
             put.together.temp <- NULL
           }
-        }
-        if(length(put.together.temp)==0){
+        } else{
           put.together.temp <- NULL
         }
         T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, ranks = ranks, notification = FALSE)

@@ -10,7 +10,7 @@ permut.row.matrix(data, strata = NULL, seqpermutation = NULL)
 \arguments{
 \item{data}{A matrix.}
 
-\item{strata}{Argument to specify restricting permutations in rows (Default strata = NULL).}
+\item{strata}{Strata vector to specify restricting permutations in rows, must be the same length of number of rows in data matrix (Default strata = NULL).}
 
 \item{seqpermutation}{A set of predefined permutation vector (Default seqpermutation = NULL).}
 }

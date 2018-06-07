@@ -10,7 +10,7 @@ permut.vector(n, strata = NULL, nset = 999)
 \arguments{
 \item{n}{The length of vector.}
 
-\item{strata}{Argument to specify restricting permutations.}
+\item{strata}{A vector to specify restricting permutations.}
 
 \item{nset}{The number of permutations to generate for the set (Default strata = NULL).}
 }

@@ -75,7 +75,7 @@ examples.}
 distances should be deleted in cases of missing observations (Default na.rm
 = FALSE).}
 
-\item{strata}{Argument to specify restricting permutations within species
+\item{strata}{Strata named vector to specify restricting permutations within species
 groups (Default strata = NULL).}
 
 \item{permutations}{Number of permutations in assessing significance.}

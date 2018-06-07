@@ -5,7 +5,7 @@
 #' @encoding UTF-8
 #' @importFrom permute how Within Plots shuffleSet
 #' @param n The length of vector.
-#' @param strata Argument to specify restricting permutations.
+#' @param strata A vector to specify restricting permutations.
 #' @param nset The number of permutations to generate for the set (Default strata = NULL).
 #' @return A matrix of permutations, where each row is a separate permutation.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
