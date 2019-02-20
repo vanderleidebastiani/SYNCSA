@@ -138,9 +138,9 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
       }
       phylodist <- as.matrix(phylodist[match.names, match.names])
     }
-    D1 <- as.matrix(phylodist)
+    dist.3 <- as.matrix(phylodist)
     if(standardize){
-      dist.3 <- D1/max(D1)
+      dist.3 <- dist.3/max(dist.3)
     }
   }
   comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
