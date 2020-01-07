@@ -2,14 +2,14 @@
 #'
 #' @description This function integrates several steps for the analysis of phylogenetic
 #' assembly patterns and their links to traits and ecological processes in a
-#' metacommunity (Pillar et al. 2009, Pillar & Duarte 2010). The function implement
-#' methods that have been available in the SYNCSA
+#' metacommunity (Pillar et al. 2009, Pillar & Duarte 2010, Debastiani & Pillar 2012). The
+#' function implement methods that have been available in the SYNCSA
 #' application written in C++ (by Valerio Pillar, available at
 #' http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html). See details.
 #'
 #'
 #' @details Package \strong{SYNCSA} requires that the species and community sequence in
-#' the dataframe or matrix must be the same for all dataframe/matrices.
+#' the data.frame or matrix must be the same for all dataframe/matrices.
 #' The function \code{\link{organize.syncsa}} organizes the data for the functions
 #' of the package, placing the matrices of community, traits, phylogenetic distance,
 #' environmental varibles and strata vector in the same order. The function
@@ -22,7 +22,18 @@
 #' but not nominal ones (these should be expanded into binary traits); and (4)
 #' the ecological gradient of interest, which may be one or more factors to
 #' which the communities respond or ecosystem effects of the communities
-#' (\strong{E}). The function computes several correlations (Mantel or
+#' (\strong{E}). In this way the arguments comm, traits, phylodist, envir,
+#' as well as the arguments put.together and strata, can be specified them as normal
+#' arguments or by passing them with the object returned by the function
+#' \code{\link{organize.syncsa}} using, in this case only the argument comm. Using the
+#' object returned by organize.syncsa, the comm argument is used as an alternative way
+#' of entering to set all data.frames/matrices, and therefore the other arguments
+#' (traits, phylodist, envir, put.together and strata) must be null.
+#'
+#'
+#' \strong{Correlations}
+#'
+#' The function computes several correlations (Mantel or
 #' Procrustes) that express trait-convergence assembly patterns (TCAP),
 #' trait-divergence assembly patterns (TDAP), and phylogenetic signal in
 #' functional traits at the species pool level and at the metacomunity level.
@@ -206,15 +217,17 @@
 #' \strong{Missing data}
 #'
 #' The functions ignore missing data when specified. In the case of direct
-#' multiplication of matrices (matrices \strong{W} and matrix \strong{B}) the
-#' missing data are replaced by 0, ignoring the cell with missing value. Result
+#' multiplication of matrices the missing data are replaced by 0, ignoring the cell with missing value. For the
+#' matrix \strong{T = WB} an adjustment is done by divide each cell of the product
+#' matrix (\strong{T}) by the sum of species proportion with trait data in \strong{B}. Result
 #' matrices are shown without missing values. Where the matrices are calculated
 #' using a dissimilarity index (matrix \strong{U} and correlations between
 #' matrices) the missing data are ignored as in \code{\link{vegdist}} function.
 #' In some cases the dissimilarity matrices obtained by the function
 #' \code{\link{vegdist}} still contain some missing values. In these cases the
 #' rest of the procedure will be affected. In these cases you can find
-#' solutions in the package mice.
+#' solutions in impute the missing values.
+#'
 #'
 #' \strong{Error messenger and options}
 #'
@@ -234,12 +247,19 @@
 #' @importFrom parallel makeCluster stopCluster
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
+#' Alternatively comm can be an object of class metacommunity.data, an alternative
+#' way to set all data.frames/matrices. When you use the class metacommunity.data the arguments
+#' traits, phylodist, envir and put.together must be null. See details.
 #' @param traits Data frame or matrix data of species described by traits, with traits as
-#' columns and species as rows.
+#' columns and species as rows (Default traits = NULL).
 #' @param phylodist Matrix containing phylogenetic distance between species.
-#' Must be a complete matrix (not a half diagonal matrix).
+#' Must be a complete matrix, not a half diagonal matrix (Default phylodist = NULL).
 #' @param envir Environmental variables for each community, with variables as
-#' columns and sampling units as rows.
+#' columns and sampling units as rows (Default envir = NULL).
+#' @param checkdata Logical argument (TRUE or FALSE) to check if species
+#' sequence in the community data follows the same order as the one in the
+#' trait and in the phylodist matrices and if sampling units in the community data follows
+#' the same order as the one in the environmental data (Default checkdata = TRUE).
 #' @param ro.method Method to obtain the correlation, "mantel" or "procrustes"
 #' (Default ro.method = "mantel").
 #' @param method Mantel correlation method, as accepted by cor: "pearson",
@@ -295,7 +315,7 @@
 #' \strong{IMPORTANT}: The sequence of species in the community data matrix
 #' MUST be the same as that in the phylogenetic distance matrix and in traits
 #' matrix. Similarly, the sequence of communities in the community data matrix
-#' MUST be the same as that in the environmental data matrix. See
+#' MUST be the same as that in the environmental data. See details and
 #' \code{\link{organize.syncsa}}.
 #'
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
@@ -305,25 +325,30 @@
 #' \code{\link{var.dummy}}
 #'
 #' @references
-#' Pillar, V.D.; Duarte, L.d.S. (2010). A framework for metacommunity analysis
+#'
+#' Debastiani, V.J & Pillar, V.D., (2012). SYNCSA-R tool for analysis of metacommunities
+#' based on functional traits and phylogeny of the community components. Bioinformatics,
+#' 28(15), 2067–2068.
+#'
+#' Pillar, V.D.; Duarte, L.d.S., (2010). A framework for metacommunity analysis
 #' of phylogenetic structure. Ecology Letters, 13, 587:596.
 #'
 #' Pillar, V.D., Duarte, L.d.S., Sosinski, E.E. & Joner, F. (2009).
 #' Discriminating trait-convergence and trait-divergence assembly patterns in
 #' ecological community gradients. Journal of Vegetation Science, 20, 334:348.
 #'
-#' Pillar, V.D. & Orloci, L. (1991). Fuzzy components in community level
+#' Pillar, V.D. & Orloci, L., (1991). Fuzzy components in community level
 #' comparisons. In: Computer Assisted Vegetation Analysis (eds Feoli, E. &
-#' Orloci, L.). Kluwer, Dordrecht, pp. 87:93.
+#' Orloci, L.). Kluwer, Dordrecht, 87:93.
 #'
-#' Stubbs, W.J. & Wilson, J.B. (2004). Evidence for limiting similarity in a
+#' Stubbs, W.J. & Wilson, J.B., (2004). Evidence for limiting similarity in a
 #' sand dune community. Journal of Ecology, 92, 557:567.
 #'
 #' Violle, C., Navas, M.L., Vile, D., Kazakou, E., Fortunel, C., Hummel, I. &
-#' Garnier, E. (2007). Let the concept of trait be functional! Oikos, 116,
+#' Garnier, E., (2007). Let the concept of trait be functional! Oikos, 116,
 #' 882:892.
 #'
-#' Wilson, J.B. (2007). Trait-divergence assembly rules have been demonstrated:
+#' Wilson, J.B., (2007). Trait-divergence assembly rules have been demonstrated:
 #' limiting similarity lives! A reply to Grime. Journal of Vegetation Science,
 #' 18, 451:452.
 #' @keywords SYNCSA
@@ -337,11 +362,12 @@
 #'    put.together = put.together, permutations = 99)
 #' res$weights
 #' @export
-syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method = "pearson",
-                    dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord, put.together = NULL,
-                    na.rm = FALSE, strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
+syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkdata = TRUE, ro.method = "mantel",
+                    method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord,
+                    put.together = NULL, na.rm = FALSE, strata = NULL, permutations = 999,
+                    parallel = NULL, notification = TRUE)
 {
-  N <- permutations
+  res <- list(call = match.call())
   roTE <- NA
   roXE <- NA
   roPE <- NA
@@ -364,9 +390,9 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   note.roRE <- paste("Alpha divergence (correlation between environmental variables and Rao entropy): roRE")
   note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P, note.roRE)
   colnames(note) <- "Correlation meanings"
-  res <- list(call = match.call())
   res.matrices <- list()
   res$notes <- note
+  N <- permutations
   roMETHOD <- c("mantel", "procrustes")
   romethod <- pmatch(ro.method, roMETHOD)
   if (length(romethod) > 1) {
@@ -375,56 +401,86 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   if (is.na(romethod)) {
     stop("\n Invalid ro.method \n")
   }
-  if (!missing(comm)){
-    commvartype <- var.type(comm)
-    if(any(commvartype == "n")){
-      stop("\n comm must contain only numeric, binary or ordinal variables \n")
+  if (inherits(comm, "metacommunity.data")) {
+    if (!is.null(traits) | !is.null(phylodist) | !is.null(envir) | !is.null(put.together) | !is.null(strata)) {
+      stop("\n When you use an object of class metacommunity.data the arguments traits, phylodist, envir, put.together and strata must be null. \n")
     }
+    traits <- comm$traits
+    phylodist <- comm$phylodist
+    envir <- comm$environmental
+    put.together <- comm$put.together
+    strata <- comm$strata
+    comm <- comm$community
   }
-  if(notification){
+  list.warning <- list()
+  if(checkdata){
+    organize.temp <- organize.syncsa(comm, traits = traits, phylodist = phylodist, envir = envir,
+                                     strata = strata, check.comm = TRUE)
+    if(!is.null(organize.temp$stop)){
+      organize.temp$call <- match.call()
+      return(organize.temp)
+    }
+    list.warning <- organize.temp$list.warning
+    comm <- organize.temp$community
+    traits <- organize.temp$traits
+    phylodist <- organize.temp$phylodist
+    envir <- organize.temp$environmental
+    strata <- organize.temp$strata
+  }
+  if(notification & !checkdata){
     if (!missing(comm)) {
-      c.NA <- apply(comm, 2, is.na)
-      if(length(which(unique(as.vector(c.NA)) == TRUE))>0){
+      if(any(is.na(comm))){
         warning("Warning: NA in community data", call. = FALSE)
       }
     }
-    if (!missing(traits)) {
-      t.NA <- apply(traits, 2, is.na)
-      if(length(which(unique(as.vector(t.NA)) == TRUE))>0){
+    if (!is.null(traits)) {
+      if(any(is.na(traits))){
         warning("Warning: NA in traits matrix", call. = FALSE)
       }
     }
-    if (!missing(envir)) {
-      e.NA <- apply(envir, 2, is.na)
-      if(length(which(unique(as.vector(e.NA))==TRUE))>0){
+    if (!is.null(phylodist)) {
+      if(any(is.na(phylodist))){
+        warning("Warning: NA in phylodist data", call. = FALSE)
+      }
+    }
+    if (!is.null(envir)) {
+      if(any(is.na(envir))){
         warning("Warning: NA in environmental data", call. = FALSE)
       }
     }
   }
   if(!is.null(strata)){
-    if(length(strata) != dim(comm)[2]){
+    if(length(strata) != ncol(comm)){
       stop("\n strata must be the same length of number of species \n")
     }
   }
-  seqpermutation <- permut.vector(dim(comm)[2], strata = strata, nset = permutations)
-  if (!missing(traits)) {
-    traitsvartype <- var.type(traits)
-    if(any(traitsvartype == "n")){
-      stop("\n trait must contain only numeric, binary or ordinal variables \n")
+  seqpermutation <- permut.vector(ncol(comm), strata = strata, nset = permutations)
+  if(!checkdata){
+    commvartype <- var.type(comm)
+    if(any(commvartype == "n")){
+      stop("\n comm must contain only numeric, binary or ordinal variables \n")
+    }
+    if (!is.null(traits)) {
+      traitsvartype <- var.type(traits)
+      if(any(traitsvartype == "n")){
+        stop("\n trait must contain only numeric, binary or ordinal variables \n")
+      }
+    }
+    if (!is.null(phylodist)) {
+      phylodistvartype <- var.type(phylodist)
+      if(any(phylodistvartype == "n")){
+        stop("\n phylodist must contain only numeric, binary or ordinal variables \n")
+      }
+    }
+    if (!is.null(envir)) {
+      envirvartype <- var.type(envir)
+      if(any(envirvartype == "n")){
+        stop("\n envir must contain only numeric, binary or ordinal variables \n")
+      }
     }
   }
-  if (!missing(phylodist)) {
-    phylodistvartype <- var.type(phylodist)
-    if(any(phylodistvartype == "n")){
-      stop("\n phylodist must contain only numeric, binary or ordinal variables \n")
-    }
-  }
-  if (!missing(envir)) {
-    envirvartype <- var.type(envir)
-    if(any(envirvartype == "n")){
-      stop("\n envir must contain only numeric, binary or ordinal variables \n")
-    }
-    if(romethod == 1 & any(is.na(suppressWarnings(vegdist(envir, method = dist, na.rm = TRUE))))){
+  if (!is.null(envir)) {
+    if(romethod == 1 & any(is.na(suppressWarnings(vegan::vegdist(envir, method = dist, na.rm = TRUE))))){
       stop("\n envir with too much NA \n")
     }
     if(romethod == 2 & any(is.na(envir))){
@@ -436,14 +492,14 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   } else {
     CL <- NULL
   }
-  if (!missing(traits)) {
-    m <- dim(traits)[2]
-    weights <- rep(1,m)
+  if (!is.null(traits)) {
+    m <- ncol(traits)
+    weights <- rep(1, m)
     make.names <- is.null(colnames(traits))
     colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
     names(weights) <- colnames(traits)
     if(!is.null(put.together)){
-      if(class(put.together) != "list"){
+      if(!inherits(put.together, "list")){
         stop("\n put.together must be a object of class list\n")
       }
       if(make.names){
@@ -462,6 +518,31 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
       }
     }
     matrixT <- matrix.t(comm, traits, scale = scale, ranks = ranks, notification = FALSE)
+    check.U <- function(traits, scale, ranks, ord, ...){
+      vartype <- var.type(traits)
+      if(missing(ord)){
+        for(i in 1:length(vartype)){
+          if(ranks & vartype[i] == "o"){
+            traits[, i] <- rank(traits[, i], na.last = "keep")
+          }
+          traits[, i] <- as.numeric(traits[, i])
+        }
+        traits <- as.matrix(traits)
+      }
+      if (scale) {
+        dist.traits <- FD::gowdis(traits, asym.bin = NULL, ...)
+      }
+      else{
+        dist.traits <- as.matrix(vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = TRUE))
+      }
+      res <- any(is.na(dist.traits))
+      return(res)
+    }
+    if(notification){
+      if(check.U(traits, scale = scale, ranks = ranks, ord, w = weights)){
+        warning("Warning: NA in distance matrix between species based in traits", call. = FALSE)
+      }
+    }
     matrixX <- matrix.x(comm, traits, scale = scale, ranks = ranks, notification = FALSE, ord, w = weights)
     W <- matrixT$matrix.w
     B <- matrixT$matrix.b
@@ -476,7 +557,7 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
     res$weights <- weights
     res$FunRao <- cbind(rao.diversity(comm, traits = B, checkdata = FALSE, put.together = put.together)$FunRao)
     colnames(res$FunRao) <- "FunRao"
-    if (!missing(envir)) {
+    if (!is.null(envir)) {
       E <- envir
       if (scale.envir) {
         E <- cent.norm(envir, na.rm = na.rm)
@@ -496,15 +577,15 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
       }
     }
   }
-  if (!missing(phylodist)) {
+  if (!is.null(phylodist)) {
     matrixP <- matrix.p(comm, phylodist, notification = FALSE)
     W <- matrixP$matrix.w
     Q <- matrixP$matrix.q
     P <- matrixP$matrix.P
-    res.matrices$W < -W
-    res.matrices$Q <-Q
-    res.matrices$P<- P
-    if (!missing(envir)) {
+    res.matrices$W <- W
+    res.matrices$Q <- Q
+    res.matrices$P <- P
+    if (!is.null(envir)) {
       E <- envir
       if (scale.envir) {
         E <- cent.norm(envir, na.rm = na.rm)
@@ -516,7 +597,7 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
       if(romethod == 2){
         roPE <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
-      if (!missing(traits)) {
+      if (!is.null(traits)) {
         if(romethod == 1){
           roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
           roXE.P <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
@@ -527,7 +608,7 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
         }
       }
     }
-    if (!missing(traits)) {
+    if (!is.null(traits)) {
       if(romethod == 1){
         roPT <- cor.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, method = method, dist = dist, permutations = N, norm.y = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roPX.T <- cor.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
@@ -537,9 +618,10 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
         roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 1){
-        dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
-        if (scale == "TRUE") {
+        if (scale) {
           dist.traits <- vegan::vegdist(traits, method = "gower", diag = TRUE, upper = TRUE, na.rm = na.rm)
+        } else{
+          dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
         }
         roBF <- cor.mantel(dist.traits, stats::as.dist(phylodist), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
@@ -553,7 +635,13 @@ syncsa <- function (comm, traits, phylodist, envir, ro.method = "mantel", method
   if(!is.null(parallel)){
     parallel::stopCluster(CL)
   }
+  if(length(list.warning)>0){
+    res$list.warning <- list.warning
+  }
   res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF, roRE)
+  if(is.null(colnames(res$statistics))){
+    colnames(res$statistics) <- "Obs"
+  }
   res$matrices <- res.matrices
   class(res) <- "syncsa"
   return(res)

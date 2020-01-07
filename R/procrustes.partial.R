@@ -1,4 +1,5 @@
 #' @rdname procrustes.syncsa
+#' @include procrustes.syncsa.R
 #' @encoding UTF-8
 #' @export
 procrustes.partial <- function(x, y, z)
@@ -9,7 +10,7 @@ procrustes.partial <- function(x, y, z)
   if(!options("SYNCSA.speed")$SYNCSA.speed){
     pro.residuals <- function(Y, X){
       res <- matrix(NA, dim(Y)[1], dim(Y)[2])
-      for(i in 1:dim(Y)[2]){
+      for(i in 1:ncol(Y)){
         mat <- cbind(1, X)
         fast_mod <- RcppArmadillo::fastLmPure(mat, Y[,i])
         coeffs <- fast_mod$coefficients
@@ -27,8 +28,8 @@ procrustes.partial <- function(x, y, z)
     }
   }
   scoresofz <- stats::prcomp(z, scale = TRUE)$x
-  nm <- round((dim(x)[1]-2)/2)
-  if(nm<dim(scoresofz)[2]){
+  nm <- round((nrow(x)-2)/2)
+  if(nm<ncol(scoresofz)){
     scoresofz <- scoresofz[, 1:nm, drop = FALSE]
   }
   x.r <- pro.residuals(x, scoresofz)

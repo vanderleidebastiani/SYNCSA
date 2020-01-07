@@ -5,15 +5,22 @@
 \alias{organize.syncsa}
 \title{Function for organize data for Package SYNCSA}
 \usage{
-organize.syncsa(comm, traits = NULL, phylodist = NULL, envir = NULL,
-  strata = NULL, check.comm = TRUE, convert.traits = FALSE,
-  ranks = TRUE)
+organize.syncsa(
+  comm,
+  traits = NULL,
+  phylodist = NULL,
+  envir = NULL,
+  strata = NULL,
+  check.comm = TRUE,
+  convert.traits = FALSE,
+  ranks = TRUE
+)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
 rows.}
 
-\item{traits}{Matrix or dataframe of species described by traits, with traits as
+\item{traits}{Matrix or data.frame of species described by traits, with traits as
 columns and species as rows (Default traits = NULL).}
 
 \item{phylodist}{Matrix containing phylogenetic distance between species.
@@ -40,34 +47,42 @@ and if ranks = FALSE all ordinal variables are simply treated as continuous vari
 (Default ranks = TRUE).}
 }
 \value{
-The dataframes or matrices of community, traits, phylogenetic distance and
-environmental variables, as well as the type of each varible in each dataframe or matrix
-(where 'c' to continuous/numeric, 'o' to ordinal, 'b' to binary and 'f' to factor, nominal
-are not allowed). The strata vector for permutations. If convert.traits is TRUE and some
-traits is of class factor the function returm the traits with expand traits in dummy variables
-and return a list with sugestion to group of traits that are analysed together. Warning messenger
-are returned as a list of warning.
+A object of class metacommunity.data (also of the class list) with the data.frames or matrices:
+\item{call}{The arguments used.}
+\item{community}{Community data.}
+\item{traits}{Traits data.}
+\item{phylodist}{Phylogenetic distance.}
+\item{environmental}{Environmental variables.}
+\item{community.var.type}{Type of each varible in community data,
+where 'c' to continuous/numeric, 'o' to ordinal, 'b' to binary and 'f' to factor. Nominal are not allowed.}
+\item{traits.var.type}{Type of each varible in traits data. See labels above.}
+\item{phylodist.var.type}{Type of each varible in phylodist. See labels above.}
+\item{environmental.var.type}{Type of each varible in environmental data. See labels above.}
+\item{strata}{The strata vector for permutations.}
+\item{put.together}{A list with suggestion to group of traits that are analyzed together,
+only if convert.traits is TRUE and if some traits are of factor class.}
+\item{list.warning}{A list of warning.}
 }
 \description{
 Package \strong{SYNCSA} requires that the species and community sequence in
-the dataframe or matrix must be the same for all dataframe/matrices.
+the data.frame or matrix must be the same for all data.frame/matrices.
 }
 \details{
 The function organizes the data for the functions of the package
 SYNCSA, placing the matrices of community, traits, phylogenetic
 distance, environmental varibles and strata vector in the same order.
-The function use as reference the community data for organize all data frame or matrices
+The function use as reference the community data for organize all data.frame or matrices
 in the same order that the sampling units names and species names found in community
 data set. For this all data sets entered must be correctly named, with rows and columns
 named. The matrices phylodist, traits, envir can be larger than community
 data (more species and/or more sampling units) as long as it has at least
 all species and/or sampling units that are in community data. The function
-organizes the data despite the absence of one of the dataframes or matrices,
+organizes the data despite the absence of one of the data.frames or matrices,
 provided that the community data had been entered. Unspecified data will
 appear as NULL.
 
 When trait is a data.frame with differents types of variables correctly identified and
-convert.traits is TRUE factor traits are expanded in dummy traits and ordinal variables
+the argument convert.traits is TRUE factor traits are expanded in dummy traits and ordinal variables
 are converted in numeric according to ranks argument.
 
 The strata must be a named vector. The strata vector is a vector for restrict

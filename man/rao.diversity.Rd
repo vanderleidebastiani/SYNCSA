@@ -5,12 +5,23 @@
 \alias{rao.diversity}
 \title{Rao's quadratic entropy}
 \usage{
-rao.diversity(comm, traits = NULL, phylodist = NULL, checkdata = TRUE,
-  ord = "metric", put.together = NULL, standardize = TRUE, ...)
+rao.diversity(
+  comm,
+  traits = NULL,
+  phylodist = NULL,
+  checkdata = TRUE,
+  ord = "metric",
+  put.together = NULL,
+  standardize = TRUE,
+  ...
+)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
-rows. This matrix can contain either presence/absence or abundance data.}
+rows. This matrix can contain either presence/absence or abundance data.
+Alternatively comm can be an object of class metacommunity.data, an alternative
+way to set all data.frames/matrices. When you use the class metacommunity.data the arguments
+traits, phylodist and put.together must be null. See details.}
 
 \item{traits}{Data frame or matrix data of species described by traits, with traits as
 columns and species as rows (Default traits = NULL).}
@@ -37,12 +48,11 @@ distance to range into range 0 to 1. (Default standardize = TRUE).}
 }
 \value{
 \item{Simpson}{Gini-Simpson index within each community (equivalent
-to Rao quadratic entropy with null, crisp, similarities).} \item{FunRao}{Rao
-quadratic entropy within each community, considering trait distance.}
+to Rao quadratic entropy with null, crisp, similarities).}
+\item{FunRao}{Rao quadratic entropy within each community, considering trait distance.}
 \item{FunRedundancy}{Functional redundancy in each community.}
-\item{PhyRao}{Rao quadratic entropy within each community, considering
-phylogenetic distance.} \item{PhyRedundancy}{Phylogenetic redundancy in each
-community.}
+\item{PhyRao}{Rao quadratic entropy within each community, considering phylogenetic distance.}
+\item{PhyRedundancy}{Phylogenetic redundancy in each community.}
 }
 \description{
 Calculates Rao's quadratic entropy, functional and phylogenetic redundancy.
@@ -68,11 +78,24 @@ Functional redundancy is defined purely as the difference between species
 diversity and Rao`s quadratic entropy based on their functional
 dissimilarity (de Bello et al. 2007). The same definition is used for
 phylogenetic redundancy.
+
+Package \strong{SYNCSA} requires that the species and community sequence in
+the data.frame or matrix must be the same for all dataframe/matrices.
+The function \code{\link{organize.syncsa}} organizes the data for the functions
+of the package, placing the matrices of community, traits, phylogenetic distance
+in the same order. The function use of function organize.syncsa is not requered
+for run the functions, but is recommended. In this way the arguments comm, traits,
+phylodist, as well as the argument put.together, can be specified them as normal
+arguments or by passing them with the object returned by the function
+\code{\link{organize.syncsa}} using, in this case only the argument comm.
+Using the object returned by organize.syncsa, the comm argument is used as an alternative
+way of entering to set all data.frames/matrices, and therefore the other arguments
+(traits, phylodist and put.together) must be null.
 }
 \note{
 \strong{IMPORTANT}: The sequence species show up in community data
 matrix MUST be the same as they show up in traits and phylodist matrices.
-See \code{\link{organize.syncsa}}.
+See details and \code{\link{organize.syncsa}}.
 }
 \examples{
 data(ADRS)

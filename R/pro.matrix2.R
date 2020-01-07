@@ -13,7 +13,7 @@ pro.matrix2<-function (mx1, mx2, x, y, put.together = NULL, permutations = 999, 
   x <- cbind(x)
   y <- cbind(y)
   correlation <- procrustes.syncsa(x, y)
-  N <- dim(mx2)[1]
+  N <- nrow(mx2)
   if (is.null(seqpermutation)) {
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
   }

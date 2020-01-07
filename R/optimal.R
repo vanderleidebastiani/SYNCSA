@@ -5,6 +5,20 @@
 #' patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE) or
 #' alpha divergence (roRE) For more details, see \code{\link{syncsa}}.
 #'
+#' @details Package \strong{SYNCSA} requires that the species and community sequence in
+#' the data.frame or matrix must be the same for all dataframe/matrices.
+#' The function \code{\link{organize.syncsa}} organizes the data for the functions
+#' of the package, placing the matrices of community, traits and
+#' environmental varibles in the same order. The function
+#' use of function organize.syncsa is not requered for run the functions, but
+#' is recommended. In this way the arguments comm, traits, envir, as well as the argument
+#' put.together, can be specified them as normal arguments or by passing them
+#' with the object returned by the function \code{\link{organize.syncsa}} using, in this
+#' case only the argument comm. Using the object returned by organize.syncsa, the comm argument
+#' is used as an alternative way of entering to set all data.frames/matrices, and therefore
+#' the other arguments (traits, envir, and put.together) must be null.
+#'
+#'
 #' @encoding UTF-8
 #' @importFrom vegan vegdist
 #' @importFrom stats cor
@@ -12,10 +26,17 @@
 #' @aliases optimal print.optimal
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
+#' Alternatively comm can be an object of class metacommunity.data, an alternative
+#' way to set all data.frames/matrices. When you use the class metacommunity.data the arguments
+#' traits, envir and put.together must be null. See details.
 #' @param traits Matrix data of species described by traits, with traits as
-#' columns and species as rows.
+#' columns and species as rows (Default traits = NULL).
 #' @param envir Environmental variables for each community, with variables as
-#' columns and sampling units as rows.
+#' columns and sampling units as rows (Default envir = NULL).
+#' @param checkdata Logical argument (TRUE or FALSE) to check if species
+#' sequence in the community data follows the same order as the one in the
+#' trait and if sampling units in the community data follows the same order as the one in the
+#' environmental matrices (Default checkdata = TRUE).
 #' @param subset.min Minimum of traits in each subset (Default subset.min = 1).
 #' @param subset.max Maximum of traits in each subset (Default subset.max = ncol(traits)).
 #' @param pattern Patterns for maximize correlation, "tcap", "tdap",
@@ -62,7 +83,7 @@
 #' @return \item{Subset}{Subset of traits that maximizes the correlation.}
 #' \item{ro}{Correlation for the subset of traits.}
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
-#' matrix MUST be the same as they show up in traits matrix. See
+#' matrix MUST be the same as they show up in traits matrix. See details and
 #' \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}}
@@ -87,29 +108,14 @@
 #' optimal(flona$community, flona$traits, flona$environment, subset.min = 1,
 #'    subset.max = 3, pattern = "tcap", put.together = put.together)
 #' @export
-optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits),
+optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
+                   subset.min = 1, subset.max = ncol(traits),
                    pattern = NULL, ro.method = "mantel", dist = "euclidean", method = "pearson",
                    scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord = "metric",
-                   put.together = NULL, na.rm = FALSE, notification = TRUE, progressbar = FALSE)
+                   put.together = NULL, na.rm = FALSE, notification = TRUE,
+                   progressbar = FALSE)
 {
-  if (!missing(comm)){
-    commvartype <- var.type(comm)
-    if(any(commvartype == "n")){
-      stop("\n comm must contain only numeric, binary or ordinal variables\n")
-    }
-  }
-  if (!missing(traits)) {
-    traitsvartype <- var.type(traits)
-    if(any(traitsvartype == "n")){
-      stop("\n trait must contain only numeric, binary or ordinal variables \n")
-    }
-  }
-  if (!missing(envir)) {
-    envirvartype <- var.type(envir)
-    if(any(envirvartype == "n")){
-      stop("\n envir must contain only numeric, binary or ordinal variables \n")
-    }
-  }
+  res <- list(call = match.call())
   roMETHOD <- c("mantel", "procrustes")
   romethod <- pmatch(ro.method, roMETHOD)
   if (length(romethod) > 1) {
@@ -120,24 +126,69 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
   }
   PATTERNS <- c("tcap", "tdap", "tcap.tdap", "rao")
   pattern <- pmatch(pattern, PATTERNS)
-  if (length(pattern) > 1) {
+  if (length(pattern) != 1) {
     stop("\n Only one argument is accepted in pattern \n")
   }
   if (is.na(pattern)) {
     stop("\n Invalid pattern \n")
   }
-  if (notification) {
-    c.NA <- apply(comm, 2, is.na)
-    if (length(which(unique(as.vector(c.NA)) == TRUE)) > 0) {
+  if (inherits(comm, "metacommunity.data")) {
+    if (!is.null(traits) | !is.null(envir) | !is.null(put.together)) {
+      stop("\n When you use an object of class metacommunity.data the arguments traits, envir and put.together must be null. \n")
+    }
+    traits <- comm$traits
+    envir <- comm$environmental
+    put.together <- comm$put.together
+    comm <- comm$community
+  }
+  list.warning <- list()
+  if(checkdata){
+    organize.temp <- organize.syncsa(comm, traits = traits, envir = envir, check.comm = TRUE)
+    if(!is.null(organize.temp$stop)){
+      organize.temp$call <- match.call()
+      return(organize.temp)
+    }
+    list.warning <- organize.temp$list.warning
+    comm <- organize.temp$community
+    traits <- organize.temp$traits
+    envir <- organize.temp$environmental
+  }
+  if(length(list.warning)>0){
+    res$list.warning <- list.warning
+  }
+  if (is.null(traits)) {
+    stop("\n traits is NULL \n")
+  }
+  if (is.null(envir)) {
+    stop("\n envir is NULL \n")
+  }
+  if (notification & !checkdata) {
+    if (any(is.na(comm))) {
       warning("Warning: NA in community data", call. = FALSE)
     }
-    t.NA <- apply(traits, 2, is.na)
-    if (length(which(unique(as.vector(t.NA)) == TRUE)) > 0) {
+    if (any(is.na(traits))) {
       warning("Warning: NA in traits matrix", call. = FALSE)
     }
-    e.NA <- apply(envir, 2, is.na)
-    if (length(which(unique(as.vector(e.NA)) == TRUE)) > 0) {
+    if (any(is.na(envir))) {
       warning("Warning: NA in environmental data", call. = FALSE)
+    }
+  }
+  if(!checkdata){
+    commvartype <- var.type(comm)
+    if(any(commvartype == "n")){
+      stop("\n comm must contain only numeric, binary or ordinal variables \n")
+    }
+    if (!is.null(traits)) {
+      traitsvartype <- var.type(traits)
+      if(any(traitsvartype == "n")){
+        stop("\n trait must contain only numeric, binary or ordinal variables \n")
+      }
+    }
+    if (!is.null(envir)) {
+      envirvartype <- var.type(envir)
+      if(any(envirvartype == "n")){
+        stop("\n envir must contain only numeric, binary or ordinal variables \n")
+      }
     }
   }
   make.names <- is.null(colnames(traits))
@@ -148,7 +199,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
   if (romethod == 1) {
     dist.y <- vegan::vegdist(envir, method = dist, na.rm = na.rm)
   }
-  m <- dim(traits)[2]
+  m <- ncol(traits)
   weights <- rep(1, m)
   names(weights) <- colnames(traits)
   p <- 1:subset.max
@@ -185,7 +236,7 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
   bin <- factorial(m)/(factorial(p) * factorial(m - p))
   nT <- sum(bin[subset.min:subset.max])
   comb <- matrix(NA, nrow = sum(bin[subset.min:subset.max]), ncol = 1)
-  n = 0
+  n <- 0
   for (i in subset.min:subset.max) {
     combinations <- utils::combn(names.traits, i, simplify = TRUE)
     for (j in 1:bin[i]) {
@@ -345,7 +396,9 @@ optimal<-function (comm, traits, envir, subset.min = 1, subset.max = ncol(traits
   } else{
     result <- result[order(abs(result[, 2]), decreasing = TRUE), ]
   }
-  res <- list(call = match.call(), N_subset = nT, optimization = result, weights = weights)
+  res$N_subset <- nT
+  res$optimization <- result
+  res$weights <- weights
   class(res) <- "optimal"
   return(res)
 }

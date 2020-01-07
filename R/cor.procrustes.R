@@ -10,7 +10,7 @@ cor.procrustes <- function (x, y, permutations = 999, strata = NULL, na.rm = FAL
     }
   }
   correlation <- procrustes.syncsa(x, y)
-  N <- dim(x)[1]
+  N <- nrow(x)
   if(is.null(seqpermutation)){
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
   }

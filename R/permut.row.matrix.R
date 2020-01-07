@@ -13,7 +13,7 @@
 #' @export
 permut.row.matrix <- function(data, strata = NULL, seqpermutation = NULL)
 {
-  N <- dim(data)[1]
+  N <- nrow(data)
   if(!is.null(strata) & N!=length(strata)){
     stop("\n strata must be the length of number of row in the data\n")
   }

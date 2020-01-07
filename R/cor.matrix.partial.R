@@ -32,7 +32,7 @@ cor.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
   rxz <- stats::cor(dist.x, dist.z, method = method)
   ryz <- stats::cor(dist.y, dist.z, method = method)
   statistic <- part.cor(rxy, rxz, ryz)
-  N <- dim(mx2)[1]
+  N <- nrow(mx2)
   if(is.null(seqpermutation)){
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
   }
@@ -40,14 +40,16 @@ cor.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
     parallel <- length(CL)
   }
   ptest <- function(samp, mx1, mx2, my1, my2, dist.y, mz1, mz2, dist.z, permute.my2, permute.mz2, norm, norm.y, norm.z, dist, na.rm, method){
-    x.permut <- mx1 %*% mx2[samp, , drop = FALSE]
+    # x.permut <- mx1 %*% mx2[samp, , drop = FALSE]
+    x.permut <- matmult.syncsa(mx1, mx2[samp, , drop = FALSE])
     if (norm) {
       matrix.permut <- apply(x.permut^2, 2, sum)
       x.permut <- sweep(x.permut, 2, sqrt(matrix.permut), "/")
     }
     dist.x.permut <- vegan::vegdist(x.permut, method = dist, na.rm = na.rm)
     if(permute.my2){
-      y.permut <- my1 %*% my2[samp, , drop = FALSE]
+      # y.permut <- my1 %*% my2[samp, , drop = FALSE]
+      y.permut <- matmult.syncsa(my1, my2[samp, , drop = FALSE])
       if (norm.y) {
         matrix.permut <- apply(y.permut^2, 2, sum)
         y.permut <- sweep(y.permut, 2, sqrt(matrix.permut), "/")
@@ -55,7 +57,8 @@ cor.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
       dist.y.permut <- vegan::vegdist(y.permut, method = dist, na.rm = na.rm)
     }
     if(permute.mz2){
-      z.permut <- mz1 %*% mz2[samp, , drop = FALSE]
+      # z.permut <- mz1 %*% mz2[samp, , drop = FALSE]
+      z.permut <- matmult.syncsa(mz1, mz2[samp, , drop = FALSE])
       if (norm.z) {
         matrix.permut <- apply(z.permut^2, 2, sum)
         z.permut <- sweep(z.permut, 2, sqrt(matrix.permut), "/")

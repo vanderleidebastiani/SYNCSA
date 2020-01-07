@@ -23,10 +23,27 @@
 #' dissimilarity (de Bello et al. 2007). The same definition is used for
 #' phylogenetic redundancy.
 #'
+#' Package \strong{SYNCSA} requires that the species and community sequence in
+#' the data.frame or matrix must be the same for all dataframe/matrices.
+#' The function \code{\link{organize.syncsa}} organizes the data for the functions
+#' of the package, placing the matrices of community, traits, phylogenetic distance
+#' in the same order. The function use of function organize.syncsa is not requered
+#' for run the functions, but is recommended. In this way the arguments comm, traits,
+#' phylodist, as well as the argument put.together, can be specified them as normal
+#' arguments or by passing them with the object returned by the function
+#' \code{\link{organize.syncsa}} using, in this case only the argument comm.
+#' Using the object returned by organize.syncsa, the comm argument is used as an alternative
+#' way of entering to set all data.frames/matrices, and therefore the other arguments
+#' (traits, phylodist and put.together) must be null.
+#'
+#'
 #' @encoding UTF-8
 #' @importFrom FD gowdis
 #' @param comm Community data, with species as columns and sampling units as
 #' rows. This matrix can contain either presence/absence or abundance data.
+#' Alternatively comm can be an object of class metacommunity.data, an alternative
+#' way to set all data.frames/matrices. When you use the class metacommunity.data the arguments
+#' traits, phylodist and put.together must be null. See details.
 #' @param traits Data frame or matrix data of species described by traits, with traits as
 #' columns and species as rows (Default traits = NULL).
 #' @param phylodist Matrix containing phylogenetic distance between species
@@ -44,15 +61,14 @@
 #' distance to range into range 0 to 1. (Default standardize = TRUE).
 #' @param ... Parameters for \code{\link{gowdis}} function.
 #' @return \item{Simpson}{Gini-Simpson index within each community (equivalent
-#' to Rao quadratic entropy with null, crisp, similarities).} \item{FunRao}{Rao
-#' quadratic entropy within each community, considering trait distance.}
+#' to Rao quadratic entropy with null, crisp, similarities).}
+#' \item{FunRao}{Rao quadratic entropy within each community, considering trait distance.}
 #' \item{FunRedundancy}{Functional redundancy in each community.}
-#' \item{PhyRao}{Rao quadratic entropy within each community, considering
-#' phylogenetic distance.} \item{PhyRedundancy}{Phylogenetic redundancy in each
-#' community.}
+#' \item{PhyRao}{Rao quadratic entropy within each community, considering phylogenetic distance.}
+#' \item{PhyRedundancy}{Phylogenetic redundancy in each community.}
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
 #' matrix MUST be the same as they show up in traits and phylodist matrices.
-#' See \code{\link{organize.syncsa}}.
+#' See details and \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{organize.syncsa}}, \code{\link{gowdis}},
 #' \code{\link{syncsa}}
@@ -75,32 +91,62 @@
 rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE, ord = "metric",
                           put.together = NULL, standardize = TRUE, ...)
 {
+  diver.internal <- function(community, distance){
+    if(any(is.na(distance))){
+      distance.na <- ifelse(is.na(distance), 0, 1)
+      inter.na <- community%*%distance.na
+      adjustment <- rowSums(sweep(community, 1, inter.na, "*", check.margin = FALSE))
+      distance[is.na(distance)] <- 0
+      inter <- community%*%distance
+      res <- rowSums(sweep(community, 1, inter, "*", check.margin = FALSE))
+      res <- ifelse(adjustment>0, res/adjustment, res)
+    } else{
+      inter <- community%*%distance
+      res <- rowSums(sweep(community, 1, inter, "*", check.margin = FALSE))
+    }
+    return(res)
+  }
   res <- list(call = match.call())
+  if (inherits(comm, "metacommunity.data")) {
+    if (!is.null(traits) | !is.null(phylodist) | !is.null(put.together)) {
+      stop("\n When you use an object of class metacommunity.data the arguments traits, phylodist and put.together must be null. \n")
+    }
+    traits <- comm$traits
+    phylodist <- comm$phylodist
+    put.together <- comm$put.together
+    comm <- comm$community
+  }
+  list.warning <- list()
+  if(checkdata){
+    organize.temp <- organize.syncsa(comm, traits = traits, phylodist = phylodist, check.comm = TRUE)
+    if(!is.null(organize.temp$stop)){
+      organize.temp$call <- match.call()
+      return(organize.temp)
+    }
+    list.warning <- organize.temp$list.warning
+    comm <- organize.temp$community
+    traits <- organize.temp$traits
+    phylodist <- organize.temp$phylodist
+  }
+  if(length(list.warning)>0){
+    res$list.warning <- list.warning
+  }
+  if(any(is.na(comm))){
+    stop("\n community data with NA\n")
+  }
   comm <- as.matrix(comm)
-  N <- dim(comm)[1]
-  S <- dim(comm)[2]
+  N <- nrow(comm)
+  S <- ncol(comm)
   dist.1 <- 1 - diag(x = rep(1, S))
   if (!is.null(traits)) {
-    if (checkdata) {
-      if (is.null(rownames(traits))) {
-        stop("\n Erro in row names of traits\n")
-      }
-      if (is.null(colnames(comm))) {
-        stop("\n Erro in row names of comm\n")
-      }
-      match.names <- match(colnames(comm), rownames(traits))
-      if (sum(is.na(match.names)) > 0) {
-        stop("\n There are species from community data that are not on traits matrix\n")
-      }
-      traits <- as.data.frame(traits[match.names, ])
-    }
-    m <- dim(traits)[2]
-    weights <- rep(1,m)
+    traits <- as.data.frame(traits)
+    m <- ncol(traits)
+    weights <- rep(1, m)
     make.names <- is.null(colnames(traits))
     colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
     names(weights) <- colnames(traits)
     if(!is.null(put.together)){
-      if(class(put.together) != "list"){
+      if(!inherits(put.together, "list")){
         stop("\n put.together must be a object of class list\n")
       }
       if(make.names){
@@ -118,49 +164,38 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
         weights[put.together[[k]]] <- 1/length(put.together[[k]])
       }
     }
-    dist.2 <- sqrt(as.matrix(FD::gowdis(x=traits, asym.bin = NULL, ord = ord, w = weights, ...)))
+    dist.functional <- sqrt(as.matrix(FD::gowdis(x=traits, asym.bin = NULL, ord = ord, w = weights, ...)))
+    if (checkdata) {
+      if(any(is.na(dist.functional))){
+        # stop("\n traits with too much NA \n")
+        warning("Warning: NA in distance between species", call. = FALSE)
+      }
+    }
   }
   if (!is.null(phylodist)) {
+    dist.phylogenetic <- as.matrix(phylodist)
     if (checkdata) {
-      if (is.null(rownames(phylodist))) {
-        stop("\n Erro in row names of phylodist\n")
+      if(any(is.na(dist.phylogenetic))){
+        # stop("\n phylodist with NA \n")
+        warning("Warning: NA in phylodist", call. = FALSE)
       }
-      if (is.null(colnames(phylodist))) {
-        stop("\n Erro in column names of phylodist\n")
-      }
-      if (is.null(colnames(comm))) {
-        stop("\n Erro in row names of comm\n")
-      }
-      match.names <- match(colnames(comm), colnames(phylodist))
-      if (sum(is.na(match.names)) > 0) {
-        stop("\n There are species from community data that are not on phylogenetic distance matrix\n")
-      }
-      phylodist <- as.matrix(phylodist[match.names, match.names])
     }
-    dist.3 <- as.matrix(phylodist)
     if(standardize){
-      dist.3 <- dist.3/max(dist.3)
+      dist.phylogenetic <- dist.phylogenetic/max(dist.phylogenetic, na.rm = TRUE)
     }
   }
   comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
-  inter <- comm%*%dist.1
-  SD <- rowSums(sweep(comm, 1, inter, "*", check.margin = FALSE))
-  if (!is.null(traits)){
-    inter <- comm%*%dist.2
-    RD <- rowSums(sweep(comm, 1, inter, "*", check.margin = FALSE))
-  }
-  if (!is.null(phylodist)){
-    inter <- comm%*%dist.3
-    FRD <- rowSums(sweep(comm, 1, inter, "*", check.margin = FALSE))
-  }
+  SD <- diver.internal(comm, dist.1)
   res$Simpson <- SD
   if (!is.null(traits)){
-    res$FunRao <- RD
-    res$FunRedundancy <- SD-RD
+    FD <- diver.internal(comm, dist.functional)
+    res$FunRao <- FD
+    res$FunRedundancy <- SD-FD
   }
   if (!is.null(phylodist)){
-    res$PhyRao <- FRD
-    res$PhyRedundancy <- SD-FRD
+    PD <- diver.internal(comm, dist.phylogenetic)
+    res$PhyRao <- PD
+    res$PhyRedundancy <- SD-PD
   }
   return(res)
 }

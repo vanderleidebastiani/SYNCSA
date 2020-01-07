@@ -4,26 +4,48 @@
 \name{optimal}
 \alias{optimal}
 \alias{print.optimal}
-\alias{print.optimal}
 \title{Searching for optimal traits}
 \usage{
-optimal(comm, traits, envir, subset.min = 1, subset.max = ncol(traits),
-  pattern = NULL, ro.method = "mantel", dist = "euclidean",
-  method = "pearson", scale = TRUE, scale.envir = TRUE, ranks = TRUE,
-  ord = "metric", put.together = NULL, na.rm = FALSE,
-  notification = TRUE, progressbar = FALSE)
+optimal(
+  comm,
+  traits = NULL,
+  envir = NULL,
+  checkdata = TRUE,
+  subset.min = 1,
+  subset.max = ncol(traits),
+  pattern = NULL,
+  ro.method = "mantel",
+  dist = "euclidean",
+  method = "pearson",
+  scale = TRUE,
+  scale.envir = TRUE,
+  ranks = TRUE,
+  ord = "metric",
+  put.together = NULL,
+  na.rm = FALSE,
+  notification = TRUE,
+  progressbar = FALSE
+)
 
 \method{print}{optimal}(x, ...)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
-rows. This matrix can contain either presence/absence or abundance data.}
+rows. This matrix can contain either presence/absence or abundance data.
+Alternatively comm can be an object of class metacommunity.data, an alternative
+way to set all data.frames/matrices. When you use the class metacommunity.data the arguments
+traits, envir and put.together must be null. See details.}
 
 \item{traits}{Matrix data of species described by traits, with traits as
-columns and species as rows.}
+columns and species as rows (Default traits = NULL).}
 
 \item{envir}{Environmental variables for each community, with variables as
-columns and sampling units as rows.}
+columns and sampling units as rows (Default envir = NULL).}
+
+\item{checkdata}{Logical argument (TRUE or FALSE) to check if species
+sequence in the community data follows the same order as the one in the
+trait and if sampling units in the community data follows the same order as the one in the
+environmental matrices (Default checkdata = TRUE).}
 
 \item{subset.min}{Minimum of traits in each subset (Default subset.min = 1).}
 
@@ -94,9 +116,23 @@ assembly patterns (TDAP = roXE.T), maximize both trait-divergence assembly
 patterns and trait-convergence assembly patterns (TCAP.TDAP = roXE) or
 alpha divergence (roRE) For more details, see \code{\link{syncsa}}.
 }
+\details{
+Package \strong{SYNCSA} requires that the species and community sequence in
+the data.frame or matrix must be the same for all dataframe/matrices.
+The function \code{\link{organize.syncsa}} organizes the data for the functions
+of the package, placing the matrices of community, traits and
+environmental varibles in the same order. The function
+use of function organize.syncsa is not requered for run the functions, but
+is recommended. In this way the arguments comm, traits, envir, as well as the argument
+put.together, can be specified them as normal arguments or by passing them
+with the object returned by the function \code{\link{organize.syncsa}} using, in this
+case only the argument comm. Using the object returned by organize.syncsa, the comm argument
+is used as an alternative way of entering to set all data.frames/matrices, and therefore
+the other arguments (traits, envir, and put.together) must be null.
+}
 \note{
 \strong{IMPORTANT}: The sequence species show up in community data
-matrix MUST be the same as they show up in traits matrix. See
+matrix MUST be the same as they show up in traits matrix. See details and
 \code{\link{organize.syncsa}}.
 }
 \examples{

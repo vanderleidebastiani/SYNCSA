@@ -8,7 +8,7 @@
 var.type(data)
 }
 \arguments{
-\item{data}{A dataframe or matrix.}
+\item{data}{A data.frame or matrix.}
 }
 \value{
 A vector with the variable types, where 'c' is continuous/numeric, 'o' is
@@ -16,7 +16,7 @@ ordinal, 'b' is binary, 'n' is nominal and 'f' is factor.
 }
 \description{
 Function extracted (with small changes) of the function \code{\link{gowdis}}
-to check the type of variables in a dataframe or matrix.
+to check the type of variables in a data.frame or matrix.
 }
 \seealso{
 \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.dummy}}

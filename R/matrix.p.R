@@ -42,10 +42,14 @@ matrix.p<-function (comm, phylodist, notification = TRUE)
     if(any(w.NA)){
       warning("Warning: NA in community data", call.=FALSE)
     }
+    if(any(is.na(phylodist))){
+      warning("Warning: NA in phylodist data", call.=FALSE)
+    }
   }
   similar.phy <- 1 - (phylodist/max(phylodist))
   matrix.phy <- 1/colSums(similar.phy)
   matrix.q <- sweep(similar.phy, 1, matrix.phy, "*")
   matrix.P <- matrix.w %*% matrix.q
+  # matrix.P <- matmult.syncsa(matrix.w, matrix.q)
   return(list(matrix.w = matrix.w, matrix.q = matrix.q, matrix.P = matrix.P))
 }

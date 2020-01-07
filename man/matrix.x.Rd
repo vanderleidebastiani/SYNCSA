@@ -5,8 +5,15 @@
 \alias{matrix.x}
 \title{Matrix X}
 \usage{
-matrix.x(comm, traits, scale = TRUE, ranks = TRUE, ord,
-  notification = TRUE, ...)
+matrix.x(
+  comm,
+  traits,
+  scale = TRUE,
+  ranks = TRUE,
+  ord,
+  notification = TRUE,
+  ...
+)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as

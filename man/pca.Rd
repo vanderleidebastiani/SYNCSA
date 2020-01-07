@@ -9,9 +9,17 @@
 \usage{
 pca(data)
 
-\method{plot}{pcasyncsa}(x, show = c("variables", "individuals"),
-  axis = c(1, 2), xlab = axis[1], ylab = axis[2], arrows = TRUE,
-  text = TRUE, points = FALSE, ...)
+\method{plot}{pcasyncsa}(
+  x,
+  show = c("variables", "individuals"),
+  axis = c(1, 2),
+  xlab = axis[1],
+  ylab = axis[2],
+  arrows = TRUE,
+  text = TRUE,
+  points = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame  or matrix with individuals in rows and variables in columns.}

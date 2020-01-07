@@ -100,5 +100,6 @@ matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord, notificatio
   }
   matrix.u[u.NA] <- 0
   matrix.X <- matrix.w %*% matrix.u
+  # matrix.X <- matmult.syncsa(matrix.w, matrix.u)
   return(list(matrix.w = matrix.w, matrix.u = matrix.u, matrix.X = matrix.X))
 }

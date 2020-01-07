@@ -64,14 +64,13 @@ matrix.t <- function (comm, traits, scale = TRUE, ranks = TRUE, notification = T
     }
   }
   b.NA <- apply(traits, 2, is.na)
-  traits[b.NA] <-0
   if(notification){
     if(any(b.NA)){
       warning("Warning: NA in traits matrix", call. = FALSE)
     }
   }
   matrix.b <- traits
-  matrix.T <- matrix.w %*% traits
+  matrix.T <- matmult.syncsa(matrix.w, traits)
   if (scale) {
     matrix.traits <- apply(matrix.T^2, 2, sum)
     matrix.T <- sweep(matrix.T, 2, sqrt(matrix.traits), "/")

@@ -1,4 +1,5 @@
 #' @rdname cor.matrix
+#' @include cor.matrix.R
 #' @encoding UTF-8
 #' @export
 cor.mantel <- function (dist.x, dist.y, method = "pearson", permutations = 999, strata = NULL,
@@ -12,7 +13,7 @@ cor.mantel <- function (dist.x, dist.y, method = "pearson", permutations = 999, 
   }
   correlation <- cor(dist.x, dist.y, method = method)
   mx <- as.matrix(dist.x)
-  N <- dim(mx)[1]
+  N <- nrow(mx)
   if(is.null(seqpermutation)){
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
   }
