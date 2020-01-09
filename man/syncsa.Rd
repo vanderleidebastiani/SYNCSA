@@ -121,7 +121,7 @@ assembly patterns and their links to traits and ecological processes in a
 metacommunity (Pillar et al. 2009, Pillar & Duarte 2010, Debastiani & Pillar 2012). The
 function implement methods that have been available in the SYNCSA
 application written in C++ (by Valerio Pillar, available at
-http://ecoqua.ecologia.ufrgs.br/ecoqua/SYNCSA.html). See details.
+http://ecoqua.ecologia.ufrgs.br/SYNCSA.html). See details.
 }
 \details{
 Package \strong{SYNCSA} requires that the species and community sequence in
