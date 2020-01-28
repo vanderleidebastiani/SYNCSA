@@ -24,7 +24,7 @@ pro.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
     mz2 <- as.matrix(mz2)
   }
   z <- as.matrix(z)
-  statistic <- procrustes.partial(x, y, z)
+  statistic <- procrustes.partial.syncsa(x, y, z)
   N <- nrow(mx2)
   if(is.null(seqpermutation)){
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
@@ -56,16 +56,16 @@ pro.matrix.partial <- function (mx1, mx2, x, my1 = NULL, my2 = NULL, y, mz1 = NU
       }
     }
     if(!permute.my2 & !permute.mz2){
-      res <- SYNCSA::procrustes.partial(x.permut, y, z)
+      res <- SYNCSA::procrustes.partial.syncsa(x.permut, y, z)
     }
     if(permute.my2 & !permute.mz2){
-      res <- SYNCSA::procrustes.partial(x.permut, y.permut, z)
+      res <- SYNCSA::procrustes.partial.syncsa(x.permut, y.permut, z)
     }
     if(!permute.my2 & permute.mz2){
-      res <- SYNCSA::procrustes.partial(x.permut, y, z.permut)
+      res <- SYNCSA::procrustes.partial.syncsa(x.permut, y, z.permut)
     }
     if(permute.my2 & permute.mz2){
-      res <- SYNCSA::procrustes.partial(x.permut, y.permut, z.permut)
+      res <- SYNCSA::procrustes.partial.syncsa(x.permut, y.permut, z.permut)
     }
     return(res)
   }

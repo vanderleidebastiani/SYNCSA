@@ -1,6 +1,6 @@
 #' @title Permutate rows in a matrix
 #'
-#' @description Internal function to permutate rows in a matrix.
+#' @description Function to permutate rows in a matrix.
 #'
 #' @encoding UTF-8
 #' @param data A matrix.
@@ -9,7 +9,7 @@
 #' @return \item{permut.matrix}{The matrix permuted.} \item{samp}{The sequence of permutation.}
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{permut.vector}}
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 permut.row.matrix <- function(data, strata = NULL, seqpermutation = NULL)
 {

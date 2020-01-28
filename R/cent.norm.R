@@ -1,6 +1,6 @@
 #' @title Matrix centralization and standardization
 #'
-#' @description Internal function for centralization and standardization in a matrix.
+#' @description Function to perform centralization and standardization in a matrix.
 #'
 #' @encoding UTF-8
 #' @param x A matrix
@@ -8,7 +8,7 @@
 #' observations are removed (Default na.rm = FALSE).
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 cent.norm <- function (x, na.rm = FALSE)
 {

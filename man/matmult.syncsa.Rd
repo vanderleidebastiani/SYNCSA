@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{matmult.syncsa}
 \alias{matmult.syncsa}
-\title{Matrix multiplication}
+\title{Matrix multiplication with missing data}
 \usage{
 matmult.syncsa(X, Y)
 }
@@ -16,7 +16,8 @@ matmult.syncsa(X, Y)
 The matrix product.
 }
 \description{
-Internal function to get the matrix product when missing data (NA) is found in matrix Y.
+Function to get the matrix product when missing data (NA) are found in matrix Y.
+The matrix X must be standardized. See details.
 }
 \details{
 The function ignore missing data when found in matrix Y. Before multiplication of matrices
@@ -24,7 +25,7 @@ the missing data in Y are replaced by 0 and multiplication is performed, and the
 performed. This adjustment is done by divide each cell of the product matrix by the sum of
 proportions of nonzero at X with complete data in Y. In SYNCSA context this adjustment is done by
 divide each cell of the product matrix by the sum of species proportion with trait data in Y.
-Important, the matrix X must be standardized, in other words, row totals must be equal to 1.
+The matrix X must be standardized, in other words, row totals must be equal to 1.
 }
 \seealso{
 \code{\link{syncsa}}, \code{\link{matmult}},
@@ -32,4 +33,4 @@ Important, the matrix X must be standardized, in other words, row totals must be
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

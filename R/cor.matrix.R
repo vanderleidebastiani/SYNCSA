@@ -20,7 +20,7 @@
 #' @importFrom vegan vegdist
 #' @importFrom parallel makeCluster parRapply stopCluster
 #' @importFrom stats as.dist cor
-#' @aliases cor.matrix cor.matrix.partial pro.matrix pro.matrix.partial cor.mantel cor.procrustes
+#' @aliases cor.matrix cor.matrix.partial cor.matrix.rao cor.matrix.bf pro.matrix pro.matrix.partial pro.matrix.rao pro.matrix.bf rv.matrix rv.matrix.partial rv.matrix.rao rv.matrix.bf
 #' @param mx1 Matrix that multiplied by mx2 results in the matrix x.
 #' @param mx2 Matrix that when multiplied by mx1 results in the matrix x. See
 #' `details` below.

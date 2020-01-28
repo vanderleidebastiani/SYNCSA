@@ -156,7 +156,7 @@
 #'
 #' The Mantel and Partial Mantel statistics are calculated simply as the correlation
 #' entries the dissimilarity matrices, using standard Mantel test (see
-#' \code{\link{mantel}} and \code{\link{cor.mantel}}). Partial Mantel
+#' \code{\link{mantel}} and \code{\link{cor.matrix}}). Partial Mantel
 #' statistic use paired correlation between the three matrices and obtains the partial
 #' correlation using the formula of first-order partial correlation coefficient. The
 #' significances are obtained using a different procedure than standard Mantel test,
@@ -166,7 +166,7 @@
 #'
 #' The Procrustes correlation uses symmetric Procrustes as a measure of concordance
 #' between the data matrices (see \code{\link{procrustes}} and
-#' \code{\link{cor.procrustes}}). Procrustes procedure use rotation, translation,
+#' \code{\link{procrustes.syncsa}}). Procrustes procedure use rotation, translation,
 #' and rescaling for minimizing sum of squared differences between two data sets.
 #' The correlation of Procrustes is calculated as the statistic derived from the
 #' symmetric Procrustes sum of squares, representing the optimal fit between the two
@@ -570,19 +570,19 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
         roTE <- cor.matrix(mx1 = W, mx2 = B, x = T, y = E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE <- cor.matrix(mx1 = W, mx2 = U, x = X, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-        roRE <- cor.matrix2(mx1 = comm, B, res$FunRao, E, method = method, dist = dist, put.together = put.together, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roRE <- cor.matrix.rao(mx1 = comm, B, res$FunRao, E, method = method, dist = dist, put.together = put.together, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 2){
         roTE <- pro.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE <- pro.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-        roRE <- pro.matrix2(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roRE <- pro.matrix.rao(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 3){
         roTE <- rv.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE <- rv.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE.T <- rv.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
-        roRE <- rv.matrix2(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roRE <- rv.matrix.rao(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
     }
   }
@@ -643,17 +643,17 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
         } else{
           dist.traits <- vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = na.rm)
         }
-        roBF <- cor.mantel(dist.traits, stats::as.dist(phylodist), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roBF <- cor.matrix.bf(dist.traits, stats::as.dist(phylodist), method = method, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 2){
         vectors <- vegan::wcmdscale(phylodist/max(phylodist), eig = TRUE)$points
         traits.t <- sweep(B, 2, sqrt(apply(B^2, 2, sum, na.rm = na.rm)), "/")
-        roBF <- cor.procrustes(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roBF <- pro.matrix.bf(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 3){
         vectors <- vegan::wcmdscale(phylodist/max(phylodist), eig = TRUE)$points
         traits.t <- sweep(B, 2, sqrt(apply(B^2, 2, sum, na.rm = na.rm)), "/")
-        roBF <- cor.coinertia(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roBF <- rv.matrix.bf(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
     }
   }

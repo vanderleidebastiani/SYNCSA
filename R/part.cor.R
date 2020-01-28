@@ -1,6 +1,6 @@
 #' @title First-order partial correlation coefficient
 #'
-#' @description Internal function to obtain the first-order partial correlation coefficient.
+#' @description Function to obtain the first-order partial correlation coefficient.
 #'
 #' @encoding UTF-8
 #' @param rxy Correlation between xy
@@ -9,7 +9,7 @@
 #' @return The first-order partial correlation coefficient.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{cor.matrix}},
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 part.cor <- function(rxy, rxz, ryz)
 {

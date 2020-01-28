@@ -30,4 +30,4 @@ not expanded.
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

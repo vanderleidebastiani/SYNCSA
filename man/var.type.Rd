@@ -15,8 +15,8 @@ A vector with the variable types, where 'c' is continuous/numeric, 'o' is
 ordinal, 'b' is binary, 'n' is nominal and 'f' is factor.
 }
 \description{
-Function extracted (with small changes) of the function \code{\link{gowdis}}
-to check the type of variables in a data.frame or matrix.
+Function to check the type of variables in a data.frame or matrix. This function was extracted
+and slightly modified of the function \code{\link{gowdis}}.
 }
 \seealso{
 \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.dummy}}
@@ -24,4 +24,4 @@ to check the type of variables in a data.frame or matrix.
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

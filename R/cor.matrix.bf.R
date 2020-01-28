@@ -2,7 +2,7 @@
 #' @include cor.matrix.R
 #' @encoding UTF-8
 #' @export
-cor.mantel <- function (dist.x, dist.y, method = "pearson", permutations = 999, strata = NULL,
+cor.matrix.bf <- function (dist.x, dist.y, method = "pearson", permutations = 999, strata = NULL,
                         na.rm = FALSE, seqpermutation = NULL, parallel = NULL, newClusters = TRUE,
                         CL =  NULL)
 {

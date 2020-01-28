@@ -1,12 +1,12 @@
 #' @title Collect names an entire list
 #'
-#' @description Internal function to collect names an entire list.
+#' @description Function to collect names an entire list.
 #'
 #' @encoding UTF-8
 #' @param l A list.
 #' @param prefix A prefix to nomes.
 #' @return The names.
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 CollectNames <- function(l, prefix = NULL) {
   if (!is.list(l)) return(NULL)

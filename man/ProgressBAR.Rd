@@ -15,9 +15,9 @@ ProgressBAR(n, N, ...)
 \item{...}{Other parameters for the txtProgressBar function.}
 }
 \description{
-Text progress bar in the R console. See \code{\link{txtProgressBar}}.
+Function to display a progress bar in the R console. See \code{\link{txtProgressBar}}.
 }
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

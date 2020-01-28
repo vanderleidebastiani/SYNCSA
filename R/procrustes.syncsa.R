@@ -13,7 +13,7 @@
 #' @encoding UTF-8
 #' @importFrom stats lm residuals prcomp
 #' @importFrom RcppArmadillo fastLmPure
-#' @aliases procrustes.syncsa procrustes.partial
+#' @aliases procrustes.syncsa procrustes.partial.syncsa
 #' @param x,y Matrix that will be correlated.
 #' @param z Matrix whose effect will be removed from the correlation between x
 #' and y.

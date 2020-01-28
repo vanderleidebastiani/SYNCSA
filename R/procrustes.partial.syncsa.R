@@ -2,7 +2,7 @@
 #' @include procrustes.syncsa.R
 #' @encoding UTF-8
 #' @export
-procrustes.partial <- function(x, y, z)
+procrustes.partial.syncsa <- function(x, y, z)
 {
   x <- as.matrix(x)
   y <- as.matrix(y)

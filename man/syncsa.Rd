@@ -272,7 +272,7 @@ computed, which may be useful for evaluating causal models in path analysis.
 
 The Mantel and Partial Mantel statistics are calculated simply as the correlation
 entries the dissimilarity matrices, using standard Mantel test (see
-\code{\link{mantel}} and \code{\link{cor.mantel}}). Partial Mantel
+\code{\link{mantel}} and \code{\link{cor.matrix}}). Partial Mantel
 statistic use paired correlation between the three matrices and obtains the partial
 correlation using the formula of first-order partial correlation coefficient. The
 significances are obtained using a different procedure than standard Mantel test,
@@ -282,7 +282,7 @@ see section Testing against null models below.
 
 The Procrustes correlation uses symmetric Procrustes as a measure of concordance
 between the data matrices (see \code{\link{procrustes}} and
-\code{\link{cor.procrustes}}). Procrustes procedure use rotation, translation,
+\code{\link{procrustes.syncsa}}). Procrustes procedure use rotation, translation,
 and rescaling for minimizing sum of squared differences between two data sets.
 The correlation of Procrustes is calculated as the statistic derived from the
 symmetric Procrustes sum of squares, representing the optimal fit between the two

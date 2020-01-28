@@ -1,7 +1,7 @@
 #' @rdname cor.matrix
 #' @encoding UTF-8
 #' @export
-rv.matrix2<-function (mx1, mx2, x, y, put.together = NULL, permutations = 999, strata = NULL,
+pro.matrix.rao<-function (mx1, mx2, x, y, put.together = NULL, permutations = 999, strata = NULL,
           seqpermutation = NULL, parallel = NULL, newClusters = TRUE,
           CL = NULL)
 {
@@ -12,7 +12,7 @@ rv.matrix2<-function (mx1, mx2, x, y, put.together = NULL, permutations = 999, s
   }
   x <- cbind(x)
   y <- cbind(y)
-  correlation <- coinertia.syncsa(x, y)
+  correlation <- procrustes.syncsa(x, y)
   N <- nrow(mx2)
   if (is.null(seqpermutation)) {
     seqpermutation <- permut.vector(N, strata = strata, nset = permutations)
@@ -22,7 +22,7 @@ rv.matrix2<-function (mx1, mx2, x, y, put.together = NULL, permutations = 999, s
   }
   ptest <- function(samp, mx1, mx2, y, put.together) {
     x.permut <- cbind(rao.diversity(mx1, traits = mx2[samp, , drop = FALSE], checkdata = FALSE, put.together = put.together)$FunRao)
-    res <- SYNCSA::coinertia.syncsa(x.permut, y)
+    res <- SYNCSA::procrustes.syncsa(x.permut, y)
     return(res)
   }
   if (is.null(parallel)) {

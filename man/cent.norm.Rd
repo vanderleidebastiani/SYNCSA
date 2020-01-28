@@ -14,7 +14,7 @@ cent.norm(x, na.rm = FALSE)
 observations are removed (Default na.rm = FALSE).}
 }
 \description{
-Internal function for centralization and standardization in a matrix.
+Function to perform centralization and standardization in a matrix.
 }
 \seealso{
 \code{\link{syncsa}}
@@ -22,4 +22,4 @@ Internal function for centralization and standardization in a matrix.
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

@@ -1,7 +1,7 @@
 #' @title Check the type of variables
 #'
-#' @description Function extracted (with small changes) of the function \code{\link{gowdis}}
-#' to check the type of variables in a data.frame or matrix.
+#' @description Function to check the type of variables in a data.frame or matrix. This function was extracted
+#' and slightly modified of the function \code{\link{gowdis}}.
 #'
 #' @encoding UTF-8
 #' @param data A data.frame or matrix.
@@ -9,7 +9,7 @@
 #' ordinal, 'b' is binary, 'n' is nominal and 'f' is factor.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso  \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.dummy}}
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 var.type <- function(data)
 {

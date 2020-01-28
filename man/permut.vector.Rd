@@ -18,7 +18,7 @@ permut.vector(n, strata = NULL, nset = 999)
 A matrix of permutations, where each row is a separate permutation.
 }
 \description{
-Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
+Function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
 }
 \seealso{
 \code{\link{syncsa}}, \code{\link{permut.row.matrix}}
@@ -26,4 +26,4 @@ Internal function to permutate a vector of size n using the function \code{\link
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

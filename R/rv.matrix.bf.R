@@ -1,7 +1,7 @@
 #' @rdname cor.matrix
 #' @encoding UTF-8
 #' @export
-cor.coinertia <- function (x, y, permutations = 999, strata = NULL, na.rm = FALSE, seqpermutation = NULL,
+rv.matrix.bf <- function (x, y, permutations = 999, strata = NULL, na.rm = FALSE, seqpermutation = NULL,
                             parallel = NULL, newClusters = TRUE, CL =  NULL)
 {
   if(!is.null(seqpermutation)){

@@ -16,6 +16,6 @@ CollectNames(l, prefix = NULL)
 The names.
 }
 \description{
-Internal function to collect names an entire list.
+Function to collect names an entire list.
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

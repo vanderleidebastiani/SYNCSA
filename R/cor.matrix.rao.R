@@ -1,7 +1,7 @@
 #' @rdname cor.matrix
 #' @encoding UTF-8
 #' @export
-cor.matrix2<-function (mx1, mx2, x, y, method = "pearson", dist = "euclidean", put.together = NULL,
+cor.matrix.rao<-function (mx1, mx2, x, y, method = "pearson", dist = "euclidean", put.together = NULL,
                       permutations = 999, strata = NULL, na.rm = FALSE,
                       seqpermutation = NULL, parallel = NULL, newClusters = TRUE, CL = NULL)
 {

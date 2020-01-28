@@ -18,7 +18,7 @@ part.cor(rxy, rxz, ryz)
 The first-order partial correlation coefficient.
 }
 \description{
-Internal function to obtain the first-order partial correlation coefficient.
+Function to obtain the first-order partial correlation coefficient.
 }
 \seealso{
 \code{\link{syncsa}}, \code{\link{cor.matrix}},
@@ -26,4 +26,4 @@ Internal function to obtain the first-order partial correlation coefficient.
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}

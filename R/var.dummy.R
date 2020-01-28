@@ -14,7 +14,7 @@
 #' with sugestion to group of traits that are analysed together.}
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso  \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{var.type}}
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 var.dummy<-function(data)
 {

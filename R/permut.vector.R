@@ -1,6 +1,6 @@
 #' @title Permutate a vector
 #'
-#' @description Internal function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
+#' @description Function to permutate a vector of size n using the function \code{\link{shuffleSet}}.
 #'
 #' @encoding UTF-8
 #' @importFrom permute how Within Plots shuffleSet
@@ -10,7 +10,7 @@
 #' @return A matrix of permutations, where each row is a separate permutation.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{permut.row.matrix}}
-#' @keywords SYNCSA
+#' @keywords Auxiliary
 #' @export
 permut.vector <- function(n, strata = NULL, nset = 999)
 {

@@ -18,7 +18,7 @@ permut.row.matrix(data, strata = NULL, seqpermutation = NULL)
 \item{permut.matrix}{The matrix permuted.} \item{samp}{The sequence of permutation.}
 }
 \description{
-Internal function to permutate rows in a matrix.
+Function to permutate rows in a matrix.
 }
 \seealso{
 \code{\link{syncsa}}, \code{\link{permut.vector}}
@@ -26,4 +26,4 @@ Internal function to permutate rows in a matrix.
 \author{
 Vanderlei Julio Debastiani <vanderleidebastiani@yahoo.com.br>
 }
-\keyword{SYNCSA}
+\keyword{Auxiliary}
