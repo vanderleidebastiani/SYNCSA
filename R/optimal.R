@@ -116,7 +116,7 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
                    progressbar = FALSE)
 {
   res <- list(call = match.call())
-  roMETHOD <- c("mantel", "procrustes")
+  roMETHOD <- c("mantel", "procrustes", "coinertia")
   romethod <- pmatch(ro.method, roMETHOD)
   if (length(romethod) > 1) {
     stop("\n Only one argument is accepted in ro.method \n")
@@ -279,6 +279,12 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
             ProgressBAR(n, nT, style = 3)
           }
         }
+        if (romethod == 3) {
+          correlation[n, 1] <- coinertia.syncsa(T$matrix.T, envir)
+          if (progressbar) {
+            ProgressBAR(n, nT, style = 3)
+          }
+        }
       }
       if (pattern == 2) {
         n <- n + 1
@@ -316,6 +322,12 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
             ProgressBAR(n, nT, style = 3)
           }
         }
+        if (romethod == 3) {
+          correlation[n, 1] <- coinertia.partial.syncsa(X$matrix.X, envir, T$matrix.T)
+          if (progressbar) {
+            ProgressBAR(n, nT, style = 3)
+          }
+        }
       }
       if (pattern == 3) {
         n <- n + 1
@@ -343,6 +355,12 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
         }
         if (romethod == 2) {
           correlation[n, 1] <- procrustes.syncsa(X$matrix.X, envir)
+          if (progressbar) {
+            ProgressBAR(n, nT, style = 3)
+          }
+        }
+        if (romethod == 3) {
+          correlation[n, 1] <- coinertia.syncsa(X$matrix.X, envir)
           if (progressbar) {
             ProgressBAR(n, nT, style = 3)
           }
@@ -383,6 +401,12 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
         }
         if (romethod == 2) {
           correlation[n, 1] <- procrustes.syncsa(RAO, envir)
+          if (progressbar) {
+            ProgressBAR(n, nT, style = 3)
+          }
+        }
+        if (romethod == 3) {
+          correlation[n, 1] <- coinertia.syncsa(RAO, envir)
           if (progressbar) {
             ProgressBAR(n, nT, style = 3)
           }

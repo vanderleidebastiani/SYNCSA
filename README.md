@@ -1,4 +1,4 @@
-SYNCSA 1.3.4
+SYNCSA 1.3.5
 ======
 
 [![Travis-CI Build Status](https://travis-ci.org/vanderleidebastiani/SYNCSA.svg?branch=master)](https://travis-ci.org/vanderleidebastiani/SYNCSA)
@@ -7,7 +7,7 @@ R Package - SYNCSA - Analysis of functional and phylogenetic patterns in metacom
 
 ## Previous version
 
-SYNCSA 1.3.4 available in [`CRAN`](https://cran.r-project.org/web/packages/SYNCSA/index.html)
+SYNCSA 1.3.4 available in [`CRAN`](https://CRAN.R-project.org/package=SYNCSA)
 
 [![CRAN version](http://www.r-pkg.org/badges/version/SYNCSA)](https://cran.r-project.org/web/packages/SYNCSA/index.html) [![](http://cranlogs.r-pkg.org/badges/grand-total/SYNCSA)](https://cran.r-project.org/web/packages/SYNCSA/index.html)
 

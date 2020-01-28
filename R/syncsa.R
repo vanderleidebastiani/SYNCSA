@@ -393,7 +393,7 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
   res.matrices <- list()
   res$notes <- note
   N <- permutations
-  roMETHOD <- c("mantel", "procrustes")
+  roMETHOD <- c("mantel", "procrustes", "coinertia")
   romethod <- pmatch(ro.method, roMETHOD)
   if (length(romethod) > 1) {
     stop("\n Only one argument is accepted in ro.method \n")
@@ -486,6 +486,9 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
     if(romethod == 2 & any(is.na(envir))){
       stop("\n envir with NA \n")
     }
+    if(romethod == 3 & any(is.na(envir))){
+      stop("\n envir with NA \n")
+    }
   }
   if(!is.null(parallel)){
     CL <- parallel::makeCluster(parallel, type = "PSOCK")
@@ -575,6 +578,12 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
         roXE.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roRE <- pro.matrix2(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
+      if(romethod == 3){
+        roTE <- rv.matrix(mx1 = W, mx2 = B, x = T, y = E, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roXE <- rv.matrix(mx1 = W, mx2 = U, x = X, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roXE.T <- rv.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roRE <- rv.matrix2(mx1 = comm, B, res$FunRao, E, put.together = put.together, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
     }
   }
   if (!is.null(phylodist)) {
@@ -597,6 +606,9 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
       if(romethod == 2){
         roPE <- pro.matrix(mx1 = W, mx2 = Q, x = P, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
+      if(romethod == 3){
+        roPE <- rv.matrix(mx1 = W, mx2 = Q, x = P, y = E, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
       if (!is.null(traits)) {
         if(romethod == 1){
           roTE.P <- cor.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
@@ -605,6 +617,10 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
         if(romethod == 2){
           roTE.P <- pro.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
           roXE.P <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        }
+        if(romethod == 3){
+          roTE.P <- rv.matrix.partial(mx1 = W, mx2 = B, x = T, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+          roXE.P <- rv.matrix.partial(mx1 = W, mx2 = U, x = X, y = E, mz1 = W, mz2 = Q, z = P, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         }
       }
     }
@@ -616,6 +632,10 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
       if(romethod == 2){
         roPT <- pro.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, permutations = N, norm.y = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roPX.T <- pro.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 3){
+        roPT <- rv.matrix(mx1 = W, mx2 = Q, x = P, my1= W, my2 = B, y = T, permute.my2 = TRUE, permutations = N, norm.y = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+        roPX.T <- rv.matrix.partial(mx1 = W, mx2 = Q, x = P, my1 = W, my2 = U, y = X, mz1 = W, mz2 = B, z = T, permute.my2 = TRUE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
       if(romethod == 1){
         if (scale) {
@@ -629,6 +649,11 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
         vectors <- vegan::wcmdscale(phylodist/max(phylodist), eig = TRUE)$points
         traits.t <- sweep(B, 2, sqrt(apply(B^2, 2, sum, na.rm = na.rm)), "/")
         roBF <- cor.procrustes(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      }
+      if(romethod == 3){
+        vectors <- vegan::wcmdscale(phylodist/max(phylodist), eig = TRUE)$points
+        traits.t <- sweep(B, 2, sqrt(apply(B^2, 2, sum, na.rm = na.rm)), "/")
+        roBF <- cor.coinertia(vectors, traits.t, permutations = N, strata = strata, na.rm = na.rm,seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
     }
   }
