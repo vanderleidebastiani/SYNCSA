@@ -13,6 +13,8 @@ rao.diversity(
   ord = "metric",
   put.together = NULL,
   standardize = TRUE,
+  transformation = "standardized",
+  spp.weights = NULL,
   ...
 )
 }
@@ -43,6 +45,11 @@ examples in \code{\link{syncsa}}.}
 
 \item{standardize}{Logical argument (TRUE or FALSE) to specify if standardize phylogenetic
 distance to range into range 0 to 1. (Default standardize = TRUE).}
+
+\item{transformation}{Method to transformation, "none", "standardized", "weights"
+or "max.weights" (Default transformation = "standardized").}
+
+\item{spp.weights}{Vector with 0 or 1 to specify individual species weights (Default spp.weights = NULL).}
 
 \item{...}{Parameters for \code{\link{gowdis}} function.}
 }
@@ -79,23 +86,34 @@ diversity and Rao`s quadratic entropy based on their functional
 dissimilarity (de Bello et al. 2007). The same definition is used for
 phylogenetic redundancy.
 
+By default, the community data is standardization to row totals will be 1.
+The options are: "none" no transformation is applied; "standardized" the
+community data is standardized to row totals will be 1; and "weights" community
+data is first "standardized" and when, individual species weights are multiplied
+to each species entries. The argument transformation also allow an additional
+method to weights individual species, called "max.weights". In this method
+community data is standardization as default, however dissimilarity matrix is
+weighted indeed. The argument spp.weights specify the weights to target species
+and the dissimilarity weights are 1 if at least one species in the pair belongs
+to the target community, otherwise weights to pair are 0.
+
 Package \strong{SYNCSA} requires that the species and community sequence in
 the data.frame or matrix must be the same for all dataframe/matrices.
 The function \code{\link{organize.syncsa}} organizes the data for the functions
 of the package, placing the matrices of community, traits, phylogenetic distance
 in the same order. The function use of function organize.syncsa is not requered
 for run the functions, but is recommended. In this way the arguments comm, traits,
-phylodist, as well as the argument put.together, can be specified them as normal
+phylodist, as well as the argument put.together and spp.weights, can be specified them as normal
 arguments or by passing them with the object returned by the function
 \code{\link{organize.syncsa}} using, in this case only the argument comm.
 Using the object returned by organize.syncsa, the comm argument is used as an alternative
 way of entering to set all data.frames/matrices, and therefore the other arguments
-(traits, phylodist and put.together) must be null.
+(traits, phylodist, put.together and spp.weights) must be null.
 }
 \note{
 \strong{IMPORTANT}: The sequence species show up in community data
-matrix MUST be the same as they show up in traits and phylodist matrices.
-See details and \code{\link{organize.syncsa}}.
+matrix MUST be the same as they show up in traits and phylodist matrices as well as
+in the species weights vector. See details and \code{\link{organize.syncsa}}.
 }
 \examples{
 data(ADRS)

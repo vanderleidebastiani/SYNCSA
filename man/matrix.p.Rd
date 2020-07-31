@@ -5,7 +5,13 @@
 \alias{matrix.p}
 \title{Matrix P}
 \usage{
-matrix.p(comm, phylodist, notification = TRUE)
+matrix.p(
+  comm,
+  phylodist,
+  transformation = "standardized",
+  spp.weights = NULL,
+  notification = TRUE
+)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -14,17 +20,20 @@ rows. This matrix can contain either presence/absence or abundance data.}
 \item{phylodist}{Matrix containing phylogenetic distance between species.
 Must be a complete matrix (not a diagonal resemblance matrix).}
 
+\item{transformation}{Method to community data transformation, "none", "standardized" or "weights" (Default transformation = "standardized").}
+
+\item{spp.weights}{Vector with 0 or 1 to specify individual species weights (Default spp.weights = NULL).}
+
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications for missing observations are to be shown (Default notification =
 TRUE).}
 }
 \value{
 \item{matrix.w}{Standardized community matrix, where rows are
-communities and columns species. Row totals (communities) = 1.}
+communities and columns species. If default transformation, row totals (communities) = 1.}
 \item{matrix.q}{Standardized matrix containing the degree of belonging of
 species in relation to each other. Row totals (species) = 1.}
-\item{matrix.P}{Phylogeny-weighted species composition matrix. Row totals
-(communities) = 1.}
+\item{matrix.P}{Phylogeny-weighted species composition matrix. If default transformation, row totals (communities) = 1.}
 }
 \description{
 Function to obtain a matrix containing phylogeny-weighted species
@@ -32,7 +41,7 @@ composition. For more details, see \code{\link{syncsa}}.
 }
 \note{
 \strong{IMPORTANT}: Species sequence in the community data
-matrix MUST be the same as the one in the phylogenetic distance matrix. See
+matrix MUST be the same as the one in the phylogenetic distance matrix or in the spp.weights vector. See
 \code{\link{organize.syncsa}}.
 }
 \examples{

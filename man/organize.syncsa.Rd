@@ -11,6 +11,7 @@ organize.syncsa(
   phylodist = NULL,
   envir = NULL,
   strata = NULL,
+  spp.weights = NULL,
   check.comm = TRUE,
   convert.traits = FALSE,
   ranks = TRUE
@@ -33,6 +34,8 @@ columns and sampling units as rows (Default envir = NULL).}
 
 \item{strata}{Strata named vector to specify restricting permutations within
 species groups (Default strata = NULL).}
+
+\item{spp.weights}{Named vector to specify individual species weights (Default spp.weights = NULL).}
 
 \item{check.comm}{Logical argument (TRUE or FALSE) to remove sampling units and
 species with total sums equal or less than zero (Default check.comm = TRUE).}
@@ -61,6 +64,7 @@ where 'c' to continuous/numeric, 'o' to ordinal, 'b' to binary and 'f' to factor
 \item{strata}{The strata vector for permutations.}
 \item{put.together}{A list with suggestion to group of traits that are analyzed together,
 only if convert.traits is TRUE and if some traits are of factor class.}
+\item{spp.weights}{The individual species weights vector.}
 \item{list.warning}{A list of warning.}
 }
 \description{
@@ -70,7 +74,7 @@ the data.frame or matrix must be the same for all data.frame/matrices.
 \details{
 The function organizes the data for the functions of the package
 SYNCSA, placing the matrices of community, traits, phylogenetic
-distance, environmental varibles and strata vector in the same order.
+distance, environmental varibles, species weights and strata vectors in the same order.
 The function use as reference the community data for organize all data.frame or matrices
 in the same order that the sampling units names and species names found in community
 data set. For this all data sets entered must be correctly named, with rows and columns
@@ -81,12 +85,12 @@ organizes the data despite the absence of one of the data.frames or matrices,
 provided that the community data had been entered. Unspecified data will
 appear as NULL.
 
-When trait is a data.frame with differents types of variables correctly identified and
+When trait is a data.frame with different types of variables correctly identified and
 the argument convert.traits is TRUE factor traits are expanded in dummy traits and ordinal variables
 are converted in numeric according to ranks argument.
 
-The strata must be a named vector. The strata vector is a vector for restrict
-permutation within species groups, insofar as the SYNCSA package the null
+The individual species weights (spp.weights) and strata must be named vectors. The strata vector
+is a vector for restrict permutation within species groups, insofar as the SYNCSA package the null
 models are based in permutation of species rather than permutation of sample units.
 }
 \examples{

@@ -317,7 +317,7 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
           }
         }
         if (romethod == 2) {
-          correlation[n, 1] <- procrustes.partial(X$matrix.X, envir, T$matrix.T)
+          correlation[n, 1] <- procrustes.partial.syncsa(X$matrix.X, envir, T$matrix.T)
           if (progressbar) {
             ProgressBAR(n, nT, style = 3)
           }

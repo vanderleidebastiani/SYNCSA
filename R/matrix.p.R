@@ -8,17 +8,18 @@
 #' rows. This matrix can contain either presence/absence or abundance data.
 #' @param phylodist Matrix containing phylogenetic distance between species.
 #' Must be a complete matrix (not a diagonal resemblance matrix).
+#' @param transformation Method to community data transformation, "none", "standardized" or "weights" (Default transformation = "standardized").
+#' @param spp.weights Vector with 0 or 1 to specify individual species weights (Default spp.weights = NULL).
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notifications for missing observations are to be shown (Default notification =
 #' TRUE).
 #' @return \item{matrix.w}{Standardized community matrix, where rows are
-#' communities and columns species. Row totals (communities) = 1.}
+#' communities and columns species. If default transformation, row totals (communities) = 1.}
 #' \item{matrix.q}{Standardized matrix containing the degree of belonging of
 #' species in relation to each other. Row totals (species) = 1.}
-#' \item{matrix.P}{Phylogeny-weighted species composition matrix. Row totals
-#' (communities) = 1.}
+#' \item{matrix.P}{Phylogeny-weighted species composition matrix. If default transformation, row totals (communities) = 1.}
 #' @note \strong{IMPORTANT}: Species sequence in the community data
-#' matrix MUST be the same as the one in the phylogenetic distance matrix. See
+#' matrix MUST be the same as the one in the phylogenetic distance matrix or in the spp.weights vector. See
 #' \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{belonging}},
@@ -31,17 +32,20 @@
 #' data(ADRS)
 #' matrix.p(ADRS$community, ADRS$phylo)
 #' @export
-matrix.p<-function (comm, phylodist, notification = TRUE)
+matrix.p <- function (comm, phylodist, transformation = "standardized", spp.weights = NULL, notification = TRUE)
 {
-  comm <- as.matrix(comm)
   phylodist <- as.matrix(phylodist)
-  matrix.w <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
-  w.NA <- apply(matrix.w, 2, is.na)
-  matrix.w[w.NA] <-0
+  TRANS <- c("none", "standardized", "weights", "beals")
+  trans <- pmatch(transformation, TRANS)
+  if (length(trans) > 1) {
+    stop("\n Only one argument is accepted in transformation \n")
+  }
+  if (is.na(trans) | trans == 4) {
+    stop("\n Invalid transformation \n")
+  }
+  matrix.w <- matrix.w.transformation(comm, transformation = transformation,
+                                      spp.weights = spp.weights, notification = notification)
   if(notification){
-    if(any(w.NA)){
-      warning("Warning: NA in community data", call.=FALSE)
-    }
     if(any(is.na(phylodist))){
       warning("Warning: NA in phylodist data", call.=FALSE)
     }

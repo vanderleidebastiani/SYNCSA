@@ -186,6 +186,19 @@
 #' are obtained using the same procedure than Mantel test, see section Testing against
 #' null models below.
 #'
+#' \strong{Co-inertia correlations}
+#'
+#' Co-inertia Analysis uses RV coefficient as a measure of correlation between the data matrices.
+#' The procedure is equal to Procrustes correlation, however using the RV coefficient.
+#'
+#' \strong{The ro.method "none" or "nullmodel"}
+#'
+#' When ro.method is equal to "none" only observed matrices are returned,
+#' already when it is equal to "nullmodel" observed matrices and null matrices
+#' generated according the null models are returned. This null matrices can be
+#' used to apply any statistical method to test relation between matrices not
+#' include in the package (e.x. linear models).
+#'
 #' \strong{Testing against null models}
 #'
 #' All the matrix correlations are tested against null models. The null model
@@ -214,6 +227,15 @@
 #' the function gowdis of package FD. For additional details and requirements of function
 #' please see \code{\link{gowdis}}.
 #'
+#' \strong{Community data standardization}
+#'
+#' By default the community data is standardization to row totals will be 1. The options
+#' are: "none" no transformation is applied; "standardized" the community data is standardized
+#' to row totals will be 1; and "weights" community data is first "standardized" and when, individual
+#' species weights are multiplied to each species entries. An additional method to weights
+#' individual species is included only \code{\link{rao.diversity}} function. Current version of package
+#' does not allow choose standardization/transformation method in the \code{\link{optimal}} function.
+#'
 #' \strong{Missing data}
 #'
 #' The functions ignore missing data when specified. In the case of direct
@@ -227,7 +249,6 @@
 #' \code{\link{vegdist}} still contain some missing values. In these cases the
 #' rest of the procedure will be affected. In these cases you can find
 #' solutions in impute the missing values.
-#'
 #'
 #' \strong{Error messenger and options}
 #'
@@ -260,8 +281,8 @@
 #' sequence in the community data follows the same order as the one in the
 #' trait and in the phylodist matrices and if sampling units in the community data follows
 #' the same order as the one in the environmental data (Default checkdata = TRUE).
-#' @param ro.method Method to obtain the correlation, "mantel" or "procrustes"
-#' (Default ro.method = "mantel").
+#' @param ro.method Method to obtain the correlation, "mantel", "procrustes", "coinertia",
+#' "none" or "nullmodel" (Default ro.method = "mantel").
 #' @param method Mantel correlation method, as accepted by cor: "pearson",
 #' "spearman" or "kendall" (Default method = "pearson").
 #' @param dist Dissimilarity index used for Mantel correlation, as accepted by
@@ -293,6 +314,10 @@
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' distances should be deleted in cases of missing observations (Default na.rm
 #' = FALSE).
+#' @param transformation Method to transformation, "none", "standardized" or "weights"
+#' (Default transformation = "standardized").
+#' @param spp.weights Vector with 0 or 1 to specify individual species weights (Default
+#' spp.weights = NULL).
 #' @param strata Strata named vector to specify restricting permutations within species
 #' groups (Default strata = NULL).
 #' @param permutations Number of permutations in assessing significance.
@@ -302,11 +327,15 @@
 #' notification = TRUE).
 #' @param x An object of class syncsa.
 #' @param ... Other parameters for the respective functions.
-#' @return \item{call}{The arguments used.} \item{notes}{Some notes about the statistics.}
+#' @return \item{call}{The arguments used.}
+#' \item{notes}{Some notes about the statistics.}
 #' \item{statistics}{Correlations roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P
-#' and roBF, and their significance levels based on permutations.} \item{matrices}{The matrices
-#' produced for the functions, see details.} \item{FunRao}{Rao
-#' quadratic entropy within each community, considering trait distance.} \item{weights}{Weight for each trait.}
+#' and roBF, and their significance levels based on permutations.}
+#' \item{matrices}{A list with observed matrices produced for the functions, see details.}
+#' \item{matrices.null}{A list of list with null matrices generated according the null model,
+#' only if ro.method is "nullmodel". The number of matrices returned depends of the number of permutations.}
+#' \item{FunRao}{Rao quadratic entropy within each community, considering trait distance.}
+#' \item{weights}{Weight for each trait.}
 #'
 #' @note The function calculates the correlations despite the lack of one of
 #' the matrices, provided that community data had been entered. Correlations
@@ -363,11 +392,14 @@
 #' res$weights
 #' @export
 syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkdata = TRUE, ro.method = "mantel",
-                    method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord,
-                    put.together = NULL, na.rm = FALSE, strata = NULL, permutations = 999,
-                    parallel = NULL, notification = TRUE)
+                     method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord,
+                     put.together = NULL, na.rm = FALSE, transformation = "standardized", spp.weights = NULL,
+                     strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
 {
   res <- list(call = match.call())
+  res.matrices <- list()
+  res.matrices.null <- list()
+  list.warning <- list()
   roTE <- NA
   roXE <- NA
   roPE <- NA
@@ -390,10 +422,8 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
   note.roRE <- paste("Alpha divergence (correlation between environmental variables and Rao entropy): roRE")
   note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P, note.roRE)
   colnames(note) <- "Correlation meanings"
-  res.matrices <- list()
-  res$notes <- note
   N <- permutations
-  roMETHOD <- c("mantel", "procrustes", "coinertia")
+  roMETHOD <- c("mantel", "procrustes", "coinertia", "none", "nullmodel")
   romethod <- pmatch(ro.method, roMETHOD)
   if (length(romethod) > 1) {
     stop("\n Only one argument is accepted in ro.method \n")
@@ -401,21 +431,32 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
   if (is.na(romethod)) {
     stop("\n Invalid ro.method \n")
   }
+  if(romethod == 1 | romethod == 2 | romethod == 3){
+    res$notes <- note
+  }
+  TRANS <- c("none", "standardized", "weights", "beals")
+  trans <- pmatch(transformation, TRANS)
+  if (length(trans) > 1) {
+    stop("\n Only one argument is accepted in transformation \n")
+  }
+  if (is.na(trans) | trans == 4) {
+    stop("\n Invalid transformation \n")
+  }
   if (inherits(comm, "metacommunity.data")) {
-    if (!is.null(traits) | !is.null(phylodist) | !is.null(envir) | !is.null(put.together) | !is.null(strata)) {
-      stop("\n When you use an object of class metacommunity.data the arguments traits, phylodist, envir, put.together and strata must be null. \n")
+    if (!is.null(traits) | !is.null(phylodist) | !is.null(envir) | !is.null(put.together) | !is.null(spp.weights) | !is.null(strata) ) {
+      stop("\n When you use an object of class metacommunity.data the arguments traits, phylodist, envir, spp.weights, put.together and strata must be null. \n")
     }
     traits <- comm$traits
     phylodist <- comm$phylodist
     envir <- comm$environmental
     put.together <- comm$put.together
+    spp.weights <- comm$spp.weights
     strata <- comm$strata
     comm <- comm$community
   }
-  list.warning <- list()
   if(checkdata){
     organize.temp <- organize.syncsa(comm, traits = traits, phylodist = phylodist, envir = envir,
-                                     strata = strata, check.comm = TRUE)
+                                     strata = strata, spp.weights = spp.weights, check.comm = TRUE)
     if(!is.null(organize.temp$stop)){
       organize.temp$call <- match.call()
       return(organize.temp)
@@ -426,6 +467,7 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
     phylodist <- organize.temp$phylodist
     envir <- organize.temp$environmental
     strata <- organize.temp$strata
+    spp.weights <- organize.temp$spp.weights
   }
   if(notification & !checkdata){
     if (!missing(comm)) {
@@ -454,7 +496,11 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
       stop("\n strata must be the same length of number of species \n")
     }
   }
-  seqpermutation <- permut.vector(ncol(comm), strata = strata, nset = permutations)
+  if(!is.null(spp.weights)){
+    if(length(spp.weights) != ncol(comm)){
+      stop("\n spp.weights must be the same length of number of species \n")
+    }
+  }
   if(!checkdata){
     commvartype <- var.type(comm)
     if(any(commvartype == "n")){
@@ -490,82 +536,64 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
       stop("\n envir with NA \n")
     }
   }
-  if(!is.null(parallel)){
-    CL <- parallel::makeCluster(parallel, type = "PSOCK")
-  } else {
-    CL <- NULL
+  res.matrices <- syncsa.obs(comm, traits = traits, phylodist = phylodist, envir = envir,
+                             scale = scale, scale.envir = scale.envir, ranks = ranks, ord,
+                             put.together = put.together, na.rm = na.rm, transformation = transformation,
+                             spp.weights = spp.weights, notification = notification)
+  if(romethod != 4){
+    seqpermutation <- permut.vector(ncol(comm), strata = strata, nset = permutations)
+  }
+  if(romethod == 1 | romethod == 2 | romethod == 3){
+    if(!is.null(parallel)){
+      CL <- parallel::makeCluster(parallel, type = "PSOCK")
+    } else {
+      CL <- NULL
+    }
+  }
+  permute.syncsa <- function(samp, mx1, mx2, permut.x, norm.x){
+    res <- list()
+    mx2 <- mx2[samp, ,drop = FALSE]
+    res$mx2.null <- mx2
+    if(permut.x){
+      x.permut <- matmult.syncsa(mx1, mx2)
+      if (norm.x) {
+        matrix.permut <- apply(x.permut^2, 2, sum)
+        x.permut <- sweep(x.permut, 2, sqrt(matrix.permut), "/")
+      }
+      res$mx.null <- x.permut
+    }
+    return(res)
   }
   if (!is.null(traits)) {
-    m <- ncol(traits)
-    weights <- rep(1, m)
-    make.names <- is.null(colnames(traits))
-    colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
-    names(weights) <- colnames(traits)
-    if(!is.null(put.together)){
-      if(!inherits(put.together, "list")){
-        stop("\n put.together must be a object of class list\n")
-      }
-      if(make.names){
-        for(k in 1:length(put.together)){
-          put.together[[k]] <- paste("T", put.together[[k]], sep = "")
-        }
-      }
-      if(max(table(unlist(put.together)))>1){
-        stop("\n The same trait appears more than once in put.together\n")
-      }
-      if(length(setdiff(unlist(put.together),colnames(traits)))>0){
-        stop("\n Check traits names in put.together\n")
-      }
-      for(k in 1:length(put.together)){
-        weights[put.together[[k]]] <- 1/length(put.together[[k]])
-      }
-    }
-    matrixT <- matrix.t(comm, traits, scale = scale, ranks = ranks, notification = FALSE)
-    check.U <- function(traits, scale, ranks, ord, ...){
-      vartype <- var.type(traits)
-      if(missing(ord)){
-        for(i in 1:length(vartype)){
-          if(ranks & vartype[i] == "o"){
-            traits[, i] <- rank(traits[, i], na.last = "keep")
-          }
-          traits[, i] <- as.numeric(traits[, i])
-        }
-        traits <- as.matrix(traits)
-      }
-      if (scale) {
-        dist.traits <- FD::gowdis(traits, asym.bin = NULL, ...)
-      }
-      else{
-        dist.traits <- as.matrix(vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = TRUE))
-      }
-      res <- any(is.na(dist.traits))
-      return(res)
-    }
-    if(notification){
-      if(check.U(traits, scale = scale, ranks = ranks, ord, w = weights)){
-        warning("Warning: NA in distance matrix between species based in traits", call. = FALSE)
-      }
-    }
-    matrixX <- matrix.x(comm, traits, scale = scale, ranks = ranks, notification = FALSE, ord, w = weights)
-    W <- matrixT$matrix.w
-    B <- matrixT$matrix.b
-    T <- matrixT$matrix.T
-    U <- matrixX$matrix.u
-    X <- matrixX$matrix.X
-    res.matrices$W <- W
-    res.matrices$B <- B
-    res.matrices$T <- T
-    res.matrices$U <- U
-    res.matrices$X <- X
-    res$weights <- weights
-    res$FunRao <- cbind(rao.diversity(comm, traits = B, checkdata = FALSE, put.together = put.together)$FunRao)
+    res$weights <- res.matrices$weights
+    res.matrices$weights <- NULL
+    W <- res.matrices$W
+    B <- res.matrices$B
+    T <- res.matrices$T
+    U <- res.matrices$U
+    X <- res.matrices$X
+    res$FunRao <- cbind(rao.diversity(comm, traits = B, checkdata = FALSE, put.together = put.together, transformation = transformation, spp.weights = spp.weights)$FunRao)
     colnames(res$FunRao) <- "FunRao"
-    if (!is.null(envir)) {
-      E <- envir
-      if (scale.envir) {
-        E <- cent.norm(envir, na.rm = na.rm)
+    if(romethod == 5){
+      res.matrices.null$B.NULL <- vector("list", N)
+      res.matrices.null$T.NULL <- vector("list", N)
+      res.matrices.null$U.NULL <- vector("list", N)
+      res.matrices.null$X.NULL <- vector("list", N)
+      res.matrices.null$RAO.NULL <- vector("list", N)
+      for (i in 1:N) {
+        temp <- permute.syncsa(seqpermutation[i,], mx1 = W, mx2 = B, permut.x = TRUE, norm.x = scale)
+        res.matrices.null$B.NULL[[i]] <- temp$mx2.null
+        res.matrices.null$T.NULL[[i]] <- temp$mx.null
+        temp <- permute.syncsa(seqpermutation[i,], mx1 = W, mx2 = U, permut.x = TRUE, norm.x = FALSE)
+        res.matrices.null$U.NULL[[i]] <- temp$mx2.null
+        res.matrices.null$X.NULL[[i]] <- temp$mx.null
+        temp <- cbind(rao.diversity(comm, traits = permute.syncsa(seqpermutation[i,], mx2 = B, permut.x = FALSE, norm.x = FALSE), checkdata = FALSE, put.together = put.together, transformation = transformation, spp.weights = spp.weights)$FunRao)
+        colnames(temp) <- "FunRao"
+        res.matrices.null$RAO.NULL[[i]] <- temp
       }
-      res.matrices$E <- E
+    }
+    if (!is.null(envir)) {
+      E <- res.matrices$E
       if(romethod == 1){
         roTE <- cor.matrix(mx1 = W, mx2 = B, x = T, y = E, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
         roXE <- cor.matrix(mx1 = W, mx2 = U, x = X, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
@@ -587,19 +615,20 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
     }
   }
   if (!is.null(phylodist)) {
-    matrixP <- matrix.p(comm, phylodist, notification = FALSE)
-    W <- matrixP$matrix.w
-    Q <- matrixP$matrix.q
-    P <- matrixP$matrix.P
-    res.matrices$W <- W
-    res.matrices$Q <- Q
-    res.matrices$P <- P
-    if (!is.null(envir)) {
-      E <- envir
-      if (scale.envir) {
-        E <- cent.norm(envir, na.rm = na.rm)
+    W <- res.matrices$W
+    Q <- res.matrices$Q
+    P <- res.matrices$P
+    if(romethod == 5){
+      res.matrices.null$Q.NULL <- vector("list", N)
+      res.matrices.null$P.NULL <- vector("list", N)
+      for (i in 1:N) {
+        temp <- permute.syncsa(seqpermutation[i,], mx1 = W, mx2 = Q, permut.x = TRUE, norm.x = FALSE)
+        res.matrices.null$Q.NULL[[i]] <- temp$mx2.null
+        res.matrices.null$P.NULL[[i]] <- temp$mx.null
       }
-      res.matrices$E <- E
+    }
+    if (!is.null(envir)) {
+      E <- res.matrices$E
       if(romethod == 1){
         roPE <- cor.matrix(mx1 = W, mx2 = Q, x = P, y = E, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
       }
@@ -663,11 +692,16 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
   if(length(list.warning)>0){
     res$list.warning <- list.warning
   }
-  res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF, roRE)
-  if(is.null(colnames(res$statistics))){
-    colnames(res$statistics) <- "Obs"
-  }
   res$matrices <- res.matrices
+  if(romethod == 5){
+    res$matrices.null <- res.matrices.null
+  }
+  if(romethod == 1 | romethod == 2 | romethod == 3){
+    res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF, roRE)
+    if(is.null(colnames(res$statistics))){
+      colnames(res$statistics) <- "Obs"
+    }
+  }
   class(res) <- "syncsa"
   return(res)
 }

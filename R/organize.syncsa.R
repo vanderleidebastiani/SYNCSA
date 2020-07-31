@@ -5,7 +5,7 @@
 #'
 #' @details The function organizes the data for the functions of the package
 #' SYNCSA, placing the matrices of community, traits, phylogenetic
-#' distance, environmental varibles and strata vector in the same order.
+#' distance, environmental varibles, species weights and strata vectors in the same order.
 #' The function use as reference the community data for organize all data.frame or matrices
 #' in the same order that the sampling units names and species names found in community
 #' data set. For this all data sets entered must be correctly named, with rows and columns
@@ -16,12 +16,12 @@
 #' provided that the community data had been entered. Unspecified data will
 #' appear as NULL.
 #'
-#' When trait is a data.frame with differents types of variables correctly identified and
+#' When trait is a data.frame with different types of variables correctly identified and
 #' the argument convert.traits is TRUE factor traits are expanded in dummy traits and ordinal variables
 #' are converted in numeric according to ranks argument.
 #'
-#' The strata must be a named vector. The strata vector is a vector for restrict
-#' permutation within species groups, insofar as the SYNCSA package the null
+#' The individual species weights (spp.weights) and strata must be named vectors. The strata vector
+#' is a vector for restrict permutation within species groups, insofar as the SYNCSA package the null
 #' models are based in permutation of species rather than permutation of sample units.
 #'
 #' @encoding UTF-8
@@ -37,6 +37,7 @@
 #' columns and sampling units as rows (Default envir = NULL).
 #' @param strata Strata named vector to specify restricting permutations within
 #' species groups (Default strata = NULL).
+#' @param spp.weights Named vector to specify individual species weights (Default spp.weights = NULL).
 #' @param check.comm Logical argument (TRUE or FALSE) to remove sampling units and
 #' species with total sums equal or less than zero (Default check.comm = TRUE).
 #' @param convert.traits Logical argument (TRUE or FALSE) to convert factor traits in
@@ -60,6 +61,7 @@
 #' \item{strata}{The strata vector for permutations.}
 #' \item{put.together}{A list with suggestion to group of traits that are analyzed together,
 #' only if convert.traits is TRUE and if some traits are of factor class.}
+#' \item{spp.weights}{The individual species weights vector.}
 #' \item{list.warning}{A list of warning.}
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{var.dummy}}, \code{\link{var.type}}
@@ -68,7 +70,8 @@
 #' data(ADRS)
 #' organize.syncsa(ADRS$community, ADRS$traits, ADRS$phylo, ADRS$envir)
 #' @export
-organize.syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, strata = NULL,
+organize.syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL,
+                             strata = NULL, spp.weights = NULL,
                              check.comm = TRUE, convert.traits = FALSE, ranks = TRUE)
 {
   res <- list(call = match.call())
@@ -227,6 +230,20 @@ organize.syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL
     }
     strata <- strata[match.names]
   }
+  if (!is.null(spp.weights)) {
+    if (is.null(names(spp.weights))){
+      stop("\n Names of spp.weights are null\n")
+    }
+    match.names <- match(colnames(comm), names(spp.weights))
+    if(sum(is.na(match.names))>0){
+      list.warning$spp.weights <- data.frame(species.not.on.spp.weights = setdiff(colnames(comm), names(spp.weights)))
+      warning("ERROR - Check list of warning in list.warning$spp.weights", call. = FALSE)
+      res.temp$stop <- TRUE
+      res.temp$list.warning <- list.warning
+      return(res.temp)
+    }
+    spp.weights <- spp.weights[match.names]
+  }
   if (is.null(traits)){
     traits <- NULL
     traitsvartype <- NULL
@@ -242,6 +259,9 @@ organize.syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL
   if (is.null(strata)){
     strata <- NULL
   }
+  if (is.null(spp.weights)){
+    spp.weights <- NULL
+  }
   if(length(list.warning)>0){
     res$list.warning <- list.warning
   }
@@ -255,6 +275,7 @@ organize.syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL
   res$environmental.var.type <- envirvartype
   res$strata <- strata
   res$put.together <- put.together
+  res$spp.weights <- spp.weights
   class(res) <- c("list", "metacommunity.data")
   return(res)
 }

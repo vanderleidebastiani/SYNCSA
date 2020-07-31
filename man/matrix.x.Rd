@@ -11,6 +11,8 @@ matrix.x(
   scale = TRUE,
   ranks = TRUE,
   ord,
+  transformation = "standardized",
+  spp.weights = NULL,
   notification = TRUE,
   ...
 )
@@ -35,7 +37,13 @@ the species.}
 convert to ranks (Default ranks = TRUE).}
 
 \item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
-method is forneced the rank parameter is not apply.}
+method is provided the rank parameter is not apply.}
+
+\item{transformation}{Method to community data transformation, "none", "standardized"
+or "weights" (Default transformation = "standardized").}
+
+\item{spp.weights}{Vector with 0 or 1 to specify individual species weights (Default
+spp.weights = NULL).}
 
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications of missing observations are shown (Default notification =
@@ -45,11 +53,11 @@ TRUE).}
 }
 \value{
 \item{matriz.w}{Standardized community matrix, where rows are
-communities and columns species. Row totals (communities) = 1.}
+communities and columns species. If default transformation, row totals (communities) = 1.}
 \item{matriz.u}{Standardized matrix containing the degree of belonging of
 each species in relation to each other species. Row totals (species) = 1.}
-\item{matriz.X}{Trait-weighted species composition matrix. Row totals
-(communities) = 1.}
+\item{matriz.X}{Trait-weighted species composition matrix. If default transformation,
+row totals (communities) = 1.}
 }
 \description{
 Function to obtain a matrix containing trait-weighted species composition.
@@ -57,7 +65,7 @@ For more details, see \code{\link{syncsa}}.
 }
 \note{
 \strong{IMPORTANT}: The sequence species show up in community data
-matrix MUST be the same as they show up in traits matrix. See
+matrix MUST be the same as they show up in traits matrix or in the spp.weights vector. See
 \code{\link{organize.syncsa}}.
 }
 \examples{

@@ -5,7 +5,15 @@
 \alias{matrix.t}
 \title{Matrix T}
 \usage{
-matrix.t(comm, traits, scale = TRUE, ranks = TRUE, notification = TRUE)
+matrix.t(
+  comm,
+  traits,
+  scale = TRUE,
+  ranks = TRUE,
+  transformation = "standardized",
+  spp.weights = NULL,
+  notification = TRUE
+)
 }
 \arguments{
 \item{comm}{Community data, with species as columns and sampling units as
@@ -23,13 +31,17 @@ the same scale the matrix T is not subjected to standardization.}
 \item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
 
+\item{transformation}{Method to community data transformation, "none", "standardized" or "weights" (Default transformation = "standardized").}
+
+\item{spp.weights}{Vector with 0 or 1 to specify individual species weights (Default spp.weights = NULL).}
+
 \item{notification}{Logical argument (TRUE or FALSE) to specify if
 notifications of missing observations are shown (Default notification =
 TRUE).}
 }
 \value{
 \item{matriz.w}{Standardized community matrix, where rows are
-communities and columns species. Row totals (communities) = 1.}
+communities and columns species. If default transformation, row totals (communities) = 1.}
 \item{matriz.b}{Matrix of traits, exactly the same data input.}
 \item{matriz.T}{Matrix containing trait averages at community level. If
 Scale = TRUE the matrix T is standardized within the traits.}
@@ -40,7 +52,7 @@ For more details, see \code{\link{syncsa}}.
 }
 \note{
 \strong{IMPORTANT}: The sequence species show up in community data
-matrix MUST be the same as they show up in traits matrix. See
+matrix MUST be the same as they show up in traits matrix or in the spp.weights vector. See
 \code{\link{organize.syncsa}}.
 }
 \examples{

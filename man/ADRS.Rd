@@ -8,12 +8,12 @@ data(ADRS)
 }
 \description{Artificial data for run SYNCSA.}
 \format{
-  A list with 4 matrices.
+  A list with:.
   \describe{
     \item{commnunity}{Community data, observations of six species in ten sites.}
     \item{traits}{Matrix data of species described by two traits.}
     \item{phylo}{Matrix containing phylogenetic distance between species.}
-    \item{envir}{Two environmental variables for each community.}
+    \item{envir}{One environmental variable for each community.}
   }
 }
 \examples{

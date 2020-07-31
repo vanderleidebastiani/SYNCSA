@@ -23,18 +23,29 @@
 #' dissimilarity (de Bello et al. 2007). The same definition is used for
 #' phylogenetic redundancy.
 #'
+#' By default, the community data is standardization to row totals will be 1.
+#' The options are: "none" no transformation is applied; "standardized" the
+#' community data is standardized to row totals will be 1; and "weights" community
+#' data is first "standardized" and when, individual species weights are multiplied
+#' to each species entries. The argument transformation also allow an additional
+#' method to weights individual species, called "max.weights". In this method
+#' community data is standardization as default, however dissimilarity matrix is
+#' weighted indeed. The argument spp.weights specify the weights to target species
+#' and the dissimilarity weights are 1 if at least one species in the pair belongs
+#' to the target community, otherwise weights to pair are 0.
+#'
 #' Package \strong{SYNCSA} requires that the species and community sequence in
 #' the data.frame or matrix must be the same for all dataframe/matrices.
 #' The function \code{\link{organize.syncsa}} organizes the data for the functions
 #' of the package, placing the matrices of community, traits, phylogenetic distance
 #' in the same order. The function use of function organize.syncsa is not requered
 #' for run the functions, but is recommended. In this way the arguments comm, traits,
-#' phylodist, as well as the argument put.together, can be specified them as normal
+#' phylodist, as well as the argument put.together and spp.weights, can be specified them as normal
 #' arguments or by passing them with the object returned by the function
 #' \code{\link{organize.syncsa}} using, in this case only the argument comm.
 #' Using the object returned by organize.syncsa, the comm argument is used as an alternative
 #' way of entering to set all data.frames/matrices, and therefore the other arguments
-#' (traits, phylodist and put.together) must be null.
+#' (traits, phylodist, put.together and spp.weights) must be null.
 #'
 #'
 #' @encoding UTF-8
@@ -59,6 +70,9 @@
 #' examples in \code{\link{syncsa}}.
 #' @param standardize Logical argument (TRUE or FALSE) to specify if standardize phylogenetic
 #' distance to range into range 0 to 1. (Default standardize = TRUE).
+#' @param transformation Method to transformation, "none", "standardized", "weights"
+#' or "max.weights" (Default transformation = "standardized").
+#' @param spp.weights Vector with 0 or 1 to specify individual species weights (Default spp.weights = NULL).
 #' @param ... Parameters for \code{\link{gowdis}} function.
 #' @return \item{Simpson}{Gini-Simpson index within each community (equivalent
 #' to Rao quadratic entropy with null, crisp, similarities).}
@@ -67,8 +81,8 @@
 #' \item{PhyRao}{Rao quadratic entropy within each community, considering phylogenetic distance.}
 #' \item{PhyRedundancy}{Phylogenetic redundancy in each community.}
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
-#' matrix MUST be the same as they show up in traits and phylodist matrices.
-#' See details and \code{\link{organize.syncsa}}.
+#' matrix MUST be the same as they show up in traits and phylodist matrices as well as
+#' in the species weights vector. See details and \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{organize.syncsa}}, \code{\link{gowdis}},
 #' \code{\link{syncsa}}
@@ -89,7 +103,8 @@
 #' rao.diversity(ADRS$community, traits = ADRS$traits)
 #' @export
 rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRUE, ord = "metric",
-                          put.together = NULL, standardize = TRUE, ...)
+                          put.together = NULL, standardize = TRUE, transformation = "standardized",
+                          spp.weights = NULL, ...)
 {
   diver.internal <- function(community, distance){
     if(any(is.na(distance))){
@@ -108,17 +123,18 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
   }
   res <- list(call = match.call())
   if (inherits(comm, "metacommunity.data")) {
-    if (!is.null(traits) | !is.null(phylodist) | !is.null(put.together)) {
-      stop("\n When you use an object of class metacommunity.data the arguments traits, phylodist and put.together must be null. \n")
+    if (!is.null(traits) | !is.null(phylodist) | !is.null(put.together) | !is.null(spp.weights)) {
+      stop("\n When you use an object of class metacommunity.data the arguments traits, phylodist, spp.weights and put.together must be null. \n")
     }
     traits <- comm$traits
     phylodist <- comm$phylodist
     put.together <- comm$put.together
+    spp.weights <- comm$spp.weights
     comm <- comm$community
   }
   list.warning <- list()
   if(checkdata){
-    organize.temp <- organize.syncsa(comm, traits = traits, phylodist = phylodist, check.comm = TRUE)
+    organize.temp <- organize.syncsa(comm, traits = traits, phylodist = phylodist, spp.weights = spp.weights, check.comm = TRUE)
     if(!is.null(organize.temp$stop)){
       organize.temp$call <- match.call()
       return(organize.temp)
@@ -127,6 +143,7 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
     comm <- organize.temp$community
     traits <- organize.temp$traits
     phylodist <- organize.temp$phylodist
+    spp.weights <- organize.temp$spp.weights
   }
   if(length(list.warning)>0){
     res$list.warning <- list.warning
@@ -134,8 +151,25 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
   if(any(is.na(comm))){
     stop("\n community data with NA\n")
   }
-  comm <- as.matrix(comm)
-  N <- nrow(comm)
+  TRANS <- c("none", "standardized", "weights", "beals", "max.weights")
+  trans <- pmatch(transformation, TRANS)
+  if (length(trans) > 1) {
+    stop("\n Only one argument is accepted in transformation \n")
+  }
+  if (is.na(trans) | trans == 4) {
+    stop("\n Invalid transformation \n")
+  }
+  if(trans == 5){
+    is.bin.weights <- all(spp.weights %in% c(0, 1))
+    if(!is.bin.weights | is.null(spp.weights)){
+      stop("\n spp.weights must be 0 or 1\n")
+    }
+    comm <- matrix.w.transformation(comm, transformation = "standardized", notification = FALSE)
+    VecMax <- Vectorize(function(x, y) max(x,y))
+    dist.weights <- outer(spp.weights, spp.weights, FUN = VecMax)
+  } else{
+    comm <- matrix.w.transformation(comm, transformation = transformation, spp.weights = spp.weights, notification = FALSE)
+  }
   S <- ncol(comm)
   dist.1 <- 1 - diag(x = rep(1, S))
   if (!is.null(traits)) {
@@ -184,15 +218,23 @@ rao.diversity <- function(comm, traits = NULL, phylodist = NULL, checkdata = TRU
       dist.phylogenetic <- dist.phylogenetic/max(dist.phylogenetic, na.rm = TRUE)
     }
   }
-  comm <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
+  if(trans == 5){
+    dist.1 <- dist.1*dist.weights
+  }
   SD <- diver.internal(comm, dist.1)
   res$Simpson <- SD
   if (!is.null(traits)){
+    if(trans == 5){
+      dist.functional <- dist.functional*dist.weights
+    }
     FD <- diver.internal(comm, dist.functional)
     res$FunRao <- FD
     res$FunRedundancy <- SD-FD
   }
   if (!is.null(phylodist)){
+    if(trans == 5){
+      dist.phylogenetic <- dist.phylogenetic*dist.weights
+    }
     PD <- diver.internal(comm, dist.phylogenetic)
     res$PhyRao <- PD
     res$PhyRedundancy <- SD-PD

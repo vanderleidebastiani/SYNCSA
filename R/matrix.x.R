@@ -21,19 +21,23 @@
 #' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are
 #' convert to ranks (Default ranks = TRUE).
 #' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
-#' method is forneced the rank parameter is not apply.
+#' method is provided the rank parameter is not apply.
+#' @param transformation Method to community data transformation, "none", "standardized"
+#' or "weights" (Default transformation = "standardized").
+#' @param spp.weights Vector with 0 or 1 to specify individual species weights (Default
+#' spp.weights = NULL).
 #' @param notification Logical argument (TRUE or FALSE) to specify if
 #' notifications of missing observations are shown (Default notification =
 #' TRUE).
 #' @param ... Parameters for \code{\link{gowdis}} function.
 #' @return \item{matriz.w}{Standardized community matrix, where rows are
-#' communities and columns species. Row totals (communities) = 1.}
+#' communities and columns species. If default transformation, row totals (communities) = 1.}
 #' \item{matriz.u}{Standardized matrix containing the degree of belonging of
 #' each species in relation to each other species. Row totals (species) = 1.}
-#' \item{matriz.X}{Trait-weighted species composition matrix. Row totals
-#' (communities) = 1.}
+#' \item{matriz.X}{Trait-weighted species composition matrix. If default transformation,
+#' row totals (communities) = 1.}
 #' @note \strong{IMPORTANT}: The sequence species show up in community data
-#' matrix MUST be the same as they show up in traits matrix. See
+#' matrix MUST be the same as they show up in traits matrix or in the spp.weights vector. See
 #' \code{\link{organize.syncsa}}.
 #' @author Vanderlei Julio Debastiani <vanderleidebastiani@@yahoo.com.br>
 #' @seealso \code{\link{syncsa}}, \code{\link{organize.syncsa}}, \code{\link{belonging}},
@@ -50,9 +54,9 @@
 #' data(ADRS)
 #' matrix.x(ADRS$community, ADRS$traits)
 #' @export
-matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord, notification = TRUE, ...)
+matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord,
+                      transformation = "standardized", spp.weights = NULL, notification = TRUE, ...)
 {
-  comm <- as.matrix(comm)
   vartype <- var.type(traits)
   if(any(vartype == "n")){
     stop("\n trait must contain only numeric, binary or ordinal variables \n")
@@ -66,14 +70,16 @@ matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord, notificatio
     }
     traits <- as.matrix(traits)
   }
-  matrix.w <- sweep(comm, 1, rowSums(comm, na.rm = TRUE), "/")
-  w.NA <- apply(matrix.w, 2, is.na)
-  matrix.w[w.NA] <- 0
-  if(notification){
-    if(any(w.NA)){
-      warning("Warning: NA in community data", call. = FALSE)
-    }
+  TRANS <- c("none", "standardized", "weights", "beals")
+  trans <- pmatch(transformation, TRANS)
+  if (length(trans) > 1) {
+    stop("\n Only one argument is accepted in transformation \n")
   }
+  if (is.na(trans) | trans == 4) {
+    stop("\n Invalid transformation \n")
+  }
+  matrix.w <- matrix.w.transformation(comm, transformation = transformation,
+                                      spp.weights = spp.weights, notification = notification)
   x.NA <- apply(traits, 2, is.na)
   if(notification){
     if(any(x.NA)){
