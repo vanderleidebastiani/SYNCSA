@@ -26,6 +26,8 @@ matmult.syncsa <- function(X, Y){
     X <- sweep(X, 1, rowSums(X, na.rm = TRUE), "/")
     adjustment <- X%*%ifelse(y.NA, 0, 1)
     res <- res/adjustment
+    # res.NA <- is.na(res)
+    # res[res.NA] <- 0
   }
   return(res)
 }

@@ -87,8 +87,10 @@ matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord,
     }
   }
   if (scale) {
-    dist.traits <- FD::gowdis(traits, asym.bin = NULL, ...)
-    similar.traits <- 1 - as.matrix(dist.traits)
+    dist.traits <- as.matrix(FD::gowdis(traits, ...))
+    ## In case a species has NO trait info, replace the diag with NA
+    diag(dist.traits)[which(rowSums(is.na(dist.traits))==(ncol(dist.traits)-1))] <- NA
+    similar.traits <- 1 - dist.traits
     matrix.traits <- 1/colSums(similar.traits, na.rm = TRUE)
     matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
   }
@@ -107,5 +109,8 @@ matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord,
   matrix.u[u.NA] <- 0
   matrix.X <- matrix.w %*% matrix.u
   # matrix.X <- matmult.syncsa(matrix.w, matrix.u)
+  if(any(u.NA)){
+    matrix.X <- sweep(matrix.X, 1, rowSums(matrix.X), "/")
+  }
   return(list(matrix.w = matrix.w, matrix.u = matrix.u, matrix.X = matrix.X))
 }
