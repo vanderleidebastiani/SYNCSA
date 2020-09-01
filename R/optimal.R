@@ -65,8 +65,8 @@
 #' variable.
 #' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are
 #' convert to ranks (Default ranks = TRUE).
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}
-#' (Default ord = "metric").
+#' @param asym.bin Vector listing the asymmetric binary traits, see \code{\link{gowdis}} (Default asym.bin = NULL).
+#' @param ord Method to be used for ordinal traits, see \code{\link{gowdis}} (Default ord = "metric").
 #' @param na.rm Logical argument (TRUE or FALSE) to specify if pairwise
 #' deletion of missing observations when computing dissimilarities (Default
 #' na.rm = FALSE).
@@ -108,12 +108,12 @@
 #' optimal(flona$community, flona$traits, flona$environment, subset.min = 1,
 #'    subset.max = 3, pattern = "tcap", put.together = put.together)
 #' @export
-optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
+optimal <- function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
                    subset.min = 1, subset.max = ncol(traits),
                    pattern = NULL, ro.method = "mantel", dist = "euclidean", method = "pearson",
-                   scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord = "metric",
-                   put.together = NULL, na.rm = FALSE, notification = TRUE,
-                   progressbar = FALSE)
+                   scale = TRUE, scale.envir = TRUE, ranks = TRUE,
+                   asym.bin = NULL, ord = "metric", put.together = NULL,
+                   na.rm = FALSE, notification = TRUE, progressbar = FALSE)
 {
   res <- list(call = match.call())
   roMETHOD <- c("mantel", "procrustes", "coinertia")
@@ -193,6 +193,9 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
   }
   make.names <- is.null(colnames(traits))
   colnames(traits) <- colnames(traits, do.NULL = FALSE, prefix = "T")
+  if(!is.null(asym.bin)){
+    names(asym.bin) <- colnames(traits)[asym.bin]
+  }
   if (scale.envir) {
     envir <- cent.norm(envir, na.rm = na.rm)
   }
@@ -200,8 +203,8 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
     dist.y <- vegan::vegdist(envir, method = dist, na.rm = na.rm)
   }
   m <- ncol(traits)
-  weights <- rep(1, m)
-  names(weights) <- colnames(traits)
+  traits.weights <- rep(1, m)
+  names(traits.weights) <- colnames(traits)
   p <- 1:subset.max
   names.traits <- colnames(traits)
   if(!is.null(put.together)){
@@ -222,7 +225,7 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
     for(k in 1:length(put.together)){
       names.traits[which(names.traits == put.together[[k]][1])] <- paste(put.together[[k]], collapse = " ")
       names.traits <- setdiff(names.traits, put.together[[k]][-1])
-      weights[put.together[[k]]] <- 1/length(put.together[[k]])
+      traits.weights[put.together[[k]]] <- 1/length(put.together[[k]])
     }
     m <- length(names.traits)
     put.together2 <- list()
@@ -303,8 +306,14 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
             choose.traits <- c(choose.traits3, setdiff(choose.traits, unlist(put.together2)))
           }
         }
-        T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, ranks = ranks, notification = FALSE)
-        X <- matrix.x(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, ord = ord, notification = FALSE, w = weights[choose.traits])
+        traits.position <- which(colnames(traits) %in% choose.traits)
+        asym.bin.temp <- which(colnames(traits)[traits.position] %in% names(asym.bin[asym.bin %in% traits.position]))
+        if(length(asym.bin.temp)<1){
+          asym.bin.temp <- NULL
+        }
+        T <- matrix.t(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, notification = FALSE)
+        X <- matrix.x(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, notification = FALSE,
+                      asym.bin = asym.bin.temp, ord = ord, w = traits.weights[choose.traits])
         if (romethod == 1) {
           dist.x <- vegan::vegdist(X$matrix.X, method = dist, na.rm = na.rm)
           dist.z <- vegan::vegdist(T$matrix.T, method = dist, na.rm = na.rm)
@@ -346,7 +355,13 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
             choose.traits <- c(choose.traits3, setdiff(choose.traits, unlist(put.together2)))
           }
         }
-        X <- matrix.x(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, ord = ord, notification = FALSE, w = weights[choose.traits])
+        traits.position <- which(colnames(traits) %in% choose.traits)
+        asym.bin.temp <- which(colnames(traits)[traits.position] %in% names(asym.bin[asym.bin %in% traits.position]))
+        if(length(asym.bin.temp)<1){
+          asym.bin.temp <- NULL
+        }
+        X <- matrix.x(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, notification = FALSE,
+                      asym.bin = asym.bin.temp, ord = ord, w = traits.weights[choose.traits])
         if (romethod == 1) {
           correlation[n, 1] <- stats::cor(vegan::vegdist(as.matrix(X$matrix.X), method = dist, na.rm = na.rm), dist.y, method = method)
           if (progressbar) {
@@ -390,7 +405,7 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
         } else{
           put.together.temp <- NULL
         }
-        T <- matrix.t(comm, as.matrix(traits[, choose.traits, drop=FALSE]), scale = scale, ranks = ranks, notification = FALSE)
+        T <- matrix.t(comm, traits[, choose.traits, drop = FALSE], scale = scale, ranks = ranks, notification = FALSE)
         RAO <- cbind(rao.diversity(comm, traits = T$matrix.b, checkdata = FALSE, put.together = put.together.temp)$FunRao)
         colnames(RAO) <- "FunRao"
         if (romethod == 1) {
@@ -422,7 +437,7 @@ optimal<-function (comm, traits = NULL, envir = NULL, checkdata = TRUE,
   }
   res$N_subset <- nT
   res$optimization <- result
-  res$weights <- weights
+  res$traits.weights <- traits.weights
   class(res) <- "optimal"
   return(res)
 }

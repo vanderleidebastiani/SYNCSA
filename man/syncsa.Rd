@@ -20,7 +20,8 @@ syncsa(
   scale = TRUE,
   scale.envir = TRUE,
   ranks = TRUE,
-  ord,
+  asym.bin = NULL,
+  ord = "metric",
   put.together = NULL,
   na.rm = FALSE,
   transformation = "standardized",
@@ -41,7 +42,8 @@ syncsa.obs(
   scale = TRUE,
   scale.envir = TRUE,
   ranks = TRUE,
-  ord,
+  asym.bin = NULL,
+  ord = "metric",
   put.together = NULL,
   na.rm = FALSE,
   transformation = "standardized",
@@ -101,7 +103,9 @@ and standardization within each variable. (Default scale.envir = TRUE).}
 \item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
 
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}.}
+\item{asym.bin}{Vector listing the asymmetric binary traits, see \code{\link{gowdis}} (Default asym.bin = NULL).}
+
+\item{ord}{Method to be used for ordinal traits, see \code{\link{gowdis}} (Default ord = "metric").}
 
 \item{put.together}{List to specify group of traits. Each group specify receive the
 same weight that one trait outside any group, in the way each group is considered
@@ -142,7 +146,7 @@ and roBF, and their significance levels based on permutations.}
 \item{matrices.null}{A list of list with null matrices generated according the null model,
 only if ro.method is "nullmodel". The number of matrices returned depends of the number of permutations.}
 \item{FunRao}{Rao quadratic entropy within each community, considering trait distance.}
-\item{weights}{Weight for each trait.}
+\item{traits.weights}{Weight for each trait.}
 }
 \description{
 This function integrates several steps for the analysis of phylogenetic
@@ -424,7 +428,7 @@ put.together<-list(c("fol","sem"), c("tam", "red"))
 put.together
 res<-syncsa(flona$community, flona$traits, envir = flona$environment,
    put.together = put.together, permutations = 99)
-res$weights
+res$spp.weights
 }
 \references{
 Debastiani, V.J & Pillar, V.D., (2012). SYNCSA-R tool for analysis of metacommunities

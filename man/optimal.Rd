@@ -20,6 +20,7 @@ optimal(
   scale = TRUE,
   scale.envir = TRUE,
   ranks = TRUE,
+  asym.bin = NULL,
   ord = "metric",
   put.together = NULL,
   na.rm = FALSE,
@@ -84,8 +85,9 @@ variable.}
 \item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
 
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}
-(Default ord = "metric").}
+\item{asym.bin}{Vector listing the asymmetric binary traits, see \code{\link{gowdis}} (Default asym.bin = NULL).}
+
+\item{ord}{Method to be used for ordinal traits, see \code{\link{gowdis}} (Default ord = "metric").}
 
 \item{put.together}{List to specify group traits that are added or removed
 together (Default put.together = NULL). This argument must be a list, see

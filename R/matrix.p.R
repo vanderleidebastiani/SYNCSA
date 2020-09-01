@@ -51,7 +51,7 @@ matrix.p <- function (comm, phylodist, transformation = "standardized", spp.weig
     }
   }
   similar.phy <- 1 - (phylodist/max(phylodist))
-  matrix.phy <- 1/colSums(similar.phy)
+  matrix.phy <- 1/rowSums(similar.phy)
   matrix.q <- sweep(similar.phy, 1, matrix.phy, "*")
   matrix.P <- matrix.w %*% matrix.q
   # matrix.P <- matmult.syncsa(matrix.w, matrix.q)

@@ -20,8 +20,6 @@
 #' the species.
 #' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are
 #' convert to ranks (Default ranks = TRUE).
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
-#' method is provided the rank parameter is not apply.
 #' @param transformation Method to community data transformation, "none", "standardized"
 #' or "weights" (Default transformation = "standardized").
 #' @param spp.weights Vector with 0 or 1 to specify individual species weights (Default
@@ -54,22 +52,31 @@
 #' data(ADRS)
 #' matrix.x(ADRS$community, ADRS$traits)
 #' @export
-matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord,
+matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE,
                       transformation = "standardized", spp.weights = NULL, notification = TRUE, ...)
 {
   vartype <- var.type(traits)
-  if(any(vartype == "n")){
-    stop("\n trait must contain only numeric, binary or ordinal variables \n")
-  }
-  if(missing(ord)){
-    for(i in 1:length(vartype)){
-      if(ranks & vartype[i] == "o"){
-        traits[, i] <- rank(traits[, i], na.last = "keep")
-      }
-      traits[, i] <- as.numeric(traits[, i])
+  # if(any(vartype == "n")){
+  #   stop("\n trait must contain only numeric, binary or ordinal variables \n")
+  # }
+  # if(missing(ord)){
+  #   for(i in 1:length(vartype)){
+  #     if(ranks & vartype[i] == "o"){
+  #       traits[, i] <- rank(traits[, i], na.last = "keep")
+  #     }
+  #     traits[, i] <- as.numeric(traits[, i])
+  #   }
+  #   traits <- as.matrix(traits)
+  # }
+  # if(missing(ord)){
+  for(i in 1:length(vartype)){
+    if(ranks & vartype[i] == "o"){
+      traits[, i] <- rank(traits[, i], na.last = "keep")
     }
-    traits <- as.matrix(traits)
+    # traits[, i] <- as.numeric(traits[, i])
   }
+  # traits <- as.matrix(traits)
+  # }
   TRANS <- c("none", "standardized", "weights", "beals")
   trans <- pmatch(transformation, TRANS)
   if (length(trans) > 1) {
@@ -91,13 +98,13 @@ matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord,
     ## In case a species has NO trait info, replace the diag with NA
     diag(dist.traits)[which(rowSums(is.na(dist.traits))==(ncol(dist.traits)-1))] <- NA
     similar.traits <- 1 - dist.traits
-    matrix.traits <- 1/colSums(similar.traits, na.rm = TRUE)
+    matrix.traits <- 1/rowSums(similar.traits, na.rm = TRUE)
     matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
   }
   else{
     dist.traits <- as.matrix(vegan::vegdist(traits, method = "euclidean", diag = TRUE, upper = TRUE, na.rm = TRUE))
     similar.traits <- 1 - (dist.traits/max(dist.traits, na.rm = TRUE))
-    matrix.traits <- 1/colSums(similar.traits, na.rm = TRUE)
+    matrix.traits <- 1/rowSums(similar.traits, na.rm = TRUE)
     matrix.u <- sweep(similar.traits, 1, matrix.traits, "*")
   }
   u.NA <- apply(matrix.u, 2, is.na)
@@ -106,11 +113,12 @@ matrix.x <- function (comm, traits, scale = TRUE, ranks = TRUE, ord,
       warning("Warning: NA in matrix U", call. = FALSE)
     }
   }
+  # matrix.u[u.NA] <- 0
+  # matrix.X <- matrix.w %*% matrix.u
+  matrix.X <- matmult.syncsa(matrix.w, matrix.u)
   matrix.u[u.NA] <- 0
-  matrix.X <- matrix.w %*% matrix.u
-  # matrix.X <- matmult.syncsa(matrix.w, matrix.u)
-  if(any(u.NA)){
-    matrix.X <- sweep(matrix.X, 1, rowSums(matrix.X), "/")
-  }
+  # if(any(u.NA)){
+  #   matrix.X <- sweep(matrix.X, 1, rowSums(matrix.X), "/")
+  # }
   return(list(matrix.w = matrix.w, matrix.u = matrix.u, matrix.X = matrix.X))
 }

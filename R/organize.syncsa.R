@@ -244,6 +244,17 @@ organize.syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL
     }
     spp.weights <- spp.weights[match.names]
   }
+  if (!is.null(traits)) {
+    spp.all.trait.na <- apply(is.na(traits), 1, sum)==ncol(traits)
+    if(any(spp.all.trait.na)){
+      if (is.null(strata)) {
+        strata <- rep(1, nrow(traits))
+        names(strata) <- colnames(comm)
+      }
+      strata[spp.all.trait.na] <- max(strata)+seq_len(sum(spp.all.trait.na))
+      warning("The strata vector was generated or modified", call. = FALSE)
+    }
+  }
   if (is.null(traits)){
     traits <- NULL
     traitsvartype <- NULL

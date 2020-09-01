@@ -10,7 +10,6 @@ matrix.x(
   traits,
   scale = TRUE,
   ranks = TRUE,
-  ord,
   transformation = "standardized",
   spp.weights = NULL,
   notification = TRUE,
@@ -35,9 +34,6 @@ the species.}
 
 \item{ranks}{Logical argument (TRUE or FALSE) to specify if ordinal variables are
 convert to ranks (Default ranks = TRUE).}
-
-\item{ord}{Method to be used for ordinal variables, see \code{\link{gowdis}}, if any
-method is provided the rank parameter is not apply.}
 
 \item{transformation}{Method to community data transformation, "none", "standardized"
 or "weights" (Default transformation = "standardized").}

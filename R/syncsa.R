@@ -306,7 +306,8 @@
 #' and standardization within each variable. (Default scale.envir = TRUE).
 #' @param ranks Logical argument (TRUE or FALSE) to specify if ordinal variables are
 #' convert to ranks (Default ranks = TRUE).
-#' @param ord Method to be used for ordinal variables, see \code{\link{gowdis}}.
+#' @param asym.bin Vector listing the asymmetric binary traits, see \code{\link{gowdis}} (Default asym.bin = NULL).
+#' @param ord Method to be used for ordinal traits, see \code{\link{gowdis}} (Default ord = "metric").
 #' @param put.together List to specify group of traits. Each group specify receive the
 #' same weight that one trait outside any group, in the way each group is considered
 #' as unique trait (Default put.together = NULL). This argument must be a list, see
@@ -335,7 +336,7 @@
 #' \item{matrices.null}{A list of list with null matrices generated according the null model,
 #' only if ro.method is "nullmodel". The number of matrices returned depends of the number of permutations.}
 #' \item{FunRao}{Rao quadratic entropy within each community, considering trait distance.}
-#' \item{weights}{Weight for each trait.}
+#' \item{traits.weights}{Weight for each trait.}
 #'
 #' @note The function calculates the correlations despite the lack of one of
 #' the matrices, provided that community data had been entered. Correlations
@@ -389,12 +390,17 @@
 #' put.together
 #' res<-syncsa(flona$community, flona$traits, envir = flona$environment,
 #'    put.together = put.together, permutations = 99)
-#' res$weights
+#' res$spp.weights
 #' @export
 syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkdata = TRUE, ro.method = "mantel",
-                     method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord,
-                     put.together = NULL, na.rm = FALSE, transformation = "standardized", spp.weights = NULL,
-                     strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
+                    method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE,
+                    asym.bin = NULL, ord = "metric", put.together = NULL,
+                    na.rm = FALSE, transformation = "standardized", spp.weights = NULL,
+                    strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
+# syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkdata = TRUE, ro.method = "mantel",
+#                     method = "pearson", dist = "euclidean", scale = TRUE, scale.envir = TRUE, ranks = TRUE, ord,
+#                     put.together = NULL, na.rm = FALSE, transformation = "standardized", spp.weights = NULL,
+#                     strata = NULL, permutations = 999, parallel = NULL, notification = TRUE)
 {
   res <- list(call = match.call())
   res.matrices <- list()
@@ -410,6 +416,9 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
   roXE.P <- NA
   roBF <- NA
   roRE <- NA
+  roTY <- NA
+  roXY <- NA
+  roXY.T <- NA
   note.roTE <- paste("Trait-convergence assembly patterns (TCAP): roTE")
   note.roXE <- paste("Both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE")
   note.roXE.T <- paste("Trait-divergence assembly patterns (TDAP): roXE.T")
@@ -420,7 +429,11 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
   note.roTE.P <- paste("Removing phylogeny from trait-convergence assembly patterns: roTE.P")
   note.roXE.P <- paste("Removing phylogeny from both trait-convergence assembly patterns and trait-divergence assembly patterns: roXE.P")
   note.roRE <- paste("Alpha divergence (correlation between environmental variables and Rao entropy): roRE")
-  note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P, note.roRE)
+  note.roTY <- paste("Correlations with Beals smoothed community matrix (Y) and matrix T: roTY")
+  note.roXY <- paste("Correlations with Beals smoothed community matrix (Y) and matrix X: roXY")
+  note.roXY.T <- paste("Correlations with Beals smoothed community matrix (Y) and matrix X removing T: roXY.T")
+  note <- rbind(note.roTE, note.roXE, note.roXE.T, note.roBF, note.roPE, note.roPT, note.roPX.T, note.roTE.P, note.roXE.P,
+                note.roRE, note.roTY, note.roXY, note.roXY.T)
   colnames(note) <- "Correlation meanings"
   N <- permutations
   roMETHOD <- c("mantel", "procrustes", "coinertia", "none", "nullmodel")
@@ -537,10 +550,17 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
     }
   }
   res.matrices <- syncsa.obs(comm, traits = traits, phylodist = phylodist, envir = envir,
-                             scale = scale, scale.envir = scale.envir, ranks = ranks, ord,
-                             put.together = put.together, na.rm = na.rm, transformation = transformation,
+                             scale = scale, scale.envir = scale.envir, ranks = ranks,
+                             asym.bin = asym.bin, ord = ord, put.together = put.together,
+                             na.rm = na.rm, transformation = transformation,
                              spp.weights = spp.weights, notification = notification)
   if(romethod != 4){
+    if (notification & !is.null(traits)) {
+      spp.all.trait.na <- apply(is.na(traits), 1, sum)==ncol(traits)
+      if(any(spp.all.trait.na)){
+        warning("Some species with NA in all traits, the use of strata vector is recommended", call. = FALSE)
+      }
+    }
     seqpermutation <- permut.vector(ncol(comm), strata = strata, nset = permutations)
   }
   if(romethod == 1 | romethod == 2 | romethod == 3){
@@ -565,13 +585,14 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
     return(res)
   }
   if (!is.null(traits)) {
-    res$weights <- res.matrices$weights
-    res.matrices$weights <- NULL
+    res$traits.weights <- res.matrices$traits.weights
+    res.matrices$traits.weights <- NULL
     W <- res.matrices$W
     B <- res.matrices$B
     T <- res.matrices$T
     U <- res.matrices$U
     X <- res.matrices$X
+    Y <- res.matrices$Y
     res$FunRao <- cbind(rao.diversity(comm, traits = B, checkdata = FALSE, put.together = put.together, transformation = transformation, spp.weights = spp.weights)$FunRao)
     colnames(res$FunRao) <- "FunRao"
     if(romethod == 5){
@@ -591,6 +612,21 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
         colnames(temp) <- "FunRao"
         res.matrices.null$RAO.NULL[[i]] <- temp
       }
+    }
+    if(romethod == 1){
+      roTY <- cor.matrix(mx1 = W, mx2 = B, x = T, y = Y, method = method, dist = dist, permutations = N, norm = scale, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      roXY <- cor.matrix(mx1 = W, mx2 = U, x = X, y = Y, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      roXY.T <- cor.matrix.partial(mx1 = W, mx2 = U, x = X, y = Y, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, method = method, dist = dist, permutations = N, strata = strata, na.rm = na.rm, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    }
+    if(romethod == 2){
+      roTY <- pro.matrix(mx1 = W, mx2 = B, x = T, y = Y, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      roXY <- pro.matrix(mx1 = W, mx2 = U, x = X, y = Y, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      roXY.T <- pro.matrix.partial(mx1 = W, mx2 = U, x = X, y = Y, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+    }
+    if(romethod == 3){
+      roTY <- rv.matrix(mx1 = W, mx2 = B, x = T, y = Y, permutations = N, norm = scale, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      roXY <- rv.matrix(mx1 = W, mx2 = U, x = X, y = Y, permutations = N, strata = strata, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
+      roXY.T <- rv.matrix.partial(mx1 = W, mx2 = U, x = X, y = Y, mz1 = W, mz2 = B, z = T, permute.my2 = FALSE, permute.mz2 = TRUE, permutations = N, strata = strata, norm.z = scale, seqpermutation = seqpermutation, parallel = parallel, newClusters = FALSE, CL = CL)
     }
     if (!is.null(envir)) {
       E <- res.matrices$E
@@ -697,7 +733,7 @@ syncsa <- function (comm, traits = NULL, phylodist = NULL, envir = NULL, checkda
     res$matrices.null <- res.matrices.null
   }
   if(romethod == 1 | romethod == 2 | romethod == 3){
-    res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF, roRE)
+    res$statistics <- rbind(roTE, roXE, roPE, roPT, roPX.T, roXE.T, roTE.P, roXE.P, roBF, roRE, roTY, roXY, roXY.T)
     if(is.null(colnames(res$statistics))){
       colnames(res$statistics) <- "Obs"
     }
